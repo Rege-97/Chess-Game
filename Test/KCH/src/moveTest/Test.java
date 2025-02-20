@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Test extends JFrame {
+	int row,col;
 
 	public Test() {
 		super("테스트");
@@ -65,13 +67,25 @@ public class Test extends JFrame {
 		}
 		this.add(p_board, "Center");
 		JButton bt_pawn=new JButton("123");
-		board[1][1].add(bt_pawn);
+		board[6][4].add(bt_pawn);
 		
 		bt_pawn.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				bt_pawn.setBackground(Color.red);
+				
+				row=0;
+				col=0;
+				for(int i=1;i<=8;i++) {
+					if(Arrays.asList(board[i]).indexOf(bt_pawn.getParent())!=-1) {
+						row=i;
+						col=Arrays.asList(board[i]).indexOf(bt_pawn.getParent());
+						break;
+					}
+				}
+				
+				System.out.println(row+" "+ col);
 				
 			}
 		});
