@@ -1,6 +1,7 @@
 package moveTest;
 
 import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -18,7 +19,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Test extends JFrame {
-	int row,col;
+	int row, col;
+	JPanel p_board;
+	JPanel boards[][];
+	JButton bt_pawn;
 
 	public Test() {
 		super("테스트");
@@ -42,55 +46,73 @@ public class Test extends JFrame {
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
 
-		JPanel p_board = new JPanel(new GridLayout(8, 8));
+		p_board = new JPanel(new GridLayout(8, 8));
 
-		JPanel board[][] = new JPanel[9][9];
+		boardSet();
+
+		JButton movepin[][] = new JButton[9][9];
 
 		for (int i = 1; i <= 8; i++) {
-			for (int j = 1; j <=8; j++) {
-				board[i][j] = new JPanel();
-				if (i % 2 == 0) {
-					if (j % 2 == 0) {
-						board[i][j].setBackground(Color.yellow);
-					} else {
-						board[i][j].setBackground(Color.gray);
-					}
-				}else {
-					if (j % 2 == 0) {
-						board[i][j].setBackground(Color.gray);
-					} else {
-						board[i][j].setBackground(Color.yellow);
-					}
-				}
-				p_board.add(board[i][j]);
+			for (int j = 1; j <= 8; j++) {
+				movepin[i][j] = new JButton("0");
+				boards[i][j].add(movepin[i][j]);
+				movepin[i][j].setVisible(false);
 			}
 		}
+
 		this.add(p_board, "Center");
-		JButton bt_pawn=new JButton("123");
-		board[6][4].add(bt_pawn);
-		
+		bt_pawn = new JButton("123");
+
+		boards[2][2].add(bt_pawn);
+
 		bt_pawn.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				bt_pawn.setBackground(Color.red);
-				
-				row=0;
-				col=0;
-				for(int i=1;i<=8;i++) {
-					if(Arrays.asList(board[i]).indexOf(bt_pawn.getParent())!=-1) {
-						row=i;
-						col=Arrays.asList(board[i]).indexOf(bt_pawn.getParent());
+
+				row = 0;
+				col = 0;
+				for (int i = 1; i <= 8; i++) {
+					if (Arrays.asList(boards[i]).indexOf(bt_pawn.getParent()) != -1) {
+						row = i;
+						col = Arrays.asList(boards[i]).indexOf(bt_pawn.getParent());
 						break;
 					}
 				}
-				
-				System.out.println(row+" "+ col);
-				
+
+				movepin[row + 1][col].setVisible(true);
+				movepin[row + 2][col].setVisible(true);
+				System.out.println(row + " " + col);
+
 			}
 		});
-		
+
 		this.validate();
+	}
+
+	public void boardSet() {
+		boards = new JPanel[9][9];
+
+		for (int i = 1; i <= 8; i++) {
+			for (int j = 1; j <= 8; j++) {
+				boards[i][j] = new JPanel();
+				if (i % 2 == 0) {
+					if (j % 2 == 0) {
+						boards[i][j].setBackground(Color.yellow);
+					} else {
+						boards[i][j].setBackground(Color.gray);
+					}
+				} else {
+					if (j % 2 == 0) {
+						boards[i][j].setBackground(Color.gray);
+					} else {
+						boards[i][j].setBackground(Color.yellow);
+					}
+				}
+				p_board.add(boards[i][j]);
+			}
+		}
 	}
 
 	public static void main(String[] args) {
