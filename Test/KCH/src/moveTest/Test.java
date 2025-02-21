@@ -23,6 +23,7 @@ public class Test extends JFrame {
 	JPanel p_board;
 	JPanel boards[][];
 	JButton bt_pawn;
+	JButton movepins[][];
 
 	public Test() {
 		super("테스트");
@@ -50,43 +51,110 @@ public class Test extends JFrame {
 
 		boardSet();
 
-		JButton movepin[][] = new JButton[9][9];
+		movepins = new JButton[9][9];
 
 		for (int i = 1; i <= 8; i++) {
 			for (int j = 1; j <= 8; j++) {
-				movepin[i][j] = new JButton("0");
-				boards[i][j].add(movepin[i][j]);
-				movepin[i][j].setVisible(false);
+				movepins[i][j] = new JButton("0");
+				boards[i][j].add(movepins[i][j]);
+				movepins[i][j].setVisible(false);
 			}
 		}
 
 		this.add(p_board, "Center");
-		bt_pawn = new JButton("123");
-
-		boards[2][2].add(bt_pawn);
-
-		bt_pawn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				bt_pawn.setBackground(Color.red);
-
-				row = 0;
-				col = 0;
-				for (int i = 1; i <= 8; i++) {
-					if (Arrays.asList(boards[i]).indexOf(bt_pawn.getParent()) != -1) {
-						row = i;
-						col = Arrays.asList(boards[i]).indexOf(bt_pawn.getParent());
-						break;
-					}
+		Pawn pawns[]=new Pawn[8];
+		
+		for(int i=0;i<8;i++) {
+			pawns[i]=new Pawn("black", 2, i+1);
+			boards[2][i+1].add(pawns[i]);
+		}
+		
+		for(int i=0;i<8;i++) {
+			final int index=i;
+			pawns[i].addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					pawns[index].move(boards, movepins, p_board);
+					
 				}
-
-				movepin[row + 1][col].setVisible(true);
-				movepin[row + 2][col].setVisible(true);
-				System.out.println(row + " " + col);
-
-			}
-		});
+			});
+		}
+		
+//		pawns[1].addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				pawns[1].setBackground(Color.red);
+//				
+//				row = 0;
+//				col = 0;
+//
+//				for (int i = 1; i <= 8; i++) {
+//					if (Arrays.asList(boards[i]).indexOf(pawns[1].getParent()) != -1) {
+//						row = i;
+//						col = Arrays.asList(boards[i]).indexOf(pawns[1].getParent());
+//						break;
+//					}
+//				}
+//
+//				movepins[row + 1][col].setVisible(true);
+//				movepins[row + 2][col].setVisible(true);
+//				
+//				ActionListener[] a1=movepins[row + 1][col].getActionListeners();
+//				
+//				for(int i=0;i<a1.length;i++) {
+//					movepins[row + 1][col].removeActionListener(a1[i]);
+//				}
+//				
+//				ActionListener[] a2=movepins[row + 2][col].getActionListeners();
+//				
+//				for(int i=0;i<a2.length;i++) {
+//					movepins[row + 2][col].removeActionListener(a2[i]);
+//				}
+//				
+//				System.out.println(row + " " + col);
+//
+//				movepins[row + 1][col].addActionListener(new ActionListener() {
+//
+//					@Override
+//					public void actionPerformed(ActionEvent e) {
+//						boards[row][col].remove(pawns[1]);
+//						boards[row + 1][col].add(pawns[1]);
+//						pawns[1].setBackground(Color.green);
+//						
+//						movepins[row + 1][col].setVisible(false);
+//						movepins[row + 2][col].setVisible(false);
+//						System.out.println("1칸");
+//						
+//						p_board.getParent().validate();
+//						p_board.getParent().repaint();
+//					}
+//				});
+//
+//				movepins[row + 2][col].addActionListener(new ActionListener() {
+//
+//					@Override
+//					public void actionPerformed(ActionEvent e) {
+//						boards[row][col].remove(pawns[1]);
+//						
+//						boards[row + 2][col].add(pawns[1]);
+//						pawns[1].setBackground(Color.green);
+//						
+//						
+//						movepins[row + 1][col].setVisible(false);
+//						movepins[row + 2][col].setVisible(false);
+//						System.out.println("2칸");
+//						
+//						p_board.getParent().validate();
+//						p_board.getParent().repaint();
+//
+//					}
+//				});
+//
+//			}
+//		});
 
 		this.validate();
 	}
@@ -114,6 +182,7 @@ public class Test extends JFrame {
 			}
 		}
 	}
+
 
 	public static void main(String[] args) {
 		new Test();
