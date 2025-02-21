@@ -40,6 +40,17 @@ public class Pawn extends JButton {
 
 		boolean attack = false;
 
+		for (int i = 0; i < 8; i++) {
+			if (pawns[i] != pawn) {
+				pawns[i].setBackground(Color.white);
+			}
+		}
+
+		for (int i = 1; i <= 8; i++) {
+			for (int j = 1; j <= 8; j++) {
+				movepins[i][j].setVisible(false);
+			}
+		}
 		if (row + 1 > 8) {
 			return;
 
@@ -83,6 +94,7 @@ public class Pawn extends JButton {
 					}
 				}
 			}
+
 			if (row + 1 <= 8 && col + 1 <= 8) {
 				// 오른쪽 대각선
 				if (boards[row + 1][col + 1].getComponentCount() == 2) {
