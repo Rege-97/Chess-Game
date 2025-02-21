@@ -62,27 +62,28 @@ public class Test extends JFrame {
 		}
 
 		this.add(p_board, "Center");
-		
-		
-		Pawn white1=new Pawn("white", 3, 2);
+
+		Pawn white1 = new Pawn("white", 3, 2);
 		boards[3][2].add(white1);
-		Pawn white2=new Pawn("white", 4, 3);
+		Pawn white2 = new Pawn("white", 4, 3);
 		boards[4][3].add(white2);
-		
-		Pawn blackpawns[]=new Pawn[8];
-		
-		for(int i=0;i<8;i++) {
-			blackpawns[i]=new Pawn("black", 2, i+1);
-			boards[2][i+1].add(blackpawns[i]);
+		Pawn white3 = new Pawn("white", 4, 5);
+		boards[4][5].add(white3);
+
+		Pawn blackpawns[] = new Pawn[8];
+
+		for (int i = 0; i < 8; i++) {
+			blackpawns[i] = new Pawn("black", 2, i + 1);
+			boards[2][i + 1].add(blackpawns[i]);
 		}
-		
-		for(int i=0;i<8;i++) {
-			final int index=i;
+
+		for (int i = 0; i < 8; i++) {
+			final int index = i;
 			blackpawns[i].addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
+
 					blackpawns[index].BlackMove(boards, movepins, p_board, blackpawns);
 				}
 			});
@@ -114,7 +115,6 @@ public class Test extends JFrame {
 			}
 		}
 	}
-
 
 	public static void main(String[] args) {
 		new Test();

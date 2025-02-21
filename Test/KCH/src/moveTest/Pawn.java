@@ -36,107 +36,95 @@ public class Pawn extends JButton {
 	}
 
 	public void BlackMove(JPanel boards[][], JButton movepins[][], JPanel p_board, Pawn pawns[]) {
-		if (boards[row + 1][col].getComponentCount() == 2) {
-			return;
-		}
-		ActionListener[] al;
-
-		click = true;
-
-		for (int i = 0; i < pawns.length; i++) {
-			if (pawns[i] != this) {
-				pawns[i].click = false;
-			}
-
-		}
-
 		Pawn pawn = this;
-
-		this.setBackground(Color.red);
-
-		row = 0;
-		col = 0;
-
-		for (int i = 1; i <= 8; i++) {
-			if (Arrays.asList(boards[i]).indexOf(this.getParent()) != -1) {
-				row = i;
-				col = Arrays.asList(boards[i]).indexOf(this.getParent());
-				break;
+		if (row + 1 > 8) {
+			return;
+		} else {
+			if (boards[row + 1][col].getComponentCount() == 2) {
+				return;
 			}
-		}
+			
+			// 앞으로 한칸
+			click = true;
 
-		movepins[row + 1][col].setVisible(true);
+			for (int i = 0; i < pawns.length; i++) {
+				if (pawns[i] != this) {
+					pawns[i].click = false;
+				}
 
-		al = movepins[row + 1][col].getActionListeners();
-
-		for (int i = 0; i < al.length; i++) {
-			movepins[row + 1][col].removeActionListener(al[i]);
-		}
-
-		// 앞으로 한칸
-		movepins[row + 1][col].addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				boards[row][col].remove(pawn);
-				boards[row + 1][col].add(pawn);
-				pawn.setBackground(Color.green);
-
-				movepins[row + 1][col].setVisible(false);
-				movepins[row + 2][col].setVisible(false);
-				System.out.println("1칸");
-
-				movecount++;
-
-				pawn.click = false;
-
-				p_board.getParent().validate();
-				p_board.getParent().repaint();
-			}
-		});
-
-		// 앞으로 두칸
-		if (movecount == 0 && boards[row + 2][col].getComponentCount() != 2) {
-			movepins[row + 2][col].setVisible(true);
-			al = movepins[row + 2][col].getActionListeners();
-
-			for (int i = 0; i < al.length; i++) {
-				movepins[row + 2][col].removeActionListener(al[i]);
 			}
 
-			movepins[row + 2][col].addActionListener(new ActionListener() {
+			removeAction(movepins);
+			
+			movepins[row + 1][col].setVisible(true);
+			this.setBackground(Color.red);
+			movepins[row + 1][col].addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					boards[row][col].remove(pawn);
-
-					boards[row + 2][col].add(pawn);
+					boards[row + 1][col].add(pawn);
 					pawn.setBackground(Color.green);
 
 					movepins[row + 1][col].setVisible(false);
+					if(movecount==0) {
 					movepins[row + 2][col].setVisible(false);
-					System.out.println("2칸");
+					}
+					movepins[row + 1][col - 1].setVisible(false);
+					movepins[row + 1][col + 1].setVisible(false);
+					System.out.println("1칸");
 
 					movecount++;
+
+					row = row + 1;
+
 					pawn.click = false;
 
 					p_board.getParent().validate();
 					p_board.getParent().repaint();
-
 				}
 			});
 		}
-		
+		if (row + 2 > 8) {
+			return;
+		} else {
+			// 앞으로 두칸
+			if (movecount == 0 && boards[row + 2][col].getComponentCount() != 2) {
+				movepins[row + 2][col].setVisible(true);
+
+				movepins[row + 2][col].addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						boards[row][col].remove(pawn);
+
+						boards[row + 2][col].add(pawn);
+						pawn.setBackground(Color.green);
+
+						movepins[row + 1][col].setVisible(false);
+						movepins[row + 2][col].setVisible(false);
+						movepins[row + 1][col - 1].setVisible(false);
+						movepins[row + 1][col + 1].setVisible(false);
+						System.out.println("2칸");
+
+						movecount++;
+
+						row = row + 2;
+
+						pawn.click = false;
+
+						p_board.getParent().validate();
+						p_board.getParent().repaint();
+
+					}
+				});
+			}
+		}
 		// 왼쪽 대각선
 		if (boards[row + 1][col - 1].getComponentCount() == 2) {
 			if (((Pawn) boards[row + 1][col - 1].getComponent(1)).side.equals("white")) {
 
 				movepins[row + 1][col - 1].setVisible(true);
-				al = movepins[row + 1][col - 1].getActionListeners();
-
-				for (int i = 0; i < al.length; i++) {
-					movepins[row + 1][col - 1].removeActionListener(al[i]);
-				}
 
 				movepins[row + 1][col - 1].addActionListener(new ActionListener() {
 
@@ -150,10 +138,15 @@ public class Pawn extends JButton {
 						movepins[row + 1][col].setVisible(false);
 						movepins[row + 2][col].setVisible(false);
 						movepins[row + 1][col - 1].setVisible(false);
+						movepins[row + 1][col + 1].setVisible(false);
 
 						boards[row + 1][col - 1].remove(boards[row + 1][col - 1].getComponent(1));
 
 						movecount++;
+
+						row = row + 1;
+						col = col - 1;
+
 						pawn.click = false;
 
 						p_board.getParent().validate();
@@ -164,5 +157,55 @@ public class Pawn extends JButton {
 
 			}
 		}
+
+		// 오른쪽 대각선
+		if (boards[row + 1][col + 1].getComponentCount() == 2) {
+			if (((Pawn) boards[row + 1][col + 1].getComponent(1)).side.equals("white")) {
+
+				movepins[row + 1][col + 1].setVisible(true);
+
+				movepins[row + 1][col + 1].addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						boards[row][col].remove(pawn);
+
+						boards[row + 1][col + 1].add(pawn);
+						pawn.setBackground(Color.green);
+
+						movepins[row + 1][col].setVisible(false);
+						movepins[row + 2][col].setVisible(false);
+						movepins[row + 1][col - 1].setVisible(false);
+						movepins[row + 1][col + 1].setVisible(false);
+
+						boards[row + 1][col + 1].remove(boards[row + 1][col + 1].getComponent(1));
+
+						movecount++;
+
+						row = row + 1;
+						col = col + 1;
+
+						pawn.click = false;
+
+						p_board.getParent().validate();
+						p_board.getParent().repaint();
+
+					}
+				});
+
+			}
+		}
+	}
+
+	public void removeAction(JButton movepins[][]) {
+		for (int i = 1; i <= 8; i++) {
+			for (int j = 1; j <= 8; j++) {
+				ActionListener[] listeners = movepins[i][j].getActionListeners();
+				for (int k = 0; k < listeners.length; k++) {
+					movepins[i][j].removeActionListener(listeners[k]);
+				}
+			}
+		}
+
 	}
 }
