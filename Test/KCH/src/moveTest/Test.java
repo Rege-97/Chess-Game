@@ -63,18 +63,22 @@ public class Test extends JFrame {
 
 		this.add(p_board, "Center");
 
-		Pawn white1 = new Pawn("white", 3, 2);
-		boards[3][2].add(white1);
-		Pawn white2 = new Pawn("white", 4, 3);
-		boards[4][3].add(white2);
-		Pawn white3 = new Pawn("white", 4, 5);
-		boards[4][5].add(white3);
-
 		Pawn blackpawns[] = new Pawn[8];
 
 		for (int i = 0; i < 8; i++) {
 			blackpawns[i] = new Pawn("black", 2, i + 1);
+			blackpawns[i].setBackground(Color.white);
 			boards[2][i + 1].add(blackpawns[i]);
+			
+		}
+		
+		Pawn whitepawns[] = new Pawn[8];
+		
+		for (int i = 0; i < 8; i++) {
+			whitepawns[i] = new Pawn("white", 7, i + 1);
+			whitepawns[i].setBackground(Color.white);
+			boards[7][i + 1].add(whitepawns[i]);
+			
 		}
 
 		for (int i = 0; i < 8; i++) {
