@@ -15,15 +15,15 @@ public class Pawn extends JButton {
 	int moverow;
 	int movecol;
 	int movecount;
-	boolean click;
 	boolean live;
+	Test test;
 
-	public Pawn(String side, int row, int col) {
+	public Pawn(String side, int row, int col,Test test) {
 		this.side = side;
 		this.row = row;
 		this.col = col;
 		live = true;
-		click = false;
+		this.test=test;
 
 		setFont(new Font("Default Font", Font.BOLD, 50));
 
@@ -50,7 +50,7 @@ public class Pawn extends JButton {
 				movepins[i][j].setVisible(false);
 			}
 		}
-		
+
 		if (row + 1 > 8) {
 			return;
 
@@ -83,7 +83,7 @@ public class Pawn extends JButton {
 								row = row + 1;
 								col = col - 1;
 
-								pawn.click = false;
+								test.turn = "white";
 
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
@@ -121,7 +121,7 @@ public class Pawn extends JButton {
 								row = row + 1;
 								col = col + 1;
 
-								pawn.click = false;
+								test.turn  = "white";
 
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
@@ -138,14 +138,6 @@ public class Pawn extends JButton {
 			}
 
 			// 앞으로 한칸
-			click = true;
-
-			for (int i = 0; i < pawns.length; i++) {
-				if (pawns[i] != this) {
-					pawns[i].click = false;
-				}
-
-			}
 
 			if (boards[row + 1][col].getComponentCount() != 2) {
 
@@ -173,7 +165,7 @@ public class Pawn extends JButton {
 
 						row = row + 1;
 
-						pawn.click = false;
+						test.turn  = "white";
 
 						p_board.getParent().validate();
 						p_board.getParent().repaint();
@@ -203,7 +195,7 @@ public class Pawn extends JButton {
 
 					row = row + 2;
 
-					pawn.click = false;
+					test.turn  = "white";
 
 					p_board.getParent().validate();
 					p_board.getParent().repaint();
@@ -212,7 +204,7 @@ public class Pawn extends JButton {
 			});
 		}
 	}
-	
+
 	public void WhiteMove(JPanel boards[][], JButton movepins[][], JPanel p_board, Pawn pawns[]) {
 		Pawn pawn = this;
 
@@ -229,7 +221,7 @@ public class Pawn extends JButton {
 				movepins[i][j].setVisible(false);
 			}
 		}
-		
+
 		if (row + 1 > 8) {
 			return;
 
@@ -262,7 +254,7 @@ public class Pawn extends JButton {
 								row = row - 1;
 								col = col - 1;
 
-								pawn.click = false;
+								test.turn  = "black";
 
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
@@ -300,7 +292,7 @@ public class Pawn extends JButton {
 								row = row - 1;
 								col = col + 1;
 
-								pawn.click = false;
+								test.turn  = "black";
 
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
@@ -317,14 +309,6 @@ public class Pawn extends JButton {
 			}
 
 			// 앞으로 한칸
-			click = true;
-
-			for (int i = 0; i < pawns.length; i++) {
-				if (pawns[i] != this) {
-					pawns[i].click = false;
-				}
-
-			}
 
 			if (boards[row - 1][col].getComponentCount() != 2) {
 
@@ -335,7 +319,7 @@ public class Pawn extends JButton {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						boards[row][col].remove(pawn);
-						boards[row -1][col].add(pawn);
+						boards[row - 1][col].add(pawn);
 						pawn.setBackground(Color.white);
 
 						for (int i = 1; i <= 8; i++) {
@@ -351,8 +335,8 @@ public class Pawn extends JButton {
 						movecount++;
 
 						row = row - 1;
-
-						pawn.click = false;
+						
+						test.turn  = "black";
 
 						p_board.getParent().validate();
 						p_board.getParent().repaint();
@@ -371,7 +355,7 @@ public class Pawn extends JButton {
 				public void actionPerformed(ActionEvent e) {
 					boards[row][col].remove(pawn);
 
-					boards[row -2][col].add(pawn);
+					boards[row - 2][col].add(pawn);
 					pawn.setBackground(Color.white);
 
 					movepinsNotVisible(movepins);
@@ -381,8 +365,8 @@ public class Pawn extends JButton {
 					movecount++;
 
 					row = row - 2;
-
-					pawn.click = false;
+					
+					test.turn  = "black";
 
 					p_board.getParent().validate();
 					p_board.getParent().repaint();
@@ -391,7 +375,6 @@ public class Pawn extends JButton {
 			});
 		}
 	}
-
 
 	public void movepinsNotVisible(JButton movepins[][]) {
 		for (int i = 1; i <= 8; i++) {

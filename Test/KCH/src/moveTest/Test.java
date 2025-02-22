@@ -20,6 +20,7 @@ public class Test extends JFrame {
 	JPanel boards[][];
 	JButton bt_pawn;
 	JButton movepins[][];
+	String turn;
 
 	public Test() {
 		super("테스트");
@@ -38,6 +39,8 @@ public class Test extends JFrame {
 				System.exit(0);
 			}
 		});
+
+		turn = "black";
 
 		this.setSize(800, 800);
 		this.setVisible(true);
@@ -62,44 +65,51 @@ public class Test extends JFrame {
 		Pawn blackpawns[] = new Pawn[8];
 
 		for (int i = 0; i < 8; i++) {
-			blackpawns[i] = new Pawn("black", 2, i + 1);
+			blackpawns[i] = new Pawn("black", 2, i + 1,this);
 			blackpawns[i].setBackground(Color.white);
 			boards[2][i + 1].add(blackpawns[i]);
-			
+
 		}
-		
+
 		Pawn whitepawns[] = new Pawn[8];
-		
+
 		for (int i = 0; i < 8; i++) {
-			whitepawns[i] = new Pawn("white", 7, i + 1);
+			whitepawns[i] = new Pawn("white", 7, i + 1,this);
 			whitepawns[i].setBackground(Color.white);
 			boards[7][i + 1].add(whitepawns[i]);
-			
+
 		}
 
-		for (int i = 0; i < 8; i++) {
-			final int index = i;
-			blackpawns[i].addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-
-					blackpawns[index].BlackMove(boards, movepins, p_board, blackpawns);
-				}
-			});
-		}
 		
-		for (int i = 0; i < 8; i++) {
-			final int index = i;
-			whitepawns[i].addActionListener(new ActionListener() {
+			for (int i = 0; i < 8; i++) {
+				final int index = i;
+				blackpawns[i].addActionListener(new ActionListener() {
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (turn.equals("black")) {
+						blackpawns[index].BlackMove(boards, movepins, p_board, blackpawns);
+						}
+					}
+				});
+			}
+		
 
-					whitepawns[index].WhiteMove(boards, movepins, p_board, whitepawns);
-				}
-			});
-		}
+		
+			for (int i = 0; i < 8; i++) {
+				final int index = i;
+				whitepawns[i].addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (turn.equals("white")) {
+						whitepawns[index].WhiteMove(boards, movepins, p_board, whitepawns);
+						}
+						System.out.println(turn);
+					}
+				});
+			}
+		
 
 		this.validate();
 	}
