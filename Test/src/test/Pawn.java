@@ -1,10 +1,11 @@
-package moveTest;
+package test;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -24,7 +25,7 @@ public class Pawn extends JButton {
 		this.col = col;
 		live = true;
 		this.test=test;
-
+		
 		setFont(new Font("Default Font", Font.BOLD, 50));
 
 		if (side.equals("black")) {
