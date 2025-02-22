@@ -1,7 +1,6 @@
 package moveTest;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -10,12 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Test extends JFrame {
@@ -89,6 +85,18 @@ public class Test extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 
 					blackpawns[index].BlackMove(boards, movepins, p_board, blackpawns);
+				}
+			});
+		}
+		
+		for (int i = 0; i < 8; i++) {
+			final int index = i;
+			whitepawns[i].addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+
+					whitepawns[index].WhiteMove(boards, movepins, p_board, whitepawns);
 				}
 			});
 		}
