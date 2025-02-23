@@ -55,7 +55,7 @@ public class Test extends JFrame {
 		for (int i = 1; i <= 8; i++) {
 			for (int j = 1; j <= 8; j++) {
 				movepins[i][j] = new JButton("0");
-				boards[i][j].add(movepins[i][j]);
+				boards[i][j].add(movepins[i][j],"North");
 				movepins[i][j].setVisible(false);
 			}
 		}
@@ -67,7 +67,7 @@ public class Test extends JFrame {
 		for (int i = 0; i < 8; i++) {
 			blackpawns[i] = new Pawn("black", 2, i + 1,this);
 			blackpawns[i].setBackground(Color.white);
-			boards[2][i + 1].add(blackpawns[i]);
+			boards[2][i + 1].add(blackpawns[i],"Center");
 
 		}
 
@@ -76,7 +76,7 @@ public class Test extends JFrame {
 		for (int i = 0; i < 8; i++) {
 			whitepawns[i] = new Pawn("white", 7, i + 1,this);
 			whitepawns[i].setBackground(Color.white);
-			boards[7][i + 1].add(whitepawns[i]);
+			boards[7][i + 1].add(whitepawns[i],"Center");
 
 		}
 
@@ -119,18 +119,18 @@ public class Test extends JFrame {
 
 		for (int i = 1; i <= 8; i++) {
 			for (int j = 1; j <= 8; j++) {
-				boards[i][j] = new JPanel();
+				boards[i][j] = new JPanel(new BorderLayout());
 				if (i % 2 == 0) {
 					if (j % 2 == 0) {
-						boards[i][j].setBackground(Color.yellow);
+						boards[i][j].setBackground(Color.white);
 					} else {
-						boards[i][j].setBackground(Color.gray);
+						boards[i][j].setBackground(Color.darkGray);
 					}
 				} else {
 					if (j % 2 == 0) {
-						boards[i][j].setBackground(Color.gray);
+						boards[i][j].setBackground(Color.darkGray);
 					} else {
-						boards[i][j].setBackground(Color.yellow);
+						boards[i][j].setBackground(Color.white);
 					}
 				}
 				p_board.add(boards[i][j]);
@@ -139,6 +139,7 @@ public class Test extends JFrame {
 	}
 
 	public static void main(String[] args) {
+		System.setProperty("sun.java2d.uiScale", "1");
 		new Test();
 
 	}

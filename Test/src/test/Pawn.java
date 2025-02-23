@@ -1,6 +1,7 @@
 package test;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,31 +19,48 @@ public class Pawn extends JButton {
 	int movecount;
 	boolean live;
 	Test test;
+	ImageIcon icon1,icon2,icon3,icon4;
 
-	public Pawn(String side, int row, int col,Test test) {
+	public Pawn(String side, int row, int col, Test test) {
 		this.side = side;
 		this.row = row;
 		this.col = col;
 		live = true;
-		this.test=test;
-		
+		this.test = test;
+
+		setSize(test.getSize());
+
+		 icon1 = new ImageIcon("image/Pawn-black.png");
+		 icon2 = new ImageIcon("image/Pawn-white.png");
+		 icon3 = new ImageIcon("image/Pawn-black_s.png");
+		 icon4 = new ImageIcon("image/Pawn-white_s.png");
+		 
+
+		setSize(100,100);
+
 		setFont(new Font("Default Font", Font.BOLD, 50));
 
+		setContentAreaFilled(false);
+		setFocusPainted(false);
+		setOpaque(false);
+
 		if (side.equals("black")) {
-			setText("♟");
+			setIcon(icon1);
 		} else if (side.equals("white")) {
-			setText("♙");
+			setIcon(icon2);
 		}
+
 	}
 
 	public void BlackMove(JPanel boards[][], JButton movepins[][], JPanel p_board, Pawn pawns[]) {
 		Pawn pawn = this;
+		
 
 		boolean attack = false;
 
 		for (int i = 0; i < 8; i++) {
 			if (pawns[i] != pawn) {
-				pawns[i].setBackground(Color.white);
+				pawns[i].setIcon(icon1);
 			}
 		}
 
@@ -51,6 +69,7 @@ public class Pawn extends JButton {
 				movepins[i][j].setVisible(false);
 			}
 		}
+		this.setIcon(icon3);
 
 		if (row + 1 > 8) {
 			return;
@@ -72,8 +91,8 @@ public class Pawn extends JButton {
 							public void actionPerformed(ActionEvent e) {
 								boards[row][col].remove(pawn);
 
-								boards[row + 1][col - 1].add(pawn);
-								pawn.setBackground(Color.white);
+								boards[row + 1][col - 1].add(pawn, "Center");
+								pawn.setIcon(icon1);
 
 								movepinsNotVisible(movepins);
 
@@ -110,8 +129,8 @@ public class Pawn extends JButton {
 							public void actionPerformed(ActionEvent e) {
 								boards[row][col].remove(pawn);
 
-								boards[row + 1][col + 1].add(pawn);
-								pawn.setBackground(Color.white);
+								boards[row + 1][col + 1].add(pawn, "Center");
+								pawn.setIcon(icon1);
 
 								boards[row + 1][col + 1].remove(boards[row + 1][col + 1].getComponent(1));
 
@@ -122,7 +141,7 @@ public class Pawn extends JButton {
 								row = row + 1;
 								col = col + 1;
 
-								test.turn  = "white";
+								test.turn = "white";
 
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
@@ -149,8 +168,8 @@ public class Pawn extends JButton {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						boards[row][col].remove(pawn);
-						boards[row + 1][col].add(pawn);
-						pawn.setBackground(Color.white);
+						boards[row + 1][col].add(pawn, "Center");
+						pawn.setIcon(icon1);
 
 						for (int i = 1; i <= 8; i++) {
 							for (int j = 1; j <= 8; j++) {
@@ -166,7 +185,7 @@ public class Pawn extends JButton {
 
 						row = row + 1;
 
-						test.turn  = "white";
+						test.turn = "white";
 
 						p_board.getParent().validate();
 						p_board.getParent().repaint();
@@ -185,8 +204,8 @@ public class Pawn extends JButton {
 				public void actionPerformed(ActionEvent e) {
 					boards[row][col].remove(pawn);
 
-					boards[row + 2][col].add(pawn);
-					pawn.setBackground(Color.white);
+					boards[row + 2][col].add(pawn, "Center");
+					pawn.setIcon(icon1);
 
 					movepinsNotVisible(movepins);
 
@@ -196,7 +215,7 @@ public class Pawn extends JButton {
 
 					row = row + 2;
 
-					test.turn  = "white";
+					test.turn = "white";
 
 					p_board.getParent().validate();
 					p_board.getParent().repaint();
@@ -213,7 +232,7 @@ public class Pawn extends JButton {
 
 		for (int i = 0; i < 8; i++) {
 			if (pawns[i] != pawn) {
-				pawns[i].setBackground(Color.white);
+				pawns[i].setIcon(icon2);
 			}
 		}
 
@@ -222,6 +241,7 @@ public class Pawn extends JButton {
 				movepins[i][j].setVisible(false);
 			}
 		}
+		this.setIcon(icon4);
 
 		if (row + 1 > 8) {
 			return;
@@ -243,8 +263,8 @@ public class Pawn extends JButton {
 							public void actionPerformed(ActionEvent e) {
 								boards[row][col].remove(pawn);
 
-								boards[row - 1][col - 1].add(pawn);
-								pawn.setBackground(Color.white);
+								boards[row - 1][col - 1].add(pawn, "Center");
+								pawn.setIcon(icon2);
 
 								movepinsNotVisible(movepins);
 
@@ -255,7 +275,7 @@ public class Pawn extends JButton {
 								row = row - 1;
 								col = col - 1;
 
-								test.turn  = "black";
+								test.turn = "black";
 
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
@@ -281,8 +301,8 @@ public class Pawn extends JButton {
 							public void actionPerformed(ActionEvent e) {
 								boards[row][col].remove(pawn);
 
-								boards[row - 1][col + 1].add(pawn);
-								pawn.setBackground(Color.white);
+								boards[row - 1][col + 1].add(pawn, "Center");
+								pawn.setIcon(icon2);
 
 								boards[row - 1][col + 1].remove(boards[row - 1][col + 1].getComponent(1));
 
@@ -293,7 +313,7 @@ public class Pawn extends JButton {
 								row = row - 1;
 								col = col + 1;
 
-								test.turn  = "black";
+								test.turn = "black";
 
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
@@ -320,8 +340,8 @@ public class Pawn extends JButton {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						boards[row][col].remove(pawn);
-						boards[row - 1][col].add(pawn);
-						pawn.setBackground(Color.white);
+						boards[row - 1][col].add(pawn, "Center");
+						pawn.setIcon(icon2);
 
 						for (int i = 1; i <= 8; i++) {
 							for (int j = 1; j <= 8; j++) {
@@ -336,8 +356,8 @@ public class Pawn extends JButton {
 						movecount++;
 
 						row = row - 1;
-						
-						test.turn  = "black";
+
+						test.turn = "black";
 
 						p_board.getParent().validate();
 						p_board.getParent().repaint();
@@ -356,8 +376,8 @@ public class Pawn extends JButton {
 				public void actionPerformed(ActionEvent e) {
 					boards[row][col].remove(pawn);
 
-					boards[row - 2][col].add(pawn);
-					pawn.setBackground(Color.white);
+					boards[row - 2][col].add(pawn, "Center");
+					pawn.setIcon(icon2);
 
 					movepinsNotVisible(movepins);
 
@@ -366,8 +386,8 @@ public class Pawn extends JButton {
 					movecount++;
 
 					row = row - 2;
-					
-					test.turn  = "black";
+
+					test.turn = "black";
 
 					p_board.getParent().validate();
 					p_board.getParent().repaint();
@@ -396,4 +416,5 @@ public class Pawn extends JButton {
 		}
 
 	}
+
 }
