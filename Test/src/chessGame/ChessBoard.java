@@ -5,9 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,9 +19,15 @@ public class ChessBoard extends JFrame {
 	JButton bt_pawn;
 	JButton movepins[][];
 	String turn;
+	ImageIcon movepin;
+	ArrayList<ChessPiece> chesspiece_black, chesspiece_white;
 
 	public ChessBoard() {
 		super("테스트");
+
+		this.setSize(800, 800);
+		this.setVisible(true);
+		this.setLayout(new BorderLayout());
 
 		// 화면 중앙 출력
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -31,42 +37,28 @@ public class ChessBoard extends JFrame {
 		setLocation(x, y);
 
 		// 창 닫기
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		// 초기 턴 블랙
 		turn = "black";
 
-		this.setSize(800, 800);
-		this.setVisible(true);
-		this.setLayout(new BorderLayout());
-
+		// 보드 세팅
 		p_board = new JPanel(new GridLayout(8, 8));
-
 		boardSet();
-
-		movepins = new JButton[9][9];
-
-		for (int i = 1; i <= 8; i++) {
-			for (int j = 1; j <= 8; j++) {
-				movepins[i][j] = new JButton("0");
-				boards[i][j].add(movepins[i][j],"North");
-				movepins[i][j].setVisible(false);
-			}
-		}
-
 		this.add(p_board, "Center");
 
-	
+		// 말 배치
+		setChessPiece();
 
 		this.validate();
 	}
 
+	// 체스 보드 그리기
 	public void boardSet() {
+
 		boards = new JPanel[9][9];
+		movepins = new JButton[9][9];
+		movepin = new ImageIcon("image/MovePoint.png");
 
 		for (int i = 1; i <= 8; i++) {
 			for (int j = 1; j <= 8; j++) {
@@ -84,9 +76,34 @@ public class ChessBoard extends JFrame {
 						boards[i][j].setBackground(Color.white);
 					}
 				}
+				movepins[i][j] = new JButton();
+				movepins[i][j].setContentAreaFilled(false);
+				movepins[i][j].setFocusPainted(false);
+				movepins[i][j].setOpaque(false);
+				movepins[i][j].setIcon(movepin);
+				boards[i][j].add(movepins[i][j], "Center");
+				movepins[i][j].setVisible(false);
 				p_board.add(boards[i][j]);
 			}
 		}
+	}
+
+	// 체스 말 그리기
+	public void setChessPiece() {
+		chesspiece_black = new ArrayList<ChessPiece>();
+		chesspiece_white = new ArrayList<ChessPiece>();
+
+		chesspiece_black.add(new Rook("black", 1, 1, this));
+		chesspiece_black.add(new Rook("black", 1, 8, this));
+
+		boards[1][1].add(chesspiece_black.get(0), "Center");
+		boards[1][8].add(chesspiece_black.get(1), "Center");
+
+		chesspiece_white.add(new Rook("white", 8, 1, this));
+		chesspiece_white.add(new Rook("white", 8, 8, this));
+
+		boards[8][1].add(chesspiece_white.get(0), "Center");
+		boards[8][8].add(chesspiece_white.get(1), "Center");
 	}
 
 	public static void main(String[] args) {
