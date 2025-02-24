@@ -1,4 +1,4 @@
-package test;
+package testNgj;
 
 import java.awt.*;
 import javax.swing.*;
@@ -9,8 +9,8 @@ public class MoveTest2 extends JFrame {
     private JPanel pn[] = new JPanel[64];
     private JButton pone1[] = new JButton[8];
     private JPanel panel = new JPanel();
-    private JButton room = new JButton("°¡´É");
-    private JButton tempButton; // ÀÌµ¿ÇÒ ¹öÆ°À» ÀÓ½Ã·Î ÀúÀåÇÒ º¯¼ö
+    private JButton room = new JButton("ï¿½ï¿½ï¿½ï¿½");
+    private JButton tempButton; // ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½Ó½Ã·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     public MoveTest2() {
         setSize(800, 800);
@@ -32,7 +32,7 @@ public class MoveTest2 extends JFrame {
             panel.add(pn[i]);
         }
 
-        // ¹öÆ° ÃÊ±âÈ­
+        // ï¿½ï¿½Æ° ï¿½Ê±ï¿½È­
         for (int i = 0; i < pone1.length; i++) {
             pone1[i] = new JButton("Button " + (i + 1));
             pone1[i].addActionListener(new ButtonActionListener());
@@ -44,9 +44,9 @@ public class MoveTest2 extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Container parent = room.getParent();
                 if (parent != null && tempButton != null) {
-                    parent.remove(room); // "°¡´É" ¹öÆ° Á¦°Å
-                    parent.add(tempButton); // ÀÓ½Ã ¹öÆ°À» ÇØ´ç ÆÐ³Î¿¡ Ãß°¡
-                    tempButton = null; // ÀÓ½Ã º¯¼ö ÃÊ±âÈ­
+                    parent.remove(room); // "ï¿½ï¿½ï¿½ï¿½" ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½
+                    parent.add(tempButton); // ï¿½Ó½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½Ð³Î¿ï¿½ ï¿½ß°ï¿½
+                    tempButton = null; // ï¿½Ó½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
                     revalidate();
                     repaint();
                 }
@@ -62,13 +62,13 @@ public class MoveTest2 extends JFrame {
             JButton button = (JButton) e.getSource();
 
             if (button == pone1[0]) {
-                pn[16].add(room); // "°¡´É" ¹öÆ° Ãß°¡
-                tempButton = button; // ÀÌµ¿ÇÒ ¹öÆ°À» ÀÓ½Ã·Î ÀúÀå
+                pn[16].add(room); // "ï¿½ï¿½ï¿½ï¿½" ï¿½ï¿½Æ° ï¿½ß°ï¿½
+                tempButton = button; // ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½Ó½Ã·ï¿½ ï¿½ï¿½ï¿½ï¿½
                 revalidate();
                 repaint();
 
                 int panelIndex = findPanelIndex(button);
-                System.out.println("¹öÆ°ÀÌ ÀÖ´Â ÆÐ³ÎÀÇ ÀÎµ¦½º: " + panelIndex);
+                System.out.println("ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Ð³ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½: " + panelIndex);
             }
         }
     }
@@ -79,7 +79,7 @@ public class MoveTest2 extends JFrame {
                 return i;
             }
         }
-        return -1; // ¹öÆ°ÀÌ ÆÐ³Î¿¡ ¾øÀ» °æ¿ì
+        return -1; // ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½Ð³Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
     }
 
     private boolean isButtonInPanel(JButton button, JPanel panel) {

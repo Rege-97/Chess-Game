@@ -1,4 +1,4 @@
-package test;
+package testNgj;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +26,7 @@ public class MoveTest extends JFrame {
         button.setBounds(150, 125, 100, 50);
         isButtonClicked = false;
 
-        // ¹öÆ° Å¬¸¯ ¸®½º³Ê
+        // ï¿½ï¿½Æ° Å¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -34,7 +34,7 @@ public class MoveTest extends JFrame {
             }
         });
 
-        // ÆÐ³Î Å¬¸¯ ¸®½º³Ê
+        // ï¿½Ð³ï¿½ Å¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
