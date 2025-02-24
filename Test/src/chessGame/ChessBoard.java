@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -49,11 +51,39 @@ public class ChessBoard extends JFrame {
 
 		// 말 배치
 		setChessPiece();
+		
+		// 블랙 체스말 이벤트
+		for (int i = 0; i < chesspiece_black.size(); i++) {
+			final int index = i;
+			chesspiece_black.get(index).addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (turn.equals("black")) {
+						chesspiece_black.get(index).blackMove(boards, movepins, p_board, chesspiece_black);
+					}
+				}
+			});
+		}
+		
+		// 화이트 체스말 이벤트
+		for (int i = 0; i < chesspiece_white.size(); i++) {
+			final int index = i;
+			chesspiece_white.get(index).addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (turn.equals("white")) {
+						chesspiece_white.get(index).blackMove(boards, movepins, p_board, chesspiece_white);
+					}
+				}
+			});
+		}
 
 		this.validate();
 	}
 
-	// 체스 보드 그리기
+	// 체스 보드 그리기;
 	public void boardSet() {
 
 		boards = new JPanel[9][9];

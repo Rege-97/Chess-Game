@@ -1,13 +1,13 @@
 package chessGame;
 
+import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class Rook extends ChessPiece {
 
-	ImageIcon icon1,icon2,icon3,icon4;
-	
 	public Rook(String side, int row, int col, ChessBoard chessBoard) {
 		this.side = side;
 		this.row = row;
@@ -17,32 +17,46 @@ public class Rook extends ChessPiece {
 
 		setSize(chessBoard.getSize());
 
-		 icon1 = new ImageIcon("image/Rook-black.png");
-		 icon2 = new ImageIcon("image/Rook-white.png");
-		 icon3 = new ImageIcon("image/Rook-black_s.png");
-		 icon4 = new ImageIcon("image/Rook-white_s.png");
+		black_icon = new ImageIcon("image/Rook-black.png");
+		white_icon = new ImageIcon("image/Rook-white.png");
+		black_icon_select = new ImageIcon("image/Rook-black_s.png");
+		white_icon_select = new ImageIcon("image/Rook-white_s.png");
 
 		setContentAreaFilled(false);
 		setFocusPainted(false);
 		setOpaque(false);
 
 		if (side.equals("black")) {
-			setIcon(icon1);
+			setIcon(black_icon);
 		} else if (side.equals("white")) {
-			setIcon(icon2);
+			setIcon(white_icon);
 		}
 
 	}
+
+	public void blackMove(JPanel boards[][], JButton movepins[][], JPanel p_board, ArrayList<ChessPiece> chesspiece) {
+
+		Rook rook = this;
+
+		for (int i = 0; i < chesspiece.size(); i++) {
+			if (chesspiece.get(i) != rook) {
+				chesspiece.get(i).setIcon(chesspiece.get(i).black_icon);
+			}
+		}
+
+		for (int i = 1; i <= 8; i++) {
+			for (int j = 1; j <= 8; j++) {
+				movepins[i][j].setVisible(false);
+			}
+		}
+		this.setIcon(black_icon_select);
+
+	}
 	
-	public void blackMove(JPanel boards[][], JButton movepins[][], JPanel p_board, Rook rooks) {
-		
-		
-		
-		
-		
-		
+	@Override
+	public void whiteMove(JPanel[][] boards, JButton[][] movepins, JPanel p_board, ArrayList<ChessPiece> chesspiece) {
+		// TODO Auto-generated method stub
 		
 	}
-
 
 }
