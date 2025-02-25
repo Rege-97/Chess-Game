@@ -7,18 +7,20 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-abstract public class ChessPiece extends JButton{
+abstract public class ChessPiece extends JButton {
 	String side;
 	int row;
 	int col;
 	boolean live;
 	ChessBoard chessBoard;
-	ImageIcon black_icon, white_icon, black_icon_select, white_icon_select;
-	
-	public abstract void blackMove(JPanel boards[][], JButton movepins[][], JPanel p_board, ArrayList<ChessPiece> chesspiece);
-	
-	public abstract void whiteMove(JPanel boards[][], JButton movepins[][], JPanel p_board, ArrayList<ChessPiece> chesspiece);
-	
+	ImageIcon black_icon, white_icon, black_icon_select, white_icon_select, black_icon_attack, white_icon_attack;
+
+	public abstract void blackMove(JPanel boards[][], JButton movepins[][], JPanel p_board,
+			ArrayList<ChessPiece> chesspiece);
+
+	public abstract void whiteMove(JPanel boards[][], JButton movepins[][], JPanel p_board,
+			ArrayList<ChessPiece> chesspiece);
+
 	public void movepinsNotVisible(JButton movepins[][]) {
 		for (int i = 1; i <= 8; i++) {
 			for (int j = 1; j <= 8; j++) {
