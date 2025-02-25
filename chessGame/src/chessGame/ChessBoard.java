@@ -125,15 +125,19 @@ public class ChessBoard extends JFrame {
 
 		chesspiece_black.add(new Rook("black", 1, 1, this));
 		chesspiece_black.add(new Rook("black", 1, 8, this));
+		chesspiece_black.add(new Rook("black", 2, 4, this));
 
 		boards[1][1].add(chesspiece_black.get(0), "Center");
 		boards[1][8].add(chesspiece_black.get(1), "Center");
+		boards[2][4].add(chesspiece_black.get(2), "Center");
 
 		chesspiece_white.add(new Rook("white", 8, 1, this));
 		chesspiece_white.add(new Rook("white", 8, 8, this));
+		chesspiece_white.add(new Rook("white", 7, 8, this));
 
 		boards[8][1].add(chesspiece_white.get(0), "Center");
 		boards[8][8].add(chesspiece_white.get(1), "Center");
+		boards[7][8].add(chesspiece_white.get(2), "Center");
 	}
 
 	public static void main(String[] args) {
