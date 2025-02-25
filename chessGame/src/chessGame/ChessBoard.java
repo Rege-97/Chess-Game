@@ -60,7 +60,7 @@ public class ChessBoard extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (turn.equals("black")) {
+					if (turn.equals("black") &&chesspiece_black.get(index).isEnabled()&&chesspiece_black.get(index) != null) {
 						chesspiece_black.get(index).blackMove();
 					}
 				}
@@ -74,8 +74,8 @@ public class ChessBoard extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (turn.equals("white")) {
-						chesspiece_white.get(index).whiteMove();
+					if (turn.equals("white") &&chesspiece_white.get(index).isEnabled()&&chesspiece_white.get(index) != null) {
+			                chesspiece_white.get(index).whiteMove();
 					}
 				}
 			});
@@ -112,7 +112,7 @@ public class ChessBoard extends JFrame {
 				movepins[i][j].setFocusPainted(false);
 				movepins[i][j].setOpaque(false);
 				movepins[i][j].setIcon(movepin);
-				boards[i][j].add(movepins[i][j], "Center");
+				boards[i][j].add(movepins[i][j], "North");
 				movepins[i][j].setVisible(false);
 				p_board.add(boards[i][j]);
 			}
