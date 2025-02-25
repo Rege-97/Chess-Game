@@ -60,7 +60,7 @@ public class ChessBoard extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (turn.equals("black") &&chesspiece_black.get(index).isEnabled()&&chesspiece_black.get(index) != null) {
+					if (turn.equals("black") &&chesspiece_black.get(index).isEnabled()) {
 						chesspiece_black.get(index).blackMove();
 					}
 				}
@@ -74,7 +74,7 @@ public class ChessBoard extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (turn.equals("white") &&chesspiece_white.get(index).isEnabled()&&chesspiece_white.get(index) != null) {
+					if (turn.equals("white") &&chesspiece_white.get(index).isEnabled()) {
 			                chesspiece_white.get(index).whiteMove();
 					}
 				}
