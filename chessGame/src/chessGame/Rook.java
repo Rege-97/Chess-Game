@@ -56,74 +56,66 @@ public class Rook extends ChessPiece {
 			chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
 		}
 
-		for (int i = 1; i <= 8; i++) {
-			for (int j = 1; j <= 8; j++) {
-				movepins[i][j].setVisible(false);
-			}
-		}
+		movepinsNotVisible();
+		
 		this.setIcon(black_icon_select);
+		removeAction();
 
-		
 		// 위쪽 이동 무브포인트
-		for (int i = row-1; i >= 1; i--) {
+		for (int i = row - 1; i >= 1; i--) {
 			if (boards[i][col].getComponentCount() != 2) {
 				movepins[i][col].setVisible(true);
-			}else if (boards[i][col].getComponentCount() == 2) {
+			} else if (boards[i][col].getComponentCount() == 2) {
 				if (((ChessPiece) boards[i][col].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[i][col].getComponent(1)).setIcon(white_icon_attack);
 					break;
-				}else {
+				} else {
 					break;
 				}
 			}
 		}
-		
-		
+
 		// 아래쪽 이동 무브포인트
-		for (int i = row+1; i <= 8; i++) {
+		for (int i = row + 1; i <= 8; i++) {
 			if (boards[i][col].getComponentCount() != 2) {
 				movepins[i][col].setVisible(true);
-			}else if (boards[i][col].getComponentCount() == 2) {
+			} else if (boards[i][col].getComponentCount() == 2) {
 				if (((ChessPiece) boards[i][col].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[i][col].getComponent(1)).setIcon(white_icon_attack);
 					break;
-				}else {
+				} else {
 					break;
 				}
 			}
 		}
 
-		
-		
 		// 왼쪽 이동 무브포인트
-		for (int i = col-1; i >= 1; i--) {
-			if(boards[row][i].getComponentCount() != 2) {
+		for (int i = col - 1; i >= 1; i--) {
+			if (boards[row][i].getComponentCount() != 2) {
 				movepins[row][i].setVisible(true);
-			}else if (boards[row][i].getComponentCount() == 2) {
+			} else if (boards[row][i].getComponentCount() == 2) {
 				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[row][i].getComponent(1)).setIcon(white_icon_attack);
 					break;
-				}else {
+				} else {
 					break;
 				}
 			}
 		}
 
-		
 		// 오른쪽 이동 무브포인트
-		for (int i = col+1; i <= 8; i++) {
-			if(boards[row][i].getComponentCount() != 2) {
+		for (int i = col + 1; i <= 8; i++) {
+			if (boards[row][i].getComponentCount() != 2) {
 				movepins[row][i].setVisible(true);
-			}else if (boards[row][i].getComponentCount() == 2) {
+			} else if (boards[row][i].getComponentCount() == 2) {
 				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[row][i].getComponent(1)).setIcon(white_icon_attack);
 					break;
-				}else {
+				} else {
 					break;
 				}
 			}
 		}
-
 
 		for (int i = 1; i <= 8; i++) {
 			for (int j = 1; j <= 8; j++) {
@@ -139,10 +131,8 @@ public class Rook extends ChessPiece {
 							boards[indexrow][indexcol].add(rook, "Center");
 							rook.setIcon(black_icon);
 
-							for (int i = 1; i <= 8; i++) {
-								for (int j = 1; j <= 8; j++) {
-									movepins[i][j].setVisible(false);
-								}
+							for (int i = 0; i < chesspiece_white.size(); i++) {
+								chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
 							}
 
 							movepinsNotVisible();
@@ -157,6 +147,36 @@ public class Rook extends ChessPiece {
 
 						}
 					});
+				} else if (boards[indexrow][indexcol].getComponentCount() == 2) {
+					if ((((ChessPiece) boards[indexrow][indexcol].getComponent(1)).getIcon() == white_icon_attack)) {
+						
+						((ChessPiece) boards[indexrow][indexcol].getComponent(1)).addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								boards[row][col].remove(rook);
+								boards[indexrow][indexcol].remove(boards[indexrow][indexcol].getComponent(1));
+								boards[indexrow][indexcol].add(rook, "Center");
+								rook.setIcon(black_icon);
+								
+								
+								for (int k = 0; k < chesspiece_white.size(); k++) {
+									chesspiece_white.get(k).setIcon(chesspiece_white.get(k).white_icon);
+								}
+								
+								movepinsNotVisible();
+								row = indexrow;
+								col = indexcol;
+
+								chessBoard.turn = "white";
+
+								p_board.getParent().validate();
+								p_board.getParent().repaint();
+								
+							}
+						});
+
+					}
 				}
 			}
 		}
@@ -165,8 +185,6 @@ public class Rook extends ChessPiece {
 
 	@Override
 	public void whiteMove() {
-		// TODO Auto-generated method stub
-
 	}
 
 }
