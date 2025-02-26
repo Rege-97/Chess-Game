@@ -112,7 +112,7 @@ public class ChessBoard extends JFrame {
 				movepins[i][j].setFocusPainted(false);
 				movepins[i][j].setOpaque(false);
 				movepins[i][j].setIcon(movepin);
-				boards[i][j].add(movepins[i][j], "Center");
+				boards[i][j].add(movepins[i][j], "North");
 				movepins[i][j].setVisible(false);
 				p_board.add(boards[i][j]);
 			}
@@ -127,19 +127,51 @@ public class ChessBoard extends JFrame {
 		
 		chesspiece_black.add(new Rook("black", 1, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black.add(new Rook("black", 1, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Rook("black", 2, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black.add(new Pawn("black", 2, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black.add(new Pawn("black", 2, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black.add(new Pawn("black", 2, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black.add(new Pawn("black", 2, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black.add(new Pawn("black", 2, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black.add(new Pawn("black", 2, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black.add(new Pawn("black", 2, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black.add(new Pawn("black", 2, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 
 		boards[1][1].add(chesspiece_black.get(0), "Center");
 		boards[1][8].add(chesspiece_black.get(1), "Center");
-		boards[2][4].add(chesspiece_black.get(2), "Center");
+		boards[2][1].add(chesspiece_black.get(2), "Center");
+		boards[2][2].add(chesspiece_black.get(3), "Center");
+		boards[2][3].add(chesspiece_black.get(4), "Center");
+		boards[2][4].add(chesspiece_black.get(5), "Center");
+		boards[2][5].add(chesspiece_black.get(6), "Center");
+		boards[2][6].add(chesspiece_black.get(7), "Center");
+		boards[2][7].add(chesspiece_black.get(8), "Center");
+		boards[2][8].add(chesspiece_black.get(9), "Center");
+		
+		
 
 		chesspiece_white.add(new Rook("white", 8, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_white.add(new Rook("white", 8, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Rook("white", 7, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white.add(new Pawn("white", 7, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white.add(new Pawn("white", 7, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white.add(new Pawn("white", 7, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white.add(new Pawn("white", 7, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white.add(new Pawn("white", 7, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white.add(new Pawn("white", 7, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white.add(new Pawn("white", 7, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white.add(new Pawn("white", 7, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+
 
 		boards[8][1].add(chesspiece_white.get(0), "Center");
 		boards[8][8].add(chesspiece_white.get(1), "Center");
-		boards[7][8].add(chesspiece_white.get(2), "Center");
+		boards[7][1].add(chesspiece_white.get(2), "Center");
+		boards[7][2].add(chesspiece_white.get(3), "Center");
+		boards[7][3].add(chesspiece_white.get(4), "Center");
+		boards[7][4].add(chesspiece_white.get(5), "Center");
+		boards[7][5].add(chesspiece_white.get(6), "Center");
+		boards[7][6].add(chesspiece_white.get(7), "Center");
+		boards[7][7].add(chesspiece_white.get(8), "Center");
+		boards[7][8].add(chesspiece_white.get(9), "Center");
+		
 	}
 
 	public static void main(String[] args) {
