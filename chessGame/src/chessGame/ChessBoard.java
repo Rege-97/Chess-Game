@@ -53,6 +53,8 @@ public class ChessBoard extends JFrame {
 		// 말 배치
 		setChessPiece();
 		
+
+
 		// 블랙 체스말 이벤트
 		for (int i = 0; i < chesspiece_black.size(); i++) {
 			final int index = i;
@@ -60,7 +62,7 @@ public class ChessBoard extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (turn.equals("black")) {
+					if (turn.equals("black") &&chesspiece_black.get(index).isEnabled()) {
 						chesspiece_black.get(index).blackMove();
 					}
 				}
@@ -74,13 +76,12 @@ public class ChessBoard extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (turn.equals("white")) {
-						chesspiece_white.get(index).whiteMove();
+					if (turn.equals("white") &&chesspiece_white.get(index).isEnabled()) {
+			                chesspiece_white.get(index).whiteMove();
 					}
 				}
 			});
 		}
-
 		this.validate();
 	}
 
