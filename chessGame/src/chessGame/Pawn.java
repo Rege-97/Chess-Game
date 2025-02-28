@@ -87,7 +87,7 @@ public class Pawn extends ChessPiece {
 			for (int i = row + 1; i <= row + 1; i++) {
 				if (col+1<=8&&boards[i][col + 1].getComponentCount() == 2) {
 					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("white")) {
-						((ChessPiece) boards[i][col + 1].getComponent(1)).setIcon(white_icon_attack);
+						((ChessPiece) boards[i][col + 1].getComponent(1)).setIcon(((ChessPiece) boards[i][col + 1].getComponent(1)).white_icon_attack);
 						break;
 					} else {
 						break;
@@ -99,7 +99,7 @@ public class Pawn extends ChessPiece {
 			for (int i = row + 1; i <= row + 1; i++) {
 				if (col-1>=1&&boards[i][col - 1].getComponentCount() == 2) {
 					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("white")) {
-						((ChessPiece) boards[i][col - 1].getComponent(1)).setIcon(white_icon_attack);
+						((ChessPiece) boards[i][col - 1].getComponent(1)).setIcon(((ChessPiece) boards[i][col - 1].getComponent(1)).white_icon_attack);
 						break;
 					} else {
 						break;
@@ -117,7 +117,7 @@ public class Pawn extends ChessPiece {
 			for (int i = row + 1; i <= row + 1; i++) {
 				if (col+1<=8&&boards[i][col + 1].getComponentCount() == 2) {
 					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("white")) {
-						((ChessPiece) boards[i][col + 1].getComponent(1)).setIcon(white_icon_attack);
+						((ChessPiece) boards[i][col + 1].getComponent(1)).setIcon(((ChessPiece) boards[i][col + 1].getComponent(1)).white_icon_attack);
 						break;
 					} else {
 						break;
@@ -129,7 +129,7 @@ public class Pawn extends ChessPiece {
 			for (int i = row + 1; i <= row + 1; i++) {
 				if (col-1>=1&&boards[i][col - 1].getComponentCount() == 2) {
 					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("white")) {
-						((ChessPiece) boards[i][col - 1].getComponent(1)).setIcon(white_icon_attack);
+						((ChessPiece) boards[i][col - 1].getComponent(1)).setIcon(((ChessPiece) boards[i][col - 1].getComponent(1)).white_icon_attack);
 						break;
 					} else {
 						break;
@@ -294,7 +294,7 @@ public class Pawn extends ChessPiece {
 			for (int i = row - 1; i >= row - 1; i--) {
 				if (col+1<=8&&boards[i][col + 1].getComponentCount() == 2) {
 					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("black")) {
-						((ChessPiece) boards[i][col + 1].getComponent(1)).setIcon(black_icon_attack);
+						((ChessPiece) boards[i][col + 1].getComponent(1)).setIcon(((ChessPiece) boards[i][col + 1].getComponent(1)).black_icon_attack);
 						break;
 					} else {
 						break;
@@ -305,7 +305,7 @@ public class Pawn extends ChessPiece {
 			for (int i = row - 1; i >= row - 1; i--) {
 				if (col-1>=1&&boards[i][col - 1].getComponentCount() == 2) {
 					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("black")) {
-						((ChessPiece) boards[i][col - 1].getComponent(1)).setIcon(black_icon_attack);
+						((ChessPiece) boards[i][col - 1].getComponent(1)).setIcon(((ChessPiece) boards[i][col - 1].getComponent(1)).black_icon_attack);
 						break;
 					} else {
 						break;
@@ -322,7 +322,7 @@ public class Pawn extends ChessPiece {
 			for (int i = row - 1; i >= row - 1; i--) {
 				if (col+1<=8&&boards[i][col + 1].getComponentCount() == 2) {
 					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("black")) {
-						((ChessPiece) boards[i][col + 1].getComponent(1)).setIcon(black_icon_attack);
+						((ChessPiece) boards[i][col + 1].getComponent(1)).setIcon(((ChessPiece) boards[i][col + 1].getComponent(1)).black_icon_attack);
 						break;
 					} else {
 						break;
@@ -333,7 +333,7 @@ public class Pawn extends ChessPiece {
 			for (int i = row - 1; i >= row - 1; i--) {
 				if (col-1>=1&&boards[i][col - 1].getComponentCount() == 2) {
 					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("black")) {
-						((ChessPiece) boards[i][col - 1].getComponent(1)).setIcon(black_icon_attack);
+						((ChessPiece) boards[i][col - 1].getComponent(1)).setIcon(((ChessPiece) boards[i][col - 1].getComponent(1)).black_icon_attack);
 						break;
 					} else {
 						break;
