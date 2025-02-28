@@ -8,15 +8,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class Rook extends ChessPiece {
-	Rook rook;
+public class Pawn extends ChessPiece {
+	Pawn pawn;
+	int movecount;
 	boolean attack;
 	ActionListener attackListener;
 	ArrayList<ActionListener> attackListeners;
 
-	public Rook(String side, int row, int col, ChessBoard chessBoard, JPanel boards[][], JButton movepins[][],
+	public Pawn(String side, int row, int col, ChessBoard chessBoard, JPanel boards[][], JButton movepins[][],
 			JPanel p_board, ArrayList<ChessPiece> chesspiece_black, ArrayList<ChessPiece> chesspiece_white) {
-		// 초기 세팅
 		this.side = side;
 		this.row = row;
 		this.col = col;
@@ -28,27 +28,24 @@ public class Rook extends ChessPiece {
 		this.chesspiece_black = chesspiece_black;
 		this.chesspiece_white = chesspiece_white;
 
-		black_icon = new ImageIcon("image/Rook-black.png");
+		setSize(chessBoard.getSize());
+
+		black_icon = new ImageIcon("image/Pawn-black.png");
 		black_icon.setDescription("black_icon");
-
-		white_icon = new ImageIcon("image/Rook-white.png");
+		white_icon = new ImageIcon("image/Pawn-white.png");
 		white_icon.setDescription("white_icon");
-
-		black_icon_select = new ImageIcon("image/Rook-black_s.png");
+		black_icon_select = new ImageIcon("image/Pawn-black_s.png");
 		black_icon_select.setDescription("black_icon_select");
-
-		white_icon_select = new ImageIcon("image/Rook-white_s.png");
+		white_icon_select = new ImageIcon("image/Pawn-white_s.png");
 		white_icon_select.setDescription("white_icon_select");
-
-		black_icon_attack = new ImageIcon("image/Rook-black_a.png");
+		black_icon_attack = new ImageIcon("image/Pawn-black_a.png");
 		black_icon_attack.setDescription("black_icon_attack");
-
-		white_icon_attack = new ImageIcon("image/Rook-white_a.png");
+		white_icon_attack = new ImageIcon("image/Pawn-white_a.png");
 		white_icon_attack.setDescription("white_icon_attack");
 
-		setContentAreaFilled(false);
-		setFocusPainted(false);
-		setOpaque(false);
+		setContentAreaFilled(false);// 내용을 채우지 않음
+		setFocusPainted(false);// 포커스테두리가 안그려지도록
+		setOpaque(false);// 버튼을 투명하게
 
 		if (side.equals("black")) {
 			setIcon(black_icon);
@@ -61,16 +58,14 @@ public class Rook extends ChessPiece {
 
 	@Override
 	public void blackMove() {
-		// 나 자신 세팅
-		rook = this;
+		pawn = this;
 
-		// 공격 유무 세팅
 		attack = false;
 		attackListener = null;
 
-		// 버튼 클릭 시 초기화
+		// size가 뭘까
 		for (int i = 0; i < chesspiece_black.size(); i++) {
-			if (chesspiece_black.get(i) != rook) {
+			if (chesspiece_black.get(i) != pawn) {
 				chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
 			}
 		}
@@ -83,66 +78,75 @@ public class Rook extends ChessPiece {
 		movepinsNotVisible();
 		removeAction();
 
-		// 위쪽 이동 무브포인트 및 공격 말 탐색
-		for (int i = row - 1; i >= 1; i--) {
-			if (boards[i][col].getComponentCount() == 1) {
-				movepins[i][col].setVisible(true);
-			} else if (boards[i][col].getComponentCount() == 2) {
-				ChessPiece cp = (ChessPiece) boards[i][col].getComponent(1);
-				if (cp.side.equals("white")) {
-					cp.setIcon(white_icon_attack);
+		// 처음 움직일 때 무브포인트 탐색
+		if (row == 2) {
+			for (int i = row + 1; i <= row + 2; i++) {
+				if (boards[i][col].getComponentCount() == 1) {
+					movepins[i][col].setVisible(true);
+				} 
+				if (boards[row+1][col].getComponentCount() == 2) {
+					movepins[row+2][col].setVisible(false);
 				}
-				break;
+			}
+			for (int i = row + 1; i <= row + 1; i++) {
+				if (col+1<=8&&boards[i][col + 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("white")) {
+						((ChessPiece) boards[i][col + 1].getComponent(1)).setIcon(white_icon_attack);
+						break;
+					} else {
+						break;
+					}
+
+				}
+			}
+
+			for (int i = row + 1; i <= row + 1; i++) {
+				if (col-1>=1&&boards[i][col - 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("white")) {
+						((ChessPiece) boards[i][col - 1].getComponent(1)).setIcon(white_icon_attack);
+						break;
+					} else {
+						break;
+					}
+
+				}
+			}
+		} else if (row != 2) {
+			// 처음 이후 무브 포인트 탐색
+			for (int i = row + 1; i <= row + 1; i++) {
+				if (boards[i][col].getComponentCount() == 1) {
+					movepins[i][col].setVisible(true);
+				} 
+			}
+			for (int i = row + 1; i <= row + 1; i++) {
+				if (col+1<=8&&boards[i][col + 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("white")) {
+						((ChessPiece) boards[i][col + 1].getComponent(1)).setIcon(white_icon_attack);
+						break;
+					} else {
+						break;
+					}
+
+				}
+			}
+
+			for (int i = row + 1; i <= row + 1; i++) {
+				if (col-1>=1&&boards[i][col - 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("white")) {
+						((ChessPiece) boards[i][col - 1].getComponent(1)).setIcon(white_icon_attack);
+						break;
+					} else {
+						break;
+					}
+
+				}
 			}
 		}
 
-		// 아래쪽 이동 무브포인트 및 공격 말 탐색
-		for (int i = row + 1; i <= 8; i++) {
-			if (boards[i][col].getComponentCount() == 1) {
-				movepins[i][col].setVisible(true);
-			} else if (boards[i][col].getComponentCount() == 2) {
-				if (((ChessPiece) boards[i][col].getComponent(1)).side.equals("white")) {
-					((ChessPiece) boards[i][col].getComponent(1)).setIcon(white_icon_attack);
-					break;
-				} else {
-					break;
-				}
-			}
-		}
-
-		// 왼쪽 이동 무브포인트 및 공격 말 탐색
-		for (int i = col - 1; i >= 1; i--) {
-			if (boards[row][i].getComponentCount() == 1) {
-				movepins[row][i].setVisible(true);
-			} else if (boards[row][i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("white")) {
-					((ChessPiece) boards[row][i].getComponent(1)).setIcon(white_icon_attack);
-					break;
-				} else {
-					break;
-				}
-			}
-		}
-
-		// 오른쪽 이동 무브포인트 및 공격 말 탐색
-		for (int i = col + 1; i <= 8; i++) {
-			if (boards[row][i].getComponentCount() == 1) {
-				movepins[row][i].setVisible(true);
-			} else if (boards[row][i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("white")) {
-					((ChessPiece) boards[row][i].getComponent(1)).setIcon(white_icon_attack);
-					break;
-				} else {
-					break;
-				}
-			}
-		}
-
-		// 공격 액션
+		// 공격
 		for (int i = 1; i <= 8; i++) {
 			for (int j = 1; j <= 8; j++) {
 				if (boards[i][j].getComponentCount() == 2) {
-
 					final int indexrow = i;
 					final int indexcol = j;
 					// 조건 : 현재 보드에 아이콘이 공격으로 바뀐 상대 말의 위치
@@ -151,12 +155,11 @@ public class Rook extends ChessPiece {
 
 						// 해당 액션리스너를 나중에 지우기 위해 따로 공격용 이벤트 변수를 만들어 저장
 						attackListener = new ActionListener() {
-
 							@Override
 							public void actionPerformed(ActionEvent e) {
 
-								// 조건에 충족된 위치의 말이 체스말 모음에서 몇번 인덱스인지 확인 후 해당 말 비활성화
 								int check = 0;
+								// 조건에 충족된 위치의 말이 체스말 모음에서 몇번 인덱스인지 확인 후 해당 말 비활성화
 								for (int z = 0; z < chesspiece_white.size(); z++) {
 									if (chesspiece_white
 											.get(z) == ((ChessPiece) boards[indexrow][indexcol].getComponent(1))) {
@@ -166,9 +169,9 @@ public class Rook extends ChessPiece {
 								}
 
 								// 기준 위치에서 아군말 제거 후 이동할 위치에 상대말 제거 후 아군말 이동 위치로 추가
-								boards[row][col].remove(rook);
+								boards[row][col].remove(pawn);
 								boards[indexrow][indexcol].remove(chesspiece_white.get(check));
-								boards[indexrow][indexcol].add(rook, "Center");
+								boards[indexrow][indexcol].add(pawn, "Center");
 
 								// 공격이 끝나면 모든 아군말을 일반 아이콘으로 전환
 								for (int k = 0; k < chesspiece_black.size(); k++) {
@@ -195,16 +198,19 @@ public class Rook extends ChessPiece {
 								removeAttackBlack();
 
 							}
-
 						};
+
 						// 조건에 맞는 위치의 상대 말에 액션 이벤트 추가 후 어택 리스너 모음에 저장
 						((ChessPiece) boards[i][j].getComponent(1)).addActionListener(attackListener);
 						attackListeners.add(attackListener);
 
 					}
 				}
+
 			}
+
 		}
+
 		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
 		removeAction();
 
@@ -223,8 +229,8 @@ public class Rook extends ChessPiece {
 							public void actionPerformed(ActionEvent e) {
 
 								// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
-								boards[row][col].remove(rook);
-								boards[indexrow][indexcol].add(rook, "Center");
+								boards[row][col].remove(pawn);
+								boards[indexrow][indexcol].add(pawn, "Center");
 
 								// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
 								for (int k = 0; k < chesspiece_black.size(); k++) {
@@ -259,16 +265,14 @@ public class Rook extends ChessPiece {
 
 	@Override
 	public void whiteMove() {
-		// 나 자신 세팅
-		rook = this;
+		pawn = this;
 
-		// 공격 유무 세팅
 		attack = false;
 		attackListener = null;
 
-		// 버튼 클릭 시 초기화
+		// 버튼 클릭시 초기화
 		for (int i = 0; i < chesspiece_white.size(); i++) {
-			if (chesspiece_white.get(i) != rook) {
+			if (chesspiece_white.get(i) != pawn) {
 				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
 			}
 		}
@@ -281,66 +285,71 @@ public class Rook extends ChessPiece {
 		movepinsNotVisible();
 		removeAction();
 
-		// 위쪽 이동 무브포인트 및 공격 말 탐색
-		for (int i = row - 1; i >= 1; i--) {
-			if (boards[i][col].getComponentCount() == 1) {
-				movepins[i][col].setVisible(true);
-			} else if (boards[i][col].getComponentCount() == 2) {
-				ChessPiece cp = (ChessPiece) boards[i][col].getComponent(1);
-				if (cp.side.equals("black")) {
-					cp.setIcon(black_icon_attack);
+		// 처음 움직일 때 무브포인트 탐색
+		if (row == 7) {
+			for (int i = row - 1; i >= row - 2; i--) {
+				if (boards[i][col].getComponentCount() == 1) {
+					movepins[i][col].setVisible(true);
+				} 
+				if (boards[row-1][col].getComponentCount() == 2) {
+					movepins[row-2][col].setVisible(false);
 				}
-				break;
+			}
+			for (int i = row - 1; i >= row - 1; i--) {
+				if (col+1<=8&&boards[i][col + 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("black")) {
+						((ChessPiece) boards[i][col + 1].getComponent(1)).setIcon(black_icon_attack);
+						break;
+					} else {
+						break;
+					}
+
+				}
+			}
+			for (int i = row - 1; i >= row - 1; i--) {
+				if (col-1>=1&&boards[i][col - 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("black")) {
+						((ChessPiece) boards[i][col - 1].getComponent(1)).setIcon(black_icon_attack);
+						break;
+					} else {
+						break;
+					}
+				}
+			}
+		} else if (row != 7) {
+			// 처음 이후 무브 포인트 탐색
+			for (int i = row - 1; i >= row - 1; i--) {
+				if (boards[i][col].getComponentCount() == 1) {
+					movepins[i][col].setVisible(true);
+				} 
+			}
+			for (int i = row - 1; i >= row - 1; i--) {
+				if (col+1<=8&&boards[i][col + 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("black")) {
+						((ChessPiece) boards[i][col + 1].getComponent(1)).setIcon(black_icon_attack);
+						break;
+					} else {
+						break;
+					}
+
+				}
+			}
+			for (int i = row - 1; i >= row - 1; i--) {
+				if (col-1>=1&&boards[i][col - 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("black")) {
+						((ChessPiece) boards[i][col - 1].getComponent(1)).setIcon(black_icon_attack);
+						break;
+					} else {
+						break;
+					}
+				}
 			}
 		}
 
-		// 아래쪽 이동 무브포인트 및 공격 말 탐색
-		for (int i = row + 1; i <= 8; i++) {
-			if (boards[i][col].getComponentCount() == 1) {
-				movepins[i][col].setVisible(true);
-			} else if (boards[i][col].getComponentCount() == 2) {
-				if (((ChessPiece) boards[i][col].getComponent(1)).side.equals("black")) {
-					((ChessPiece) boards[i][col].getComponent(1)).setIcon(black_icon_attack);
-					break;
-				} else {
-					break;
-				}
-			}
-		}
-
-		// 왼쪽 이동 무브포인트 및 공격 말 탐색
-		for (int i = col - 1; i >= 1; i--) {
-			if (boards[row][i].getComponentCount() == 1) {
-				movepins[row][i].setVisible(true);
-			} else if (boards[row][i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("black")) {
-					((ChessPiece) boards[row][i].getComponent(1)).setIcon(black_icon_attack);
-					break;
-				} else {
-					break;
-				}
-			}
-		}
-
-		// 오른쪽 이동 무브포인트 및 공격 말 탐색
-		for (int i = col + 1; i <= 8; i++) {
-			if (boards[row][i].getComponentCount() == 1) {
-				movepins[row][i].setVisible(true);
-			} else if (boards[row][i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("black")) {
-					((ChessPiece) boards[row][i].getComponent(1)).setIcon(black_icon_attack);
-					break;
-				} else {
-					break;
-				}
-			}
-		}
-
-		// 공격 액션
+		// 공격
 		for (int i = 1; i <= 8; i++) {
 			for (int j = 1; j <= 8; j++) {
 				if (boards[i][j].getComponentCount() == 2) {
-
 					final int indexrow = i;
 					final int indexcol = j;
 					// 조건 : 현재 보드에 아이콘이 공격으로 바뀐 상대 말의 위치
@@ -349,12 +358,11 @@ public class Rook extends ChessPiece {
 
 						// 해당 액션리스너를 나중에 지우기 위해 따로 공격용 이벤트 변수를 만들어 저장
 						attackListener = new ActionListener() {
-
 							@Override
 							public void actionPerformed(ActionEvent e) {
 
-								// 조건에 충족된 위치의 말이 체스말 모음에서 몇번 인덱스인지 확인 후 해당 말 비활성화
 								int check = 0;
+								// 조건에 충족된 위치의 말이 체스말 모음에서 몇번 인덱스인지 확인 후 해당 말 비활성화
 								for (int z = 0; z < chesspiece_black.size(); z++) {
 									if (chesspiece_black
 											.get(z) == ((ChessPiece) boards[indexrow][indexcol].getComponent(1))) {
@@ -364,9 +372,9 @@ public class Rook extends ChessPiece {
 								}
 
 								// 기준 위치에서 아군말 제거 후 이동할 위치에 상대말 제거 후 아군말 이동 위치로 추가
-								boards[row][col].remove(rook);
+								boards[row][col].remove(pawn);
 								boards[indexrow][indexcol].remove(chesspiece_black.get(check));
-								boards[indexrow][indexcol].add(rook, "Center");
+								boards[indexrow][indexcol].add(pawn, "Center");
 
 								// 공격이 끝나면 모든 아군말을 일반 아이콘으로 전환
 								for (int k = 0; k < chesspiece_white.size(); k++) {
@@ -390,18 +398,22 @@ public class Rook extends ChessPiece {
 								attack = true;
 
 								// 사용 했거나 하지 않은 어택 리스너 제거
-								removeAttackWhite();
-							}
+								removeAttackBlack();
 
+							}
 						};
+
 						// 조건에 맞는 위치의 상대 말에 액션 이벤트 추가 후 어택 리스너 모음에 저장
 						((ChessPiece) boards[i][j].getComponent(1)).addActionListener(attackListener);
 						attackListeners.add(attackListener);
 
 					}
 				}
+
 			}
+
 		}
+
 		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
 		removeAction();
 
@@ -420,8 +432,8 @@ public class Rook extends ChessPiece {
 							public void actionPerformed(ActionEvent e) {
 
 								// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
-								boards[row][col].remove(rook);
-								boards[indexrow][indexcol].add(rook, "Center");
+								boards[row][col].remove(pawn);
+								boards[indexrow][indexcol].add(pawn, "Center");
 
 								// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
 								for (int k = 0; k < chesspiece_white.size(); k++) {
@@ -429,7 +441,7 @@ public class Rook extends ChessPiece {
 								}
 
 								// 사용 안한 어택 리스너 제거
-								removeAttackWhite();
+								removeAttackBlack();
 
 								// 무브핀 초기화
 								movepinsNotVisible();
@@ -486,5 +498,4 @@ public class Rook extends ChessPiece {
 		attackListeners.clear();
 
 	}
-
 }
