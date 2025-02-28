@@ -57,7 +57,7 @@ abstract public class ChessPiece extends JButton {
 			// 모든 상대 체스말을 순회하며 해당 리스너가 존재하면 제거 후 기본 아이콘으로 변경
 			for (int j = 0; j < chesspiece_white.size(); j++) {
 				chesspiece_white.get(j).removeActionListener(listener);
-				chesspiece_white.get(j).setIcon(white_icon);
+				chesspiece_white.get(j).setIcon(chesspiece_white.get(j).white_icon);
 			}
 		}
 		// 리스트 초기화
@@ -73,7 +73,7 @@ abstract public class ChessPiece extends JButton {
 			// 모든 상대 체스말을 순회하며 해당 리스너가 존재하면 제거 후 기본 아이콘으로 변경
 			for (int j = 0; j < chesspiece_black.size(); j++) {
 				chesspiece_black.get(j).removeActionListener(listener);
-				chesspiece_black.get(j).setIcon(black_icon);
+				chesspiece_black.get(j).setIcon(chesspiece_black.get(j).black_icon);
 			}
 		}
 		// 리스트 초기화

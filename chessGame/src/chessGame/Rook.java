@@ -87,7 +87,7 @@ public class Rook extends ChessPiece {
 			} else if (boards[i][col].getComponentCount() == 2) {
 				ChessPiece cp = (ChessPiece) boards[i][col].getComponent(1);
 				if (cp.side.equals("white")) {
-					cp.setIcon(white_icon_attack);
+					cp.setIcon(cp.white_icon_attack);
 				}
 				break;
 			}
@@ -99,7 +99,7 @@ public class Rook extends ChessPiece {
 				movepins[i][col].setVisible(true);
 			} else if (boards[i][col].getComponentCount() == 2) {
 				if (((ChessPiece) boards[i][col].getComponent(1)).side.equals("white")) {
-					((ChessPiece) boards[i][col].getComponent(1)).setIcon(white_icon_attack);
+					((ChessPiece) boards[i][col].getComponent(1)).setIcon(((ChessPiece) boards[i][col].getComponent(1)).white_icon_attack);
 					break;
 				} else {
 					break;
@@ -113,7 +113,7 @@ public class Rook extends ChessPiece {
 				movepins[row][i].setVisible(true);
 			} else if (boards[row][i].getComponentCount() == 2) {
 				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("white")) {
-					((ChessPiece) boards[row][i].getComponent(1)).setIcon(white_icon_attack);
+					((ChessPiece) boards[row][i].getComponent(1)).setIcon(((ChessPiece) boards[row][i].getComponent(1)).white_icon_attack);
 					break;
 				} else {
 					break;
@@ -127,7 +127,7 @@ public class Rook extends ChessPiece {
 				movepins[row][i].setVisible(true);
 			} else if (boards[row][i].getComponentCount() == 2) {
 				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("white")) {
-					((ChessPiece) boards[row][i].getComponent(1)).setIcon(white_icon_attack);
+					((ChessPiece) boards[row][i].getComponent(1)).setIcon(((ChessPiece) boards[row][i].getComponent(1)).white_icon_attack);
 					break;
 				} else {
 					break;
@@ -285,7 +285,7 @@ public class Rook extends ChessPiece {
 			} else if (boards[i][col].getComponentCount() == 2) {
 				ChessPiece cp = (ChessPiece) boards[i][col].getComponent(1);
 				if (cp.side.equals("black")) {
-					cp.setIcon(black_icon_attack);
+					cp.setIcon(cp.black_icon_attack);
 				}
 				break;
 			}
@@ -297,7 +297,7 @@ public class Rook extends ChessPiece {
 				movepins[i][col].setVisible(true);
 			} else if (boards[i][col].getComponentCount() == 2) {
 				if (((ChessPiece) boards[i][col].getComponent(1)).side.equals("black")) {
-					((ChessPiece) boards[i][col].getComponent(1)).setIcon(black_icon_attack);
+					((ChessPiece) boards[i][col].getComponent(1)).setIcon(((ChessPiece) boards[i][col].getComponent(1)).black_icon_attack);
 					break;
 				} else {
 					break;
@@ -311,7 +311,7 @@ public class Rook extends ChessPiece {
 				movepins[row][i].setVisible(true);
 			} else if (boards[row][i].getComponentCount() == 2) {
 				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("black")) {
-					((ChessPiece) boards[row][i].getComponent(1)).setIcon(black_icon_attack);
+					((ChessPiece) boards[row][i].getComponent(1)).setIcon(((ChessPiece) boards[row][i].getComponent(1)).black_icon_attack);
 					break;
 				} else {
 					break;
@@ -325,7 +325,7 @@ public class Rook extends ChessPiece {
 				movepins[row][i].setVisible(true);
 			} else if (boards[row][i].getComponentCount() == 2) {
 				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("black")) {
-					((ChessPiece) boards[row][i].getComponent(1)).setIcon(black_icon_attack);
+					((ChessPiece) boards[row][i].getComponent(1)).setIcon(((ChessPiece) boards[row][i].getComponent(1)).black_icon_attack);
 					break;
 				} else {
 					break;
