@@ -10,9 +10,6 @@ import javax.swing.JPanel;
 
 public class Rook extends ChessPiece {
 	Rook rook;
-	boolean attack;
-	ActionListener attackListener;
-	ArrayList<ActionListener> attackListeners;
 
 	public Rook(String side, int row, int col, ChessBoard chessBoard, JPanel boards[][], JButton movepins[][],
 			JPanel p_board, ArrayList<ChessPiece> chesspiece_black, ArrayList<ChessPiece> chesspiece_white) {
@@ -451,39 +448,6 @@ public class Rook extends ChessPiece {
 				}
 			}
 		}
-
-	}
-
-	// blackMove()용 어택 리스너 제거 메서드
-	public void removeAttackBlack() {
-		// 공격대상이 여러개일 경우 리스너는 등록되지만 수행이 안되는 경우가 있기 떄문에
-		// 모든 공격 기능을 수행 후 현재 등록된 모든 리스너는 삭제
-		for (int i = 0; i < attackListeners.size(); i++) {
-			ActionListener listener = attackListeners.get(i);
-			// 모든 상대 체스말을 순회하며 해당 리스너가 존재하면 제거 후 기본 아이콘으로 변경
-			for (int j = 0; j < chesspiece_white.size(); j++) {
-				chesspiece_white.get(j).removeActionListener(listener);
-				chesspiece_white.get(j).setIcon(white_icon);
-			}
-		}
-		// 리스트 초기화
-		attackListeners.clear();
-	}
-
-	// whiteMove()용 어택 리스너 제거 메서드
-	public void removeAttackWhite() {
-		// 공격대상이 여러개일 경우 리스너는 등록되지만 수행이 안되는 경우가 있기 떄문에
-		// 모든 공격 기능을 수행 후 현재 등록된 모든 리스너는 삭제
-		for (int i = 0; i < attackListeners.size(); i++) {
-			ActionListener listener = attackListeners.get(i);
-			// 모든 상대 체스말을 순회하며 해당 리스너가 존재하면 제거 후 기본 아이콘으로 변경
-			for (int j = 0; j < chesspiece_black.size(); j++) {
-				chesspiece_black.get(j).removeActionListener(listener);
-				chesspiece_black.get(j).setIcon(black_icon);
-			}
-		}
-		// 리스트 초기화
-		attackListeners.clear();
 
 	}
 
