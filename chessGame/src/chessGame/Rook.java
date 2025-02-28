@@ -180,11 +180,13 @@ public class Rook extends ChessPiece {
 			if (boards[i][col].getComponentCount() == 1) {
 				movepins[i][col].setVisible(true);
 			} else if (boards[i][col].getComponentCount() == 2) {
-				ChessPiece cp = (ChessPiece) boards[i][col].getComponent(1);
-				if (cp.side.equals("black")) {
-					cp.setIcon(cp.black_icon_attack);
+				if (((ChessPiece) boards[i][col].getComponent(1)).side.equals("black")) {
+					((ChessPiece) boards[i][col].getComponent(1))
+							.setIcon(((ChessPiece) boards[i][col].getComponent(1)).black_icon_attack);
+					break;
+				} else {
+					break;
 				}
-				break;
 			}
 		}
 
