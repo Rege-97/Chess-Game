@@ -139,6 +139,8 @@ public class ChessBoard extends JFrame {
 		chesspiece_black.add(new Knight("black", 1, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black.add(new Knight("black", 1, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black.add(new King("black", 4, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black.add(new Bishop("black", 4, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black.add(new Bishop("black", 1, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 
 		boards[1][1].add(chesspiece_black.get(0), "Center");
 		boards[1][8].add(chesspiece_black.get(1), "Center");
@@ -153,6 +155,8 @@ public class ChessBoard extends JFrame {
 		boards[1][2].add(chesspiece_black.get(10), "Center");
 		boards[1][7].add(chesspiece_black.get(11), "Center");
 		boards[4][5].add(chesspiece_black.get(12), "Center");
+		boards[4][3].add(chesspiece_black.get(13), "Center");
+		boards[1][6].add(chesspiece_black.get(14), "Center");
 
 		chesspiece_white.add(new Rook("white", 8, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_white.add(new Rook("white", 8, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
@@ -167,6 +171,8 @@ public class ChessBoard extends JFrame {
 		chesspiece_white.add(new Knight("white", 8, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_white.add(new Knight("white", 8, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_white.add(new King("white", 8, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white.add(new Bishop("white", 8, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white.add(new Bishop("white", 8, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 
 		boards[8][1].add(chesspiece_white.get(0), "Center");
 		boards[8][8].add(chesspiece_white.get(1), "Center");
@@ -181,6 +187,8 @@ public class ChessBoard extends JFrame {
 		boards[8][2].add(chesspiece_white.get(10), "Center");
 		boards[8][7].add(chesspiece_white.get(11), "Center");
 		boards[8][5].add(chesspiece_white.get(12), "Center");
+		boards[8][3].add(chesspiece_white.get(13), "Center");
+		boards[8][6].add(chesspiece_white.get(14), "Center");
 	}
 
 	public static void main(String[] args) {
