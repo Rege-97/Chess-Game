@@ -95,7 +95,7 @@ public class King extends ChessPiece {
 		if (row + 1 < 9) {
 			if (boards[row + 1][col].getComponentCount() == 1) {
 				movepins[row + 1][col].setVisible(true);
-			} else if (boards[row - 1][col].getComponentCount() == 2) {
+			} else if (boards[row + 1][col].getComponentCount() == 2) {
 				if (((ChessPiece) boards[row + 1][col].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[row + 1][col].getComponent(1))
 							.setIcon(((ChessPiece) boards[row + 1][col].getComponent(1)).white_icon_attack);
@@ -114,7 +114,7 @@ public class King extends ChessPiece {
 				}
 			}
 		}
-		
+
 		// ➡️방향 이동 무브포인트 및 공격 말 탐색
 		if (col + 1 < 9) {
 			if (boards[row][col + 1].getComponentCount() == 1) {
@@ -123,6 +123,54 @@ public class King extends ChessPiece {
 				if (((ChessPiece) boards[row][col + 1].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[row][col + 1].getComponent(1))
 							.setIcon(((ChessPiece) boards[row][col + 1].getComponent(1)).white_icon_attack);
+				}
+			}
+		}
+
+		// ↖️방향 이동 무브포인트 및 공격 말 탐색
+		if (row - 1 > 0 && col - 1 > 0) {
+			if (boards[row - 1][col - 1].getComponentCount() == 1) {
+				movepins[row - 1][col - 1].setVisible(true);
+			} else if (boards[row - 1][col - 1].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row - 1][col - 1].getComponent(1)).side.equals("white")) {
+					((ChessPiece) boards[row - 1][col - 1].getComponent(1))
+							.setIcon(((ChessPiece) boards[row - 1][col - 1].getComponent(1)).white_icon_attack);
+				}
+			}
+		}
+
+		// ↗️방향 이동 무브포인트 및 공격 말 탐색
+		if (row - 1 > 0 && col + 1 < 9) {
+			if (boards[row - 1][col + 1].getComponentCount() == 1) {
+				movepins[row - 1][col + 1].setVisible(true);
+			} else if (boards[row - 1][col + 1].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row - 1][col + 1].getComponent(1)).side.equals("white")) {
+					((ChessPiece) boards[row - 1][col + 1].getComponent(1))
+							.setIcon(((ChessPiece) boards[row - 1][col + 1].getComponent(1)).white_icon_attack);
+				}
+			}
+		}
+
+		// ↙️방향 이동 무브포인트 및 공격 말 탐색
+		if (row + 1 < 9 && col - 1 > 0) {
+			if (boards[row + 1][col - 1].getComponentCount() == 1) {
+				movepins[row + 1][col - 1].setVisible(true);
+			} else if (boards[row + 1][col - 1].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row + 1][col - 1].getComponent(1)).side.equals("white")) {
+					((ChessPiece) boards[row + 1][col - 1].getComponent(1))
+							.setIcon(((ChessPiece) boards[row + 1][col - 1].getComponent(1)).white_icon_attack);
+				}
+			}
+		}
+
+		// ↘️방향 이동 무브포인트 및 공격 말 탐색
+		if (row + 1 < 9 && col + 1 < 9) {
+			if (boards[row + 1][col + 1].getComponentCount() == 1) {
+				movepins[row + 1][col + 1].setVisible(true);
+			} else if (boards[row + 1][col + 1].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row + 1][col + 1].getComponent(1)).side.equals("white")) {
+					((ChessPiece) boards[row + 1][col + 1].getComponent(1))
+							.setIcon(((ChessPiece) boards[row + 1][col + 1].getComponent(1)).white_icon_attack);
 				}
 			}
 		}
@@ -139,7 +187,132 @@ public class King extends ChessPiece {
 
 	@Override
 	public void whiteMove() {
-		// TODO Auto-generated method stub
+		// 나 자신 세팅
+		king = this;
+
+		// 공격 유무 세팅
+		attack = false;
+		attackListener = null;
+
+		// 버튼 클릭 시 초기화
+		for (int i = 0; i < chesspiece_white.size(); i++) {
+			if (chesspiece_white.get(i) != king) {
+				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
+			}
+		}
+		for (int i = 0; i < chesspiece_black.size(); i++) {
+			chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
+		}
+
+		this.setIcon(white_icon_select);
+
+		movepinsNotVisible();
+		removeAction();
+		
+		// ⬆️방향 이동 무브포인트 및 공격 말 탐색
+		if (row - 1 > 0) {
+			if (boards[row - 1][col].getComponentCount() == 1) {
+				movepins[row - 1][col].setVisible(true);
+			} else if (boards[row - 1][col].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row - 1][col].getComponent(1)).side.equals("black")) {
+					((ChessPiece) boards[row - 1][col].getComponent(1))
+							.setIcon(((ChessPiece) boards[row - 1][col].getComponent(1)).black_icon_attack);
+				}
+			}
+		}
+
+		// ⬇️방향 이동 무브포인트 및 공격 말 탐색
+		if (row + 1 < 9) {
+			if (boards[row + 1][col].getComponentCount() == 1) {
+				movepins[row + 1][col].setVisible(true);
+			} else if (boards[row + 1][col].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row + 1][col].getComponent(1)).side.equals("black")) {
+					((ChessPiece) boards[row + 1][col].getComponent(1))
+							.setIcon(((ChessPiece) boards[row + 1][col].getComponent(1)).black_icon_attack);
+				}
+			}
+		}
+
+		// ⬅️방향 이동 무브포인트 및 공격 말 탐색
+		if (col - 1 > 0) {
+			if (boards[row][col - 1].getComponentCount() == 1) {
+				movepins[row][col - 1].setVisible(true);
+			} else if (boards[row][col - 1].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row][col - 1].getComponent(1)).side.equals("black")) {
+					((ChessPiece) boards[row][col - 1].getComponent(1))
+							.setIcon(((ChessPiece) boards[row][col - 1].getComponent(1)).black_icon_attack);
+				}
+			}
+		}
+
+		// ➡️방향 이동 무브포인트 및 공격 말 탐색
+		if (col + 1 < 9) {
+			if (boards[row][col + 1].getComponentCount() == 1) {
+				movepins[row][col + 1].setVisible(true);
+			} else if (boards[row][col + 1].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row][col + 1].getComponent(1)).side.equals("black")) {
+					((ChessPiece) boards[row][col + 1].getComponent(1))
+							.setIcon(((ChessPiece) boards[row][col + 1].getComponent(1)).black_icon_attack);
+				}
+			}
+		}
+
+		// ↖️방향 이동 무브포인트 및 공격 말 탐색
+		if (row - 1 > 0 && col - 1 > 0) {
+			if (boards[row - 1][col - 1].getComponentCount() == 1) {
+				movepins[row - 1][col - 1].setVisible(true);
+			} else if (boards[row - 1][col - 1].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row - 1][col - 1].getComponent(1)).side.equals("black")) {
+					((ChessPiece) boards[row - 1][col - 1].getComponent(1))
+							.setIcon(((ChessPiece) boards[row - 1][col - 1].getComponent(1)).black_icon_attack);
+				}
+			}
+		}
+
+		// ↗️방향 이동 무브포인트 및 공격 말 탐색
+		if (row - 1 > 0 && col + 1 < 9) {
+			if (boards[row - 1][col + 1].getComponentCount() == 1) {
+				movepins[row - 1][col + 1].setVisible(true);
+			} else if (boards[row - 1][col + 1].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row - 1][col + 1].getComponent(1)).side.equals("black")) {
+					((ChessPiece) boards[row - 1][col + 1].getComponent(1))
+							.setIcon(((ChessPiece) boards[row - 1][col + 1].getComponent(1)).black_icon_attack);
+				}
+			}
+		}
+
+		// ↙️방향 이동 무브포인트 및 공격 말 탐색
+		if (row + 1 < 9 && col - 1 > 0) {
+			if (boards[row + 1][col - 1].getComponentCount() == 1) {
+				movepins[row + 1][col - 1].setVisible(true);
+			} else if (boards[row + 1][col - 1].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row + 1][col - 1].getComponent(1)).side.equals("black")) {
+					((ChessPiece) boards[row + 1][col - 1].getComponent(1))
+							.setIcon(((ChessPiece) boards[row + 1][col - 1].getComponent(1)).black_icon_attack);
+				}
+			}
+		}
+
+		// ↘️방향 이동 무브포인트 및 공격 말 탐색
+		if (row + 1 < 9 && col + 1 < 9) {
+			if (boards[row + 1][col + 1].getComponentCount() == 1) {
+				movepins[row + 1][col + 1].setVisible(true);
+			} else if (boards[row + 1][col + 1].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row + 1][col + 1].getComponent(1)).side.equals("black")) {
+					((ChessPiece) boards[row + 1][col + 1].getComponent(1))
+							.setIcon(((ChessPiece) boards[row + 1][col + 1].getComponent(1)).black_icon_attack);
+				}
+			}
+		}
+
+		// 공격 액션
+		attackWhite(king);
+
+		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
+		removeAction();
+
+		// 공격을 안했을 시 일반 이동 액션
+		moveWhite(king);
 
 	}
 
