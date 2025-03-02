@@ -147,19 +147,23 @@ public class Pawn extends ChessPiece {
 
 		// 앙파상 무브포인트 탐색
 		if (row == 5) {
-			if (boards[row][col - 1].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row][col - 1].getComponent(1)).side.equals("white")
-						&& ((ChessPiece) boards[row][col - 1].getComponent(1)) instanceof Pawn) {
-					if (((ChessPiece) boards[row][col - 1].getComponent(1)).movecount == 1) {
-						movepins[row + 1][col - 1].setVisible(true);
+			if (col - 1 > 0) {
+				if (boards[row][col - 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[row][col - 1].getComponent(1)).side.equals("white")
+							&& ((ChessPiece) boards[row][col - 1].getComponent(1)) instanceof Pawn) {
+						if (((ChessPiece) boards[row][col - 1].getComponent(1)).movecount == 1) {
+							movepins[row + 1][col - 1].setVisible(true);
+						}
 					}
 				}
 			}
-			if (boards[row][col + 1].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row][col + 1].getComponent(1)).side.equals("white")
-						&& ((ChessPiece) boards[row][col + 1].getComponent(1)) instanceof Pawn) {
-					if (((ChessPiece) boards[row][col + 1].getComponent(1)).movecount == 1) {
-						movepins[row + 1][col + 1].setVisible(true);
+			if (col + 1 < 9) {
+				if (boards[row][col + 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[row][col + 1].getComponent(1)).side.equals("white")
+							&& ((ChessPiece) boards[row][col + 1].getComponent(1)) instanceof Pawn) {
+						if (((ChessPiece) boards[row][col + 1].getComponent(1)).movecount == 1) {
+							movepins[row + 1][col + 1].setVisible(true);
+						}
 					}
 				}
 			}
