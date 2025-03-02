@@ -12,6 +12,7 @@ abstract public class ChessPiece extends JButton {
 	String side;
 	int row;
 	int col;
+	int movecount;
 	boolean live;
 	boolean attack;
 	ActionListener attackListener;
@@ -102,7 +103,10 @@ abstract public class ChessPiece extends JButton {
 
 								// 공격을 한 상태로 변경
 								attack = true;
-
+								
+								// 이동 횟수 증가
+								movecount++;
+								
 								// 사용 했거나 하지 않은 어택 리스너 제거
 								removeAttackBlack();
 
@@ -155,6 +159,10 @@ abstract public class ChessPiece extends JButton {
 
 								// 턴 정보를 상대 턴으로 변경
 								chessBoard.turn = "white";
+								
+								
+								// 이동 횟수 증가
+								movecount++;
 
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
@@ -221,6 +229,9 @@ abstract public class ChessPiece extends JButton {
 
 								// 공격을 한 상태로 변경
 								attack = true;
+								
+								// 이동 횟수 증가
+								movecount++;
 
 								// 사용 했거나 하지 않은 어택 리스너 제거
 								removeAttackWhite();
@@ -273,6 +284,9 @@ abstract public class ChessPiece extends JButton {
 
 								// 턴 정보를 상대 턴으로 변경
 								chessBoard.turn = "black";
+								
+								// 이동 횟수 증가
+								movecount++;
 
 								p_board.getParent().validate();
 								p_board.getParent().repaint();

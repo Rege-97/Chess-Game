@@ -55,6 +55,8 @@ public class Bishop extends ChessPiece{
 
 		attackListeners = new ArrayList<ActionListener>();
 		
+		movecount=0;
+		
 	}
 	
 	@Override

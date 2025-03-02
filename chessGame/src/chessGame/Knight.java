@@ -53,6 +53,8 @@ public class Knight extends ChessPiece {
 		}
 
 		attackListeners = new ArrayList<ActionListener>();
+		
+		movecount=0;
 	}
 
 	@Override
