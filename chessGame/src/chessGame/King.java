@@ -1,7 +1,9 @@
 package chessGame;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Locale.Category;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -53,8 +55,8 @@ public class King extends ChessPiece {
 		}
 
 		attackListeners = new ArrayList<ActionListener>();
-		
-		movecount=0;
+
+		movecount = 0;
 	}
 
 	@Override
@@ -177,6 +179,28 @@ public class King extends ChessPiece {
 			}
 		}
 
+		// 킹사이드 캐슬링 무브포인트 탐색
+		if (movecount == 0 && boards[row][col + 1].getComponentCount() == 1
+				&& boards[row][col + 2].getComponentCount() == 1) {
+			if (boards[row][col + 3].getComponentCount() == 2) {
+				if (boards[row][col + 3].getComponent(1) instanceof Rook
+						&& ((ChessPiece) boards[row][col + 3].getComponent(1)).movecount == 0) {
+					movepins[row][col + 2].setVisible(true);
+				}
+			}
+		}
+
+		// 퀸사이드 캐슬링 무브포인트 탐색
+		if (movecount == 0 && boards[row][col - 1].getComponentCount() == 1
+				&& boards[row][col - 2].getComponentCount() == 1 && boards[row][col - 3].getComponentCount() == 1) {
+			if (boards[row][col - 4].getComponentCount() == 2) {
+				if (boards[row][col - 4].getComponent(1) instanceof Rook
+						&& ((ChessPiece) boards[row][col - 4].getComponent(1)).movecount == 0) {
+					movepins[row][col - 2].setVisible(true);
+				}
+			}
+		}
+
 		// 공격 액션
 		attackBlack(king);
 
@@ -210,7 +234,7 @@ public class King extends ChessPiece {
 
 		movepinsNotVisible();
 		removeAction();
-		
+
 		// ⬆️방향 이동 무브포인트 및 공격 말 탐색
 		if (row - 1 > 0) {
 			if (boards[row - 1][col].getComponentCount() == 1) {
@@ -307,6 +331,28 @@ public class King extends ChessPiece {
 			}
 		}
 
+		// 킹사이드 캐슬링 무브포인트 탐색
+		if (movecount == 0 && boards[row][col + 1].getComponentCount() == 1
+				&& boards[row][col + 2].getComponentCount() == 1) {
+			if (boards[row][col + 3].getComponentCount() == 2) {
+				if (boards[row][col + 3].getComponent(1) instanceof Rook
+						&& ((ChessPiece) boards[row][col + 3].getComponent(1)).movecount == 0) {
+					movepins[row][col + 2].setVisible(true);
+				}
+			}
+		}
+
+		// 퀸사이드 캐슬링 무브포인트 탐색
+		if (movecount == 0 && boards[row][col - 1].getComponentCount() == 1
+				&& boards[row][col - 2].getComponentCount() == 1 && boards[row][col - 3].getComponentCount() == 1) {
+			if (boards[row][col - 4].getComponentCount() == 2) {
+				if (boards[row][col - 4].getComponent(1) instanceof Rook
+						&& ((ChessPiece) boards[row][col - 4].getComponent(1)).movecount == 0) {
+					movepins[row][col - 2].setVisible(true);
+				}
+			}
+		}
+
 		// 공격 액션
 		attackWhite(king);
 
@@ -316,6 +362,236 @@ public class King extends ChessPiece {
 		// 공격을 안했을 시 일반 이동 액션
 		moveWhite(king);
 
+	}
+
+	// 캐슬링 구현을 위해 체스피스 클래스에서 오버라이딩
+	@Override
+	public void moveBlack(ChessPiece me) {
+		if (!attack) {
+			for (int i = 1; i <= 8; i++) {
+				for (int j = 1; j <= 8; j++) {
+					final int indexrow = i;
+					final int indexcol = j;
+
+					// 조건 : 현재 보여지고 있는 무브핀
+					if (movepins[indexrow][indexcol].isVisible()) {
+						// 캐슬링 조건 달성 시 이동 액션
+						if (indexcol == col + 2 || indexcol == col - 2) {
+
+							movepins[indexrow][indexcol].addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									// 킹 사이드 캐슬링
+									if (indexcol == col + 2) {
+										ChessPiece castlingrook = null;
+										for (int k = 0; k < chesspiece_black.size(); k++) {
+											if (chesspiece_black.get(k) == boards[row][col + 3].getComponent(1)) {
+												castlingrook = chesspiece_black.get(k);
+												break;
+											}
+										}
+										boards[row][col + 3].remove(1);
+										boards[row][col + 1].add(castlingrook);
+										// 퀸 사이드 캐슬링
+									} else if (indexcol == col - 2) {
+										ChessPiece castlingrook = null;
+										for (int k = 0; k < chesspiece_black.size(); k++) {
+											if (chesspiece_black.get(k) == boards[row][col - 4].getComponent(1)) {
+												castlingrook = chesspiece_black.get(k);
+												break;
+											}
+										}
+										boards[row][col - 4].remove(1);
+										boards[row][col - 1].add(castlingrook);
+									}
+
+									// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
+									boards[row][col].remove(me);
+									boards[indexrow][indexcol].add(me, "Center");
+
+									// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
+									for (int k = 0; k < chesspiece_black.size(); k++) {
+										chesspiece_black.get(k).setIcon(chesspiece_black.get(k).black_icon);
+									}
+
+									// 사용 안한 어택 리스너 제거
+									removeAttackBlack();
+
+									// 무브핀 초기화
+									movepinsNotVisible();
+
+									// 현재 위치 값 저장
+									row = indexrow;
+									col = indexcol;
+
+									// 턴 정보를 상대 턴으로 변경
+									chessBoard.turn = "white";
+
+									// 이동 횟수 증가
+									movecount++;
+
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
+								}
+							});
+
+						} else {
+							movepins[indexrow][indexcol].addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+
+									// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
+									boards[row][col].remove(me);
+									boards[indexrow][indexcol].add(me, "Center");
+
+									// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
+									for (int k = 0; k < chesspiece_black.size(); k++) {
+										chesspiece_black.get(k).setIcon(chesspiece_black.get(k).black_icon);
+									}
+
+									// 사용 안한 어택 리스너 제거
+									removeAttackBlack();
+
+									// 무브핀 초기화
+									movepinsNotVisible();
+
+									// 현재 위치 값 저장
+									row = indexrow;
+									col = indexcol;
+
+									// 턴 정보를 상대 턴으로 변경
+									chessBoard.turn = "white";
+
+									// 이동 횟수 증가
+									movecount++;
+
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
+
+								}
+							});
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// 캐슬링 구현을 위해 체스피스 클래스에서 오버라이딩
+	@Override
+	public void moveWhite(ChessPiece me) {
+		if (!attack) {
+			for (int i = 1; i <= 8; i++) {
+				for (int j = 1; j <= 8; j++) {
+					final int indexrow = i;
+					final int indexcol = j;
+
+					// 조건 : 현재 보여지고 있는 무브핀
+					if (movepins[indexrow][indexcol].isVisible()) {
+						// 캐슬링 조건 달성 시 이동 액션
+						if (indexcol == col + 2 || indexcol == col - 2) {
+
+							movepins[indexrow][indexcol].addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									// 킹 사이드 캐슬링
+									if (indexcol == col + 2) {
+										ChessPiece castlingrook = null;
+										for (int k = 0; k < chesspiece_white.size(); k++) {
+											if (chesspiece_white.get(k) == boards[row][col + 3].getComponent(1)) {
+												castlingrook = chesspiece_white.get(k);
+												break;
+											}
+										}
+										boards[row][col + 3].remove(1);
+										boards[row][col + 1].add(castlingrook);
+										// 퀸 사이드 캐슬링
+									} else if (indexcol == col - 2) {
+										ChessPiece castlingrook = null;
+										for (int k = 0; k < chesspiece_white.size(); k++) {
+											if (chesspiece_white.get(k) == boards[row][col - 4].getComponent(1)) {
+												castlingrook = chesspiece_white.get(k);
+												break;
+											}
+										}
+										boards[row][col - 4].remove(1);
+										boards[row][col - 1].add(castlingrook);
+									}
+
+									// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
+									boards[row][col].remove(me);
+									boards[indexrow][indexcol].add(me, "Center");
+
+									// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
+									for (int k = 0; k < chesspiece_white.size(); k++) {
+										chesspiece_white.get(k).setIcon(chesspiece_white.get(k).white_icon);
+									}
+
+									// 사용 안한 어택 리스너 제거
+									removeAttackWhite();
+
+									// 무브핀 초기화
+									movepinsNotVisible();
+
+									// 현재 위치 값 저장
+									row = indexrow;
+									col = indexcol;
+
+									// 턴 정보를 상대 턴으로 변경
+									chessBoard.turn = "black";
+
+									// 이동 횟수 증가
+									movecount++;
+
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
+								}
+							});
+
+						} else {
+							movepins[indexrow][indexcol].addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+
+									// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
+									boards[row][col].remove(me);
+									boards[indexrow][indexcol].add(me, "Center");
+
+									// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
+									for (int k = 0; k < chesspiece_white.size(); k++) {
+										chesspiece_white.get(k).setIcon(chesspiece_white.get(k).white_icon);
+									}
+
+									// 사용 안한 어택 리스너 제거
+									removeAttackWhite();
+
+									// 무브핀 초기화
+									movepinsNotVisible();
+
+									// 현재 위치 값 저장
+									row = indexrow;
+									col = indexcol;
+
+									// 턴 정보를 상대 턴으로 변경
+									chessBoard.turn = "black";
+
+									// 이동 횟수 증가
+									movecount++;
+
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
+
+								}
+							});
+						}
+					}
+				}
+			}
+		}
 	}
 
 }
