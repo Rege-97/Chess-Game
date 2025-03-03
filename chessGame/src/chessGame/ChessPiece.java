@@ -177,6 +177,17 @@ abstract public class ChessPiece extends JButton {
 				}
 			}
 		}
+		// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+		if (chessBoard.isKingInCheck("white")) {
+		    System.out.println("White King is in Check! (Normal or Discovered)");
+		}
+		if (chessBoard.isKingInCheck("black")) {
+		    System.out.println("Black King is in Check! (Normal or Discovered)");
+		}
+
+		// UI 업데이트 호출 (체크 상태 즉시 반영)
+		chessBoard.updateCheckStatus();
+
 	}
 	
 	// whiteMove()용 공격 메서드
@@ -302,6 +313,17 @@ abstract public class ChessPiece extends JButton {
 				}
 			}
 		}
+		// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+		if (chessBoard.isKingInCheck("white")) {
+		    System.out.println("White King is in Check! (Normal or Discovered)");
+		}
+		if (chessBoard.isKingInCheck("black")) {
+		    System.out.println("Black King is in Check! (Normal or Discovered)");
+		}
+
+		// UI 업데이트 호출 (체크 상태 즉시 반영)
+		chessBoard.updateCheckStatus();
+
 	}
 	
 	// blackMove()용 어택 리스너 제거 메서드

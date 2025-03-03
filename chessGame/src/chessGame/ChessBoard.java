@@ -26,9 +26,10 @@ public class ChessBoard extends JFrame {
 	String turn;
 	ImageIcon movepin;
 	ArrayList<ChessPiece> chesspiece_black, chesspiece_white;
+	JLabel check;
 
 	public ChessBoard() {
-		
+
 		super("테스트");
 
 		this.setSize(1280, 800);
@@ -52,20 +53,17 @@ public class ChessBoard extends JFrame {
 		p_board = new JPanel(new GridLayout(8, 8));
 		boardSet();
 		this.add(p_board, "Center");
-		
-		JPanel p_west=new JPanel(new BorderLayout());
-		p_west.setPreferredSize(new Dimension(480,800));
-		this.add(p_west,"East");
-		
-		// 팝업 전 임시 상태 라벨
-		JLabel check=new JLabel("play",JLabel.CENTER);
-		check.setFont(new Font("Default Font",Font.PLAIN,50));
-		p_west.add(check,"North");
+
+		JPanel p_west = new JPanel(new BorderLayout());
+		p_west.setPreferredSize(new Dimension(480, 800));
+		this.add(p_west, "East");
+
+		check = new JLabel("play", JLabel.CENTER);
+		check.setFont(new Font("Default Font", Font.PLAIN, 50));
+		p_west.add(check, "North");
 
 		// 말 배치
 		setChessPiece();
-		
-
 
 		// 블랙 체스말 이벤트
 		for (int i = 0; i < chesspiece_black.size(); i++) {
@@ -74,13 +72,13 @@ public class ChessBoard extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (turn.equals("black") &&chesspiece_black.get(index).isEnabled()) {
+					if (turn.equals("black") && chesspiece_black.get(index).isEnabled()) {
 						chesspiece_black.get(index).blackMove();
 					}
 				}
 			});
 		}
-		
+
 		// 화이트 체스말 이벤트
 		for (int i = 0; i < chesspiece_white.size(); i++) {
 			final int index = i;
@@ -88,8 +86,8 @@ public class ChessBoard extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (turn.equals("white") &&chesspiece_white.get(index).isEnabled()) {
-			                chesspiece_white.get(index).whiteMove();
+					if (turn.equals("white") && chesspiece_white.get(index).isEnabled()) {
+						chesspiece_white.get(index).whiteMove();
 					}
 				}
 			});
@@ -137,23 +135,38 @@ public class ChessBoard extends JFrame {
 		chesspiece_black = new ArrayList<ChessPiece>();
 		chesspiece_white = new ArrayList<ChessPiece>();
 
-		
-		chesspiece_black.add(new Rook("black", 1, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Rook("black", 1, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Pawn("black", 2, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Pawn("black", 2, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Pawn("black", 2, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Pawn("black", 2, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Pawn("black", 2, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Pawn("black", 2, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Pawn("black", 2, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Pawn("black", 2, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Knight("black", 1, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Knight("black", 1, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new King("black", 1, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Bishop("black", 1, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Bishop("black", 1, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Queen("black", 1, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Rook("black", 1, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Rook("black", 1, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Pawn("black", 2, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Pawn("black", 2, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Pawn("black", 2, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Pawn("black", 2, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Pawn("black", 2, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Pawn("black", 2, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Pawn("black", 2, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Pawn("black", 2, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Knight("black", 1, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Knight("black", 1, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new King("black", 1, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Bishop("black", 1, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Bishop("black", 1, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new Queen("black", 1, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 
 		boards[1][1].add(chesspiece_black.get(0), "Center");
 		boards[1][8].add(chesspiece_black.get(1), "Center");
@@ -172,22 +185,38 @@ public class ChessBoard extends JFrame {
 		boards[1][6].add(chesspiece_black.get(14), "Center");
 		boards[1][4].add(chesspiece_black.get(15), "Center");
 
-		chesspiece_white.add(new Rook("white", 8, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Rook("white", 8, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Pawn("white", 7, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Pawn("white", 7, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Pawn("white", 7, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Pawn("white", 7, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Pawn("white", 7, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Pawn("white", 7, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Pawn("white", 7, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Pawn("white", 7, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Knight("white", 8, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Knight("white", 8, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new King("white", 8, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Bishop("white", 8, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Bishop("white", 8, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white.add(new Queen("white", 8, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Rook("white", 8, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Rook("white", 8, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Pawn("white", 7, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Pawn("white", 7, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Pawn("white", 7, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Pawn("white", 7, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Pawn("white", 7, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Pawn("white", 7, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Pawn("white", 7, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Pawn("white", 7, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Knight("white", 8, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Knight("white", 8, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new King("white", 8, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Bishop("white", 8, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Bishop("white", 8, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new Queen("white", 8, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 
 		boards[8][1].add(chesspiece_white.get(0), "Center");
 		boards[8][8].add(chesspiece_white.get(1), "Center");
@@ -206,8 +235,69 @@ public class ChessBoard extends JFrame {
 		boards[8][6].add(chesspiece_white.get(14), "Center");
 		boards[8][4].add(chesspiece_white.get(15), "Center");
 	}
-	
-	
+
+	public boolean isKingInCheck(String kingSide) {
+		King king = null;
+		ArrayList<ChessPiece> opponentPieces;
+
+		// 상대 기물 리스트 설정
+		if (kingSide.equals("white")) {
+			opponentPieces = chesspiece_black;
+		} else {
+			opponentPieces = chesspiece_white;
+		}
+
+		// 킹 찾기
+		if (kingSide.equals("white")) {
+			for (int i = 0; i < chesspiece_white.size(); i++) {
+				if (chesspiece_white.get(i) instanceof King) {
+					king = (King) chesspiece_white.get(i);
+					break;
+				}
+			}
+		} else {
+			for (int i = 0; i < chesspiece_black.size(); i++) {
+				if (chesspiece_black.get(i) instanceof King) {
+					king = (King) chesspiece_black.get(i);
+					break;
+				}
+			}
+		}
+
+		if (king == null) {
+			return false; // 킹이 없으면 체크 불가
+		}
+
+		// 상대 기물들의 공격 가능 위치 확인
+		for (int i = 0; i < opponentPieces.size(); i++) {
+			opponentPieces.get(i).isAttackKing();
+		}
+
+		// 킹의 아이콘이 공격 아이콘으로 변경되었는지 확인
+		if (boards[king.row][king.col].getComponentCount() == 2) {
+			if (((ImageIcon) ((ChessPiece) boards[king.row][king.col].getComponent(1)).getIcon()).getDescription()
+					.contains("_attack")) {
+				return true; // 킹이 체크 상태
+			}
+		}
+
+		return false;
+	}
+
+	public void updateCheckStatus() {
+		if (isKingInCheck("white")) {
+			check.setText("White King in Check!");
+		} else if (isKingInCheck("black")) {
+			check.setText("Black King in Check!");
+		} else {
+			check.setText("Play");
+		}
+
+		// UI 즉시 새로고침
+		check.repaint();
+		this.validate();
+		this.repaint();
+	}
 
 	public static void main(String[] args) {
 		System.setProperty("sun.java2d.uiScale", "1");

@@ -509,12 +509,22 @@ public class Pawn extends ChessPiece {
 
 		if (side.equals("white")) {
 			// 백 폰은 위쪽 대각선 공격 가능
-			setAttackIconIfKing(row - 1, col - 1);
-			setAttackIconIfKing(row - 1, col + 1);
+			if (row - 1 > 0 && col - 1 > 0) {
+				setAttackIconIfKing(row - 1, col - 1);
+			}
+			if (row - 1 > 0 && col + 1 < 9) {
+				setAttackIconIfKing(row - 1, col + 1);
+			}
+
 		} else {
 			// 흑 폰은 아래쪽 대각선 공격 가능
-			setAttackIconIfKing(row + 1, col - 1);
-			setAttackIconIfKing(row + 1, col + 1);
+			if (row + 1 < 9 && col - 1 > 0) {
+				setAttackIconIfKing(row + 1, col - 1);
+			}
+			if (row + 1 < 9 && col + 1 < 9) {
+				setAttackIconIfKing(row + 1, col + 1);
+			}
+
 		}
 
 	}
