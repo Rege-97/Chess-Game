@@ -53,8 +53,8 @@ public class Queen extends ChessPiece {
 		}
 
 		attackListeners = new ArrayList<ActionListener>();
-		
-		movecount=0;
+
+		movecount = 0;
 	}
 
 	@Override
@@ -358,5 +358,92 @@ public class Queen extends ChessPiece {
 		// 공격을 안했을 시 일반 이동 액션
 		moveWhite(queen);
 
+	}
+
+	@Override
+	public void isAttackKing() {
+		// 위쪽 탐색
+		for (int i = row - 1; i >= 1; i--) {
+			if (setAttackIconIfKing(i, col)) {
+				break;
+			}
+			if (boards[i][col].getComponentCount() == 2) {
+				break; // 기물이 있으면 탐색 종료
+			}
+		}
+
+		// 아래쪽 탐색
+		for (int i = row + 1; i <= 8; i++) {
+			if (setAttackIconIfKing(i, col)) {
+				break;
+			}
+			if (boards[i][col].getComponentCount() == 2) {
+				break;
+			}
+		}
+
+		// 왼쪽 탐색
+		for (int i = col - 1; i >= 1; i--) {
+			if (setAttackIconIfKing(row, i)) {
+				break;
+			}
+			if (boards[row][i].getComponentCount() == 2) {
+				break;
+			}
+		}
+
+		// 오른쪽 탐색
+		for (int i = col + 1; i <= 8; i++) {
+			if (setAttackIconIfKing(row, i)) {
+				break;
+			}
+			if (boards[row][i].getComponentCount() == 2) {
+				break;
+			}
+		}
+		// ↖ 탐색
+		for (int i = 1; i < 8; i++) {
+			if (row - i >= 1 && col - i >= 1) {
+				if (setAttackIconIfKing(row - i, col - i)) {
+					break;
+				}
+				if (boards[row - i][col - i].getComponentCount() == 2) {
+					break; // 기물이 있으면 탐색 종료
+				}
+			}
+		}
+		// ↗ 탐색
+		for (int i = 1; i < 8; i++) {
+			if (row - i >= 1 && col + i <= 8) {
+				if (setAttackIconIfKing(row - i, col + i)) {
+					break;
+				}
+				if (boards[row - i][col + i].getComponentCount() == 2) {
+					break; // 기물이 있으면 탐색 종료
+				}
+			}
+		}
+		// ↙ 탐색
+		for (int i = 1; i < 8; i++) {
+			if (row + i <= 8 && col - i >= 1) {
+				if (setAttackIconIfKing(row + i, col - i)) {
+					break;
+				}
+				if (boards[row + i][col - i].getComponentCount() == 2) {
+					break; // 기물이 있으면 탐색 종료
+				}
+			}
+		}
+		// ↙ 탐색
+		for (int i = 1; i < 8; i++) {
+			if (row + i <= 8 && col + i <= 8) {
+				if (setAttackIconIfKing(row + i, col + i)) {
+					break;
+				}
+				if (boards[row + i][col + i].getComponentCount() == 2) {
+					break; // 기물이 있으면 탐색 종료
+				}
+			}
+		}
 	}
 }

@@ -594,4 +594,41 @@ public class King extends ChessPiece {
 		}
 	}
 
+	@Override
+	public void isAttackKing() {
+		// ⬆️방향 탐색
+		if (row - 1 > 0) {
+			setAttackIconIfKing(row - 1, col);
+		}
+		// ⬇️방향 탐색
+		if (row + 1 < 9) {
+			setAttackIconIfKing(row + 1, col);
+		}
+		// ⬅️방향 탐색
+		if (col - 1 > 0) {
+			setAttackIconIfKing(row, col - 1);
+		}
+		// ➡️방향 탐색
+		if (col + 1 < 9) {
+			setAttackIconIfKing(row, col + 1);
+		}
+		// ↖️방향 탐색
+		if (row - 1 > 0 && col - 1 > 0) {
+			setAttackIconIfKing(row - 1, col - 1);
+		}
+		// ↗️방향 탐색
+		if (row - 1 > 0 && col + 1 < 9) {
+			setAttackIconIfKing(row - 1, col + 1);
+		}
+		// ↙️방향 탐색
+		if (row + 1 < 9 && col - 1 > 0) {
+			setAttackIconIfKing(row + 1, col - 1);
+		}
+		// ↘️방향 탐색
+		if (row + 1 < 9 && col + 1 < 9) {
+			setAttackIconIfKing(row + 1, col + 1);
+		}
+
+	}
+
 }

@@ -348,9 +348,6 @@ public class Pawn extends ChessPiece {
 									row = indexrow;
 									col = indexcol;
 
-									// 턴 정보를 상대 턴으로 변경
-									chessBoard.turn = "white";
-
 									// 이동 횟수 증가
 									movecount++;
 
@@ -505,6 +502,21 @@ public class Pawn extends ChessPiece {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void isAttackKing() {
+
+		if (side.equals("white")) {
+			// 백 폰은 위쪽 대각선 공격 가능
+			setAttackIconIfKing(row - 1, col - 1);
+			setAttackIconIfKing(row - 1, col + 1);
+		} else {
+			// 흑 폰은 아래쪽 대각선 공격 가능
+			setAttackIconIfKing(row + 1, col - 1);
+			setAttackIconIfKing(row + 1, col + 1);
+		}
+
 	}
 
 }

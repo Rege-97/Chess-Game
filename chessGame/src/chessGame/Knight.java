@@ -53,8 +53,8 @@ public class Knight extends ChessPiece {
 		}
 
 		attackListeners = new ArrayList<ActionListener>();
-		
-		movecount=0;
+
+		movecount = 0;
 	}
 
 	@Override
@@ -308,6 +308,39 @@ public class Knight extends ChessPiece {
 
 		// 공격을 안했을 시 일반 이동 액션
 		moveWhite(knight);
+
+	}
+
+	@Override
+	public void isAttackKing() {
+		// ↖️방향 탐색
+		if (row - 2 > 0 && col - 1 > 0) {
+			setAttackIconIfKing(row - 2, col - 1);
+		}
+		if (row - 1 > 0 && col - 2 > 0) {
+			setAttackIconIfKing(row - 1, col - 2);
+		}
+		// ↗️방향 탐색
+		if (row - 2 > 0 && col + 1 < 9) {
+			setAttackIconIfKing(row - 2, col + 1);
+		}
+		if (row - 1 > 0 && col + 2 < 9) {
+			setAttackIconIfKing(row - 1, col + 2);
+		}
+		// ↙️방향 탐색
+		if (row + 2 < 9 && col - 1 > 0) {
+			setAttackIconIfKing(row + 2, col - 1);
+		}
+		if (row + 1 < 9 && col - 2 > 0) {
+			setAttackIconIfKing(row + 1, col - 2);
+		}
+		// ↘️방향 탐색
+		if (row + 2 < 9 && col + 1 < 9) {
+			setAttackIconIfKing(row + 2, col + 1);
+		}
+		if (row + 1 < 9 && col + 2 < 9) {
+			setAttackIconIfKing(row + 1, col + 2);
+		}
 
 	}
 }

@@ -28,6 +28,8 @@ abstract public class ChessPiece extends JButton {
 
 	public abstract void whiteMove();
 	
+	public abstract void isAttackKing();
+	
 	
 	// 무브핀 일괄 비활성화 메서드
 	public void movepinsNotVisible() {
@@ -106,6 +108,7 @@ abstract public class ChessPiece extends JButton {
 								
 								// 이동 횟수 증가
 								movecount++;
+
 								
 								// 사용 했거나 하지 않은 어택 리스너 제거
 								removeAttackBlack();
@@ -163,7 +166,7 @@ abstract public class ChessPiece extends JButton {
 								
 								// 이동 횟수 증가
 								movecount++;
-
+								
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
 
@@ -288,6 +291,7 @@ abstract public class ChessPiece extends JButton {
 								// 이동 횟수 증가
 								movecount++;
 
+
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
 
@@ -331,4 +335,22 @@ abstract public class ChessPiece extends JButton {
 		// 리스트 초기화
 		attackListeners.clear();
 	}
+	
+	public boolean setAttackIconIfKing(int targetRow, int targetCol) {
+	    if (boards[targetRow][targetCol].getComponentCount() == 2) {
+	        ChessPiece targetPiece = (ChessPiece) boards[targetRow][targetCol].getComponent(1);
+
+	        // 대상이 상대 킹인지 확인
+	        if (targetPiece instanceof King && !targetPiece.side.equals(this.side)) {
+	            if (this.side.equals("white")) {
+	                targetPiece.setIcon(targetPiece.black_icon_attack);
+	            } else {
+	                targetPiece.setIcon(targetPiece.white_icon_attack);
+	            }
+	            return true; // 킹이 발견되었으므로 탐색 종료
+	        }
+	    }
+	    return false; // 킹이 아니면 계속 탐색 가능
+	}
+
 }

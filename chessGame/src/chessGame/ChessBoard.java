@@ -3,6 +3,7 @@ package chessGame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.Toolkit;
@@ -44,17 +45,22 @@ public class ChessBoard extends JFrame {
 		// 창 닫기
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// 초기 턴 블랙
-		turn = "black";
+		// 초기 턴 화이트
+		turn = "white";
 
 		// 보드 세팅
 		p_board = new JPanel(new GridLayout(8, 8));
 		boardSet();
 		this.add(p_board, "Center");
 		
-		JPanel p_west=new JPanel();
+		JPanel p_west=new JPanel(new BorderLayout());
 		p_west.setPreferredSize(new Dimension(480,800));
 		this.add(p_west,"East");
+		
+		// 팝업 전 임시 상태 라벨
+		JLabel check=new JLabel("play",JLabel.CENTER);
+		check.setFont(new Font("Default Font",Font.PLAIN,50));
+		p_west.add(check,"North");
 
 		// 말 배치
 		setChessPiece();
@@ -200,6 +206,8 @@ public class ChessBoard extends JFrame {
 		boards[8][6].add(chesspiece_white.get(14), "Center");
 		boards[8][4].add(chesspiece_white.get(15), "Center");
 	}
+	
+	
 
 	public static void main(String[] args) {
 		System.setProperty("sun.java2d.uiScale", "1");
