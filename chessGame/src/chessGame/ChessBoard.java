@@ -58,6 +58,7 @@ public class ChessBoard extends JFrame {
 		p_west.setPreferredSize(new Dimension(480, 800));
 		this.add(p_west, "East");
 
+		// 체크 상태를 표시하기 위한 임시 라벨
 		check = new JLabel("Play", JLabel.CENTER);
 		check.setFont(new Font("Default Font", Font.PLAIN, 50));
 		p_west.add(check, "North");
@@ -236,6 +237,8 @@ public class ChessBoard extends JFrame {
 		boards[8][4].add(chesspiece_white.get(15), "Center");
 	}
 
+	
+	// 킹이 체스상태인지 확인하는 메서드
 	public boolean isKingInCheck(String kingSide) {
 		King king = null;
 		ArrayList<ChessPiece> opponentPieces;
@@ -295,7 +298,8 @@ public class ChessBoard extends JFrame {
 
 		return false;
 	}
-
+	
+	// 체크 상태가 되면 화면 업데이트 메서드
 	public void updateCheckStatus() {
 		if (isKingInCheck("white")) {
 			check.setText("White King in Check!");

@@ -389,6 +389,7 @@ abstract public class ChessPiece extends JButton {
 		attackListeners.clear();
 	}
 	
+	// 체크 상태를 확인하기 위해 구분하는 킹 아이콘 변경 메서드
 	public boolean setAttackIconIfKing(int targetRow, int targetCol) {
 	    if (boards[targetRow][targetCol].getComponentCount() == 2) {
 	        ChessPiece targetPiece = (ChessPiece) boards[targetRow][targetCol].getComponent(1);

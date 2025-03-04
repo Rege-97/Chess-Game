@@ -360,6 +360,7 @@ public class Queen extends ChessPiece {
 
 	}
 
+	// 현재 킹을 공격할 수 있는지 확인하는 메서드
 	@Override
 	public void isAttackKing() {
 		// 위쪽 탐색
