@@ -1,6 +1,5 @@
 package chessGame;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
@@ -54,8 +53,8 @@ public class Rook extends ChessPiece {
 		}
 
 		attackListeners = new ArrayList<ActionListener>();
-		
-		movecount=0;
+
+		movecount = 0;
 	}
 
 	@Override
@@ -245,6 +244,51 @@ public class Rook extends ChessPiece {
 
 		// 공격을 안했을 시 일반 이동 액션
 		moveWhite(rook);
+
+	}
+
+	// 현재 킹을 공격할 수 있는지 확인하는 메서드
+	@Override
+	public void isAttackKing() {
+		// 위쪽 탐색
+		for (int i = row - 1; i >= 1; i--) {
+			if (setAttackIconIfKing(i, col)) {
+				break;
+			}
+			if (boards[i][col].getComponentCount() == 2) {
+				break; // 기물이 있으면 탐색 종료
+			}
+		}
+
+		// 아래쪽 탐색
+		for (int i = row + 1; i <= 8; i++) {
+			if (setAttackIconIfKing(i, col)) {
+				break;
+			}
+			if (boards[i][col].getComponentCount() == 2) {
+				break; // 기물이 있으면 탐색 종료
+			}
+		}
+
+		// 왼쪽 탐색
+		for (int i = col - 1; i >= 1; i--) {
+			if (setAttackIconIfKing(row, i)) {
+				break;
+			}
+			if (boards[row][i].getComponentCount() == 2) {
+				break; // 기물이 있으면 탐색 종료
+			}
+		}
+
+		// 오른쪽 탐색
+		for (int i = col + 1; i <= 8; i++) {
+			if (setAttackIconIfKing(row, i)) {
+				break;
+			}
+			if (boards[row][i].getComponentCount() == 2) {
+				break; // 기물이 있으면 탐색 종료
+			}
+		}
 
 	}
 

@@ -7,12 +7,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class Bishop extends ChessPiece{
+public class Bishop extends ChessPiece {
 	Bishop bishop;
-	
+
 	public Bishop(String side, int row, int col, ChessBoard chessBoard, JPanel boards[][], JButton movepins[][],
 			JPanel p_board, ArrayList<ChessPiece> chesspiece_black, ArrayList<ChessPiece> chesspiece_white) {
-		
+
 		this.side = side;
 		this.row = row;
 		this.col = col;
@@ -24,7 +24,6 @@ public class Bishop extends ChessPiece{
 		this.chesspiece_black = chesspiece_black;
 		this.chesspiece_white = chesspiece_white;
 
-		
 		black_icon = new ImageIcon("image/Bishop-black.png");
 		black_icon.setDescription("black_icon");
 
@@ -46,7 +45,7 @@ public class Bishop extends ChessPiece{
 		setContentAreaFilled(false);
 		setFocusPainted(false);
 		setOpaque(false);
-		
+
 		if (side.equals("black")) {
 			setIcon(black_icon);
 		} else if (side.equals("white")) {
@@ -54,11 +53,11 @@ public class Bishop extends ChessPiece{
 		}
 
 		attackListeners = new ArrayList<ActionListener>();
-		
-		movecount=0;
-		
+
+		movecount = 0;
+
 	}
-	
+
 	@Override
 	public void blackMove() {
 		bishop = this;
@@ -82,12 +81,12 @@ public class Bishop extends ChessPiece{
 
 		// ↖ 이동 무브포인트 및 공격 말 탐색
 		for (int i = 1; i < 8; i++) {
-			if (row-i>=1&&col-i>=1&&boards[row-i][col-i].getComponentCount() == 1) {
-				movepins[row-i][col-i].setVisible(true);
-			} else if (row-i>=1&&col-i>=1&&boards[row-i][col-i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row-i][col-i].getComponent(1)).side.equals("white")) {
-					((ChessPiece) boards[row-i][col-i].getComponent(1))
-							.setIcon(((ChessPiece) boards[row-i][col-i].getComponent(1)).white_icon_attack);
+			if (row - i >= 1 && col - i >= 1 && boards[row - i][col - i].getComponentCount() == 1) {
+				movepins[row - i][col - i].setVisible(true);
+			} else if (row - i >= 1 && col - i >= 1 && boards[row - i][col - i].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row - i][col - i].getComponent(1)).side.equals("white")) {
+					((ChessPiece) boards[row - i][col - i].getComponent(1))
+							.setIcon(((ChessPiece) boards[row - i][col - i].getComponent(1)).white_icon_attack);
 					break;
 				} else {
 					break;
@@ -97,27 +96,27 @@ public class Bishop extends ChessPiece{
 
 		// ↗ 이동 무브포인트 및 공격 말 탐색
 		for (int i = 1; i < 8; i++) {
-			if (row-i>=1&&col+i<=8&&boards[row-i][col+i].getComponentCount() == 1) {
-				movepins[row-i][col+i].setVisible(true);
-			} else if (row-i>=1&&col+i<=8&&boards[row-i][col+i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row-i][col+i].getComponent(1)).side.equals("white")) {
-					((ChessPiece) boards[row-i][col+i].getComponent(1))
-							.setIcon(((ChessPiece) boards[row-i][col+i].getComponent(1)).white_icon_attack);
+			if (row - i >= 1 && col + i <= 8 && boards[row - i][col + i].getComponentCount() == 1) {
+				movepins[row - i][col + i].setVisible(true);
+			} else if (row - i >= 1 && col + i <= 8 && boards[row - i][col + i].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row - i][col + i].getComponent(1)).side.equals("white")) {
+					((ChessPiece) boards[row - i][col + i].getComponent(1))
+							.setIcon(((ChessPiece) boards[row - i][col + i].getComponent(1)).white_icon_attack);
 					break;
 				} else {
 					break;
 				}
 			}
 		}
-		
+
 		// ↙ 이동 무브포인트 및 공격 말 탐색
-		for (int i = 1; i <8; i++) {
-			if (row+i<=8&&col-i>=1&&boards[row+i][col-i].getComponentCount() == 1) {
-				movepins[row+i][col-i].setVisible(true);
-			} else if (row+i<=8&&col-i>=1&&boards[row+i][col-i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row+i][col-i].getComponent(1)).side.equals("white")) {
-					((ChessPiece) boards[row+i][col-i].getComponent(1))
-							.setIcon(((ChessPiece) boards[row+i][col-i].getComponent(1)).white_icon_attack);
+		for (int i = 1; i < 8; i++) {
+			if (row + i <= 8 && col - i >= 1 && boards[row + i][col - i].getComponentCount() == 1) {
+				movepins[row + i][col - i].setVisible(true);
+			} else if (row + i <= 8 && col - i >= 1 && boards[row + i][col - i].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row + i][col - i].getComponent(1)).side.equals("white")) {
+					((ChessPiece) boards[row + i][col - i].getComponent(1))
+							.setIcon(((ChessPiece) boards[row + i][col - i].getComponent(1)).white_icon_attack);
 					break;
 				} else {
 					break;
@@ -127,12 +126,12 @@ public class Bishop extends ChessPiece{
 
 		// ↘ 이동 무브포인트 및 공격 말 탐색
 		for (int i = 1; i < 8; i++) {
-			if (row+i<=8&&col+i<=8&&boards[row+i][col+i].getComponentCount() == 1) {
-				movepins[row+i][col+i].setVisible(true);
-			} else if (row+i<=8&&col+i<=8&&boards[row+i][col+i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row+i][col+i].getComponent(1)).side.equals("white")) {
-					((ChessPiece) boards[row+i][col+i].getComponent(1))
-							.setIcon(((ChessPiece) boards[row+i][col+i].getComponent(1)).white_icon_attack);
+			if (row + i <= 8 && col + i <= 8 && boards[row + i][col + i].getComponentCount() == 1) {
+				movepins[row + i][col + i].setVisible(true);
+			} else if (row + i <= 8 && col + i <= 8 && boards[row + i][col + i].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row + i][col + i].getComponent(1)).side.equals("white")) {
+					((ChessPiece) boards[row + i][col + i].getComponent(1))
+							.setIcon(((ChessPiece) boards[row + i][col + i].getComponent(1)).white_icon_attack);
 					break;
 				} else {
 					break;
@@ -148,12 +147,12 @@ public class Bishop extends ChessPiece{
 
 		// 공격을 안했을 시 일반 이동 액션
 		moveBlack(bishop);
-		
+
 	}
-	
+
 	@Override
 	public void whiteMove() {
-		
+
 		bishop = this;
 
 		attack = false;
@@ -175,12 +174,12 @@ public class Bishop extends ChessPiece{
 
 		// ↖ 이동 무브포인트 및 공격 말 탐색
 		for (int i = 1; i < 8; i++) {
-			if (row-i>=1&&col-i>=1&&boards[row-i][col-i].getComponentCount() == 1) {
-				movepins[row-i][col-i].setVisible(true);
-			} else if (row-i>=1&&col-i>=1&&boards[row-i][col-i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row-i][col-i].getComponent(1)).side.equals("black")) {
-					((ChessPiece) boards[row-i][col-i].getComponent(1))
-							.setIcon(((ChessPiece) boards[row-i][col-i].getComponent(1)).black_icon_attack);
+			if (row - i >= 1 && col - i >= 1 && boards[row - i][col - i].getComponentCount() == 1) {
+				movepins[row - i][col - i].setVisible(true);
+			} else if (row - i >= 1 && col - i >= 1 && boards[row - i][col - i].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row - i][col - i].getComponent(1)).side.equals("black")) {
+					((ChessPiece) boards[row - i][col - i].getComponent(1))
+							.setIcon(((ChessPiece) boards[row - i][col - i].getComponent(1)).black_icon_attack);
 					break;
 				} else {
 					break;
@@ -190,27 +189,27 @@ public class Bishop extends ChessPiece{
 
 		// ↗ 이동 무브포인트 및 공격 말 탐색
 		for (int i = 1; i < 8; i++) {
-			if (row-i>=1&&col+i<=8&&boards[row-i][col+i].getComponentCount() == 1) {
-				movepins[row-i][col+i].setVisible(true);
-			} else if (row-i>=1&&col+i<=8&&boards[row-i][col+i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row-i][col+i].getComponent(1)).side.equals("black")) {
-					((ChessPiece) boards[row-i][col+i].getComponent(1))
-							.setIcon(((ChessPiece) boards[row-i][col+i].getComponent(1)).black_icon_attack);
+			if (row - i >= 1 && col + i <= 8 && boards[row - i][col + i].getComponentCount() == 1) {
+				movepins[row - i][col + i].setVisible(true);
+			} else if (row - i >= 1 && col + i <= 8 && boards[row - i][col + i].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row - i][col + i].getComponent(1)).side.equals("black")) {
+					((ChessPiece) boards[row - i][col + i].getComponent(1))
+							.setIcon(((ChessPiece) boards[row - i][col + i].getComponent(1)).black_icon_attack);
 					break;
 				} else {
 					break;
 				}
 			}
 		}
-		
+
 		// ↙ 이동 무브포인트 및 공격 말 탐색
 		for (int i = 1; i < 8; i++) {
-			if (row+i<=8&&col-i>=1&&boards[row+i][col-i].getComponentCount() == 1) {
-				movepins[row+i][col-i].setVisible(true);
-			} else if (row+i<=8&&col-i>=1&&boards[row+i][col-i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row+i][col-i].getComponent(1)).side.equals("black")) {
-					((ChessPiece) boards[row+i][col-i].getComponent(1))
-							.setIcon(((ChessPiece) boards[row+i][col-i].getComponent(1)).black_icon_attack);
+			if (row + i <= 8 && col - i >= 1 && boards[row + i][col - i].getComponentCount() == 1) {
+				movepins[row + i][col - i].setVisible(true);
+			} else if (row + i <= 8 && col - i >= 1 && boards[row + i][col - i].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row + i][col - i].getComponent(1)).side.equals("black")) {
+					((ChessPiece) boards[row + i][col - i].getComponent(1))
+							.setIcon(((ChessPiece) boards[row + i][col - i].getComponent(1)).black_icon_attack);
 					break;
 				} else {
 					break;
@@ -220,12 +219,12 @@ public class Bishop extends ChessPiece{
 
 		// ↘ 이동 무브포인트 및 공격 말 탐색
 		for (int i = 1; i < 8; i++) {
-			if (row+i<=8&&col+i<=8&&boards[row+i][col+i].getComponentCount() == 1) {
-				movepins[row+i][col+i].setVisible(true);
-			} else if (row+i<=8&&col+i<=8&&boards[row+i][col+i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row+i][col+i].getComponent(1)).side.equals("black")) {
-					((ChessPiece) boards[row+i][col+i].getComponent(1))
-							.setIcon(((ChessPiece) boards[row+i][col+i].getComponent(1)).black_icon_attack);
+			if (row + i <= 8 && col + i <= 8 && boards[row + i][col + i].getComponentCount() == 1) {
+				movepins[row + i][col + i].setVisible(true);
+			} else if (row + i <= 8 && col + i <= 8 && boards[row + i][col + i].getComponentCount() == 2) {
+				if (((ChessPiece) boards[row + i][col + i].getComponent(1)).side.equals("black")) {
+					((ChessPiece) boards[row + i][col + i].getComponent(1))
+							.setIcon(((ChessPiece) boards[row + i][col + i].getComponent(1)).black_icon_attack);
 					break;
 				} else {
 					break;
@@ -241,8 +240,55 @@ public class Bishop extends ChessPiece{
 
 		// 공격을 안했을 시 일반 이동 액션
 		moveWhite(bishop);
-		
-	}
-	
 
+	}
+
+	// 현재 킹을 공격할 수 있는지 확인하는 메서드
+	@Override
+	public void isAttackKing() {
+		// ↖ 탐색
+		for (int i = 1; i < 8; i++) {
+			if (row - i >= 1 && col - i >= 1) {
+				if (setAttackIconIfKing(row - i, col - i)) {
+					break;
+				}
+				if (boards[row - i][col - i].getComponentCount() == 2) {
+					break; // 기물이 있으면 탐색 종료
+				}
+			}
+		}
+		// ↗ 탐색
+		for (int i = 1; i < 8; i++) {
+			if (row - i >= 1 && col + i <= 8) {
+				if (setAttackIconIfKing(row - i, col + i)) {
+					break;
+				}
+				if (boards[row - i][col + i].getComponentCount() == 2) {
+					break; // 기물이 있으면 탐색 종료
+				}
+			}
+		}
+		// ↙ 탐색
+		for (int i = 1; i < 8; i++) {
+			if (row + i <= 8 && col - i >= 1) {
+				if (setAttackIconIfKing(row + i, col - i)) {
+					break;
+				}
+				if (boards[row + i][col - i].getComponentCount() == 2) {
+					break; // 기물이 있으면 탐색 종료
+				}
+			}
+		}
+		// ↙ 탐색
+		for (int i = 1; i < 8; i++) {
+			if (row + i <= 8 && col + i <= 8) {
+				if (setAttackIconIfKing(row + i, col + i)) {
+					break;
+				}
+				if (boards[row + i][col + i].getComponentCount() == 2) {
+					break; // 기물이 있으면 탐색 종료
+				}
+			}
+		}
+	}
 }

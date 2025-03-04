@@ -31,6 +31,8 @@ abstract public class ChessPiece extends JButton {
 
 	public abstract void whiteMove();
 	
+	public abstract void isAttackKing();
+	
 	
 	// 무브핀 일괄 비활성화 메서드
 	public void movepinsNotVisible() {
@@ -117,9 +119,21 @@ abstract public class ChessPiece extends JButton {
 								
 								// 이동 횟수 증가
 								movecount++;
+
 								
 								// 사용 했거나 하지 않은 어택 리스너 제거
 								removeAttackBlack();
+								
+								// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+								if (chessBoard.isKingInCheck("white")) {
+								    System.out.println("White King is in Check!");
+								}
+								if (chessBoard.isKingInCheck("black")) {
+								    System.out.println("Black King is in Check!");
+								}
+
+								// UI 업데이트 호출 (체크 상태 즉시 반영)
+								chessBoard.updateCheckStatus();
 
 							}
 
@@ -174,10 +188,25 @@ abstract public class ChessPiece extends JButton {
 								
 								// 이동 횟수 증가
 								movecount++;
-
+								
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
+								
+								// 모든 적군말을 일반 아이콘으로 전환
+								for (int k = 0; k < chesspiece_white.size(); k++) {
+									chesspiece_white.get(k).setIcon(chesspiece_white.get(k).white_icon);
+								}
 
+								// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+								if (chessBoard.isKingInCheck("white")) {
+								    System.out.println("White King is in Check!");
+								}
+								if (chessBoard.isKingInCheck("black")) {
+								    System.out.println("Black King is in Check!");
+								}
+
+								// UI 업데이트 호출 (체크 상태 즉시 반영)
+								chessBoard.updateCheckStatus();
 							}
 						});
 
@@ -253,6 +282,17 @@ abstract public class ChessPiece extends JButton {
 
 								// 사용 했거나 하지 않은 어택 리스너 제거
 								removeAttackWhite();
+								
+								// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+								if (chessBoard.isKingInCheck("white")) {
+								    System.out.println("White King is in Check!");
+								}
+								if (chessBoard.isKingInCheck("black")) {
+								    System.out.println("Black King is in Check!");
+								}
+
+								// UI 업데이트 호출 (체크 상태 즉시 반영)
+								chessBoard.updateCheckStatus();
 							}
 
 						};
@@ -306,9 +346,25 @@ abstract public class ChessPiece extends JButton {
 								// 이동 횟수 증가
 								movecount++;
 
+
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
+								
+								// 모든 적군말을 일반 아이콘으로 전환
+								for (int k = 0; k < chesspiece_black.size(); k++) {
+									chesspiece_black.get(k).setIcon(chesspiece_black.get(k).black_icon);
+								}
 
+								// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+								if (chessBoard.isKingInCheck("white")) {
+								    System.out.println("White King is in Check!");
+								}
+								if (chessBoard.isKingInCheck("black")) {
+								    System.out.println("Black King is in Check!");
+								}
+
+								// UI 업데이트 호출 (체크 상태 즉시 반영)
+								chessBoard.updateCheckStatus();
 							}
 						});
 
@@ -316,6 +372,7 @@ abstract public class ChessPiece extends JButton {
 				}
 			}
 		}
+
 	}
 	
 	// blackMove()용 어택 리스너 제거 메서드
@@ -350,6 +407,7 @@ abstract public class ChessPiece extends JButton {
 		attackListeners.clear();
 	}
 	
+
 	//프로모션 적용을 위한 다이얼 로그
     public void showImageDialog() {
         ImageIcon p_queen = new ImageIcon("image/your_image.png");
@@ -376,3 +434,24 @@ abstract public class ChessPiece extends JButton {
         });
     }
 }
+
+	// 체크 상태를 확인하기 위해 구분하는 킹 아이콘 변경 메서드
+	public boolean setAttackIconIfKing(int targetRow, int targetCol) {
+	    if (boards[targetRow][targetCol].getComponentCount() == 2) {
+	        ChessPiece targetPiece = (ChessPiece) boards[targetRow][targetCol].getComponent(1);
+
+	        // 대상이 상대 킹인지 확인
+	        if (targetPiece instanceof King && !targetPiece.side.equals(this.side)) {
+	            if (this.side.equals("white")) {
+	                targetPiece.setIcon(targetPiece.black_icon_attack);
+	            } else {
+	                targetPiece.setIcon(targetPiece.white_icon_attack);
+	            }
+	            return true; // 킹이 발견되었으므로 탐색 종료
+	        }
+	    }
+	    return false; // 킹이 아니면 계속 탐색 가능
+	}
+
+}
+
