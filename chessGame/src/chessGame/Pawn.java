@@ -348,14 +348,22 @@ public class Pawn extends ChessPiece {
 									row = indexrow;
 									col = indexcol;
 
-									// 턴 정보를 상대 턴으로 변경
-									chessBoard.turn = "white";
-
 									// 이동 횟수 증가
 									movecount++;
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+									    System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+									    System.out.println("Black King is in Check!");
+									}
+
+									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
 
 								}
 							});
@@ -393,6 +401,17 @@ public class Pawn extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+									    System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+									    System.out.println("Black King is in Check!");
+									}
+
+									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
 
 								}
 							});
@@ -459,6 +478,17 @@ public class Pawn extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+									    System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+									    System.out.println("Black King is in Check!");
+									}
+
+									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
 
 								}
 							});
@@ -496,6 +526,17 @@ public class Pawn extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+									    System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+									    System.out.println("Black King is in Check!");
+									}
+
+									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
 
 								}
 							});
@@ -505,6 +546,32 @@ public class Pawn extends ChessPiece {
 				}
 			}
 		}
+	}
+	
+	// 현재 킹을 공격할 수 있는지 확인하는 메서드
+	@Override
+	public void isAttackKing() {
+
+		if (side.equals("white")) {
+			// 백 폰은 위쪽 대각선 공격 가능
+			if (row - 1 > 0 && col - 1 > 0) {
+				setAttackIconIfKing(row - 1, col - 1);
+			}
+			if (row - 1 > 0 && col + 1 < 9) {
+				setAttackIconIfKing(row - 1, col + 1);
+			}
+
+		} else {
+			// 흑 폰은 아래쪽 대각선 공격 가능
+			if (row + 1 < 9 && col - 1 > 0) {
+				setAttackIconIfKing(row + 1, col - 1);
+			}
+			if (row + 1 < 9 && col + 1 < 9) {
+				setAttackIconIfKing(row + 1, col + 1);
+			}
+
+		}
+
 	}
 
 }
