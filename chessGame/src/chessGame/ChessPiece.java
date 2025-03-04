@@ -453,7 +453,7 @@ abstract public class ChessPiece extends JButton {
 
 	public boolean afterCheckMove(int moverow, int movecol) {
 		int originalrow = row;
-		int originalcow = col;
+		int originalcol = col;
 
 		ChessPiece capturedPiece = null;
 		if (boards[moverow][movecol].getComponentCount() == 2
@@ -461,22 +461,45 @@ abstract public class ChessPiece extends JButton {
 			capturedPiece = (ChessPiece) boards[moverow][movecol].getComponent(1);
 			boards[moverow][movecol].remove(capturedPiece); // 상대 기물 임시 제거
 		}
+		
+		ArrayList<ChessPiece> opponentList = side.equals("white") ? chesspiece_black : chesspiece_white;
+		int removedIndex = -1;
+
+		if (capturedPiece != null) {
+		    for (int i = 0; i < opponentList.size(); i++) {
+		        if (opponentList.get(i) == capturedPiece) {
+		            removedIndex = i;
+		            opponentList.remove(i);
+		            break;
+		        }
+		    }
+		}
 
 		boards[row][col].remove(this);
 		boards[moverow][movecol].add(this, "Center");
+
+		row = moverow;
+		col = movecol;
 
 		boolean kingInCheck = chessBoard.isKingInCheck(side);
 
 		// 원래 위치로 복구
 		boards[moverow][movecol].remove(this);
-		boards[row][col].add(this, "Center");
+		boards[originalrow][originalcol].add(this, "Center");
 		row = originalrow;
-		col = originalcow;
+		col = originalcol;
 
+		if (capturedPiece != null && removedIndex != -1) {
+		    opponentList.add(removedIndex, capturedPiece);
+		}
+		
 		if (capturedPiece != null) {
-			boards[moverow][movecol].add(capturedPiece);
+			boards[moverow][movecol].add(capturedPiece,"Center");
 		}
 
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
+		
 		return kingInCheck;
 
 	}
@@ -507,6 +530,42 @@ abstract public class ChessPiece extends JButton {
 		col = prevCol;
 
 		return isStillInCheck;
+	}
+
+	public void removeCheckMovepin() {
+		int count = 0;
+		for (int i = 1; i <= 8; i++) {
+			for (int j = 1; j <= 8; j++) {
+				if (movepins[i][j].isVisible()) {
+					if (afterCheckMove(i, j)) {
+						movepins[i][j].setVisible(false);
+					}
+				}
+				if (boards[i][j].getComponentCount() == 2) {
+					ChessPiece targetpiece = (ChessPiece) boards[i][j].getComponent(1);
+					if ((side.equals("black") && targetpiece.side.equals("white"))
+							|| (side.equals("white") && targetpiece.side.equals("black"))) {
+						if (((ImageIcon) targetpiece.getIcon()).getDescription().contains("_attack")) {
+							if (afterCheckMove(i, j)) {
+								if (targetpiece.side.equals("white")) {
+									targetpiece.setIcon(targetpiece.white_icon);
+									count++;
+								} else {
+									targetpiece.setIcon(targetpiece.black_icon);
+									count++;
+								}
+							}
+						}
+					}
+
+				}
+
+			}
+		}
+		
+		
+		System.out.println(count);
+
 	}
 
 }

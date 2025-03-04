@@ -137,11 +137,11 @@ public class Rook extends ChessPiece {
 		// 위쪽 이동 무브포인트 및 공격 말 탐색
 		for (int i = row - 1; i >= 1; i--) {
 			if (boards[i][col].getComponentCount() == 1) {
-				if (!afterCheckMove(i, col)) {
-					movepins[i][col].setVisible(true);
-				}
+
+				movepins[i][col].setVisible(true);
+
 			} else if (boards[i][col].getComponentCount() == 2) {
-				if (((ChessPiece) boards[i][col].getComponent(1)).side.equals("white") && !afterCheckAttack(i, col,(ChessPiece) boards[i][col].getComponent(1))) {
+				if (((ChessPiece) boards[i][col].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[i][col].getComponent(1))
 							.setIcon(((ChessPiece) boards[i][col].getComponent(1)).white_icon_attack);
 					break;
@@ -154,11 +154,11 @@ public class Rook extends ChessPiece {
 		// 아래쪽 이동 무브포인트 및 공격 말 탐색
 		for (int i = row + 1; i <= 8; i++) {
 			if (boards[i][col].getComponentCount() == 1) {
-				if (!afterCheckMove(i, col)) {
-					movepins[i][col].setVisible(true);
-				}
+
+				movepins[i][col].setVisible(true);
+
 			} else if (boards[i][col].getComponentCount() == 2) {
-				if (((ChessPiece) boards[i][col].getComponent(1)).side.equals("white") && !afterCheckAttack(i, col,(ChessPiece) boards[i][col].getComponent(1))) {
+				if (((ChessPiece) boards[i][col].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[i][col].getComponent(1))
 							.setIcon(((ChessPiece) boards[i][col].getComponent(1)).white_icon_attack);
 					break;
@@ -171,11 +171,11 @@ public class Rook extends ChessPiece {
 		// 왼쪽 이동 무브포인트 및 공격 말 탐색
 		for (int i = col - 1; i >= 1; i--) {
 			if (boards[row][i].getComponentCount() == 1) {
-				if (!afterCheckMove(row, i)) {
-					movepins[row][i].setVisible(true);
-				}
+
+				movepins[row][i].setVisible(true);
+
 			} else if (boards[row][i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("white") && !afterCheckAttack(i, col,(ChessPiece) boards[row][i].getComponent(1))) {
+				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[row][i].getComponent(1))
 							.setIcon(((ChessPiece) boards[row][i].getComponent(1)).white_icon_attack);
 					break;
@@ -188,11 +188,11 @@ public class Rook extends ChessPiece {
 		// 오른쪽 이동 무브포인트 및 공격 말 탐색
 		for (int i = col + 1; i <= 8; i++) {
 			if (boards[row][i].getComponentCount() == 1) {
-				if (!afterCheckMove(row, i)) {
-					movepins[row][i].setVisible(true);
-				}
+
+				movepins[row][i].setVisible(true);
+
 			} else if (boards[row][i].getComponentCount() == 2) {
-				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("white") && !afterCheckAttack(i, col,(ChessPiece) boards[row][i].getComponent(1))) {
+				if (((ChessPiece) boards[row][i].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[row][i].getComponent(1))
 							.setIcon(((ChessPiece) boards[row][i].getComponent(1)).white_icon_attack);
 					break;
@@ -201,6 +201,8 @@ public class Rook extends ChessPiece {
 				}
 			}
 		}
+		
+		removeCheckMovepin();
 
 	}
 

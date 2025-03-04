@@ -287,6 +287,7 @@ public class ChessBoard extends JFrame {
 						.equals("white_icon_attack")) {
 					((ChessPiece) boards[king.row][king.col].getComponent(1))
 							.setIcon(((ChessPiece) boards[king.row][king.col].getComponent(1)).white_icon);
+					System.out.println("white king check");
 					return true; // 화이트 킹이 체크 상태
 				}
 			} else {
@@ -294,12 +295,13 @@ public class ChessBoard extends JFrame {
 						.equals("black_icon_attack")) {
 					((ChessPiece) boards[king.row][king.col].getComponent(1))
 							.setIcon(((ChessPiece) boards[king.row][king.col].getComponent(1)).black_icon);
+					System.out.println("black king check");
 					return true; // 블랙 킹이 체크 상태
 				}
 			}
 
 		}
-
+		System.out.println("nocheck");
 		return false;
 	}
 
