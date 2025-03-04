@@ -1,11 +1,14 @@
 package chessGame;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 abstract public class ChessPiece extends JButton {
@@ -94,7 +97,15 @@ abstract public class ChessPiece extends JButton {
 								// 현재 위치 값 저장
 								row = indexrow;
 								col = indexcol;
-
+								
+								//프로모션 다이얼로그
+								if(me instanceof Pawn) {
+									if(row==8) {
+										showImageDialog();
+									}
+								}
+									
+								
 								// 턴 정보를 상대 턴으로 변경
 								chessBoard.turn = "white";
 
@@ -220,7 +231,14 @@ abstract public class ChessPiece extends JButton {
 								// 현재 위치 값 저장
 								row = indexrow;
 								col = indexcol;
-
+								
+								//프로모션 다이얼로그
+								if(me instanceof Pawn) {
+									if(row==1) {
+										showImageDialog();
+									}
+								}
+								
 								// 턴 정보를 상대 턴으로 변경
 								chessBoard.turn = "black";
 
@@ -331,4 +349,30 @@ abstract public class ChessPiece extends JButton {
 		// 리스트 초기화
 		attackListeners.clear();
 	}
+	
+	//프로모션 적용을 위한 다이얼 로그
+    public void showImageDialog() {
+        ImageIcon p_queen = new ImageIcon("image/your_image.png");
+        ImageIcon p_bishop = new ImageIcon("image/your_image.png");
+        ImageIcon p_rook = new ImageIcon("image/your_image.png");
+        ImageIcon p_knight = new ImageIcon("image/your_image.png");
+        ImageIcon p_pone = new ImageIcon("image/your_image.png");
+        
+        JLabel imageLabel = new JLabel("111");
+        JButton selectButton = new JButton("선택");
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(imageLabel, BorderLayout.CENTER);
+        panel.add(selectButton, BorderLayout.SOUTH);
+
+        JOptionPane.showMessageDialog(this, panel, "이미지 선택", JOptionPane.PLAIN_MESSAGE);
+
+        selectButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 이미지 선택 시 처리 로직
+                JOptionPane.showMessageDialog(null, "이미지가 선택되었습니다!", "알림", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+    }
 }

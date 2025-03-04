@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Label;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class ChessBoard extends JFrame {
@@ -28,7 +30,7 @@ public class ChessBoard extends JFrame {
 		
 		super("테스트");
 
-		this.setSize(800, 800);
+		this.setSize(1280, 800);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
 
@@ -49,9 +51,17 @@ public class ChessBoard extends JFrame {
 		p_board = new JPanel(new GridLayout(8, 8));
 		boardSet();
 		this.add(p_board, "Center");
+		
+		JPanel p_west=new JPanel();
+		p_west.setPreferredSize(new Dimension(480,800));
+		this.add(p_west,"East");
 
 		// 말 배치
 		setChessPiece();
+		
+		//팝업창 세팅
+		Popup popup = new Popup();
+		setJMenuBar(popup.getMenuBar());
 		
 
 
@@ -138,8 +148,8 @@ public class ChessBoard extends JFrame {
 		chesspiece_black.add(new Pawn("black", 2, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black.add(new Knight("black", 1, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black.add(new Knight("black", 1, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new King("black", 4, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black.add(new Bishop("black", 4, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black.add(new King("black", 1, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black.add(new Bishop("black", 1, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black.add(new Bishop("black", 1, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black.add(new Queen("black", 1, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 
@@ -155,8 +165,8 @@ public class ChessBoard extends JFrame {
 		boards[2][8].add(chesspiece_black.get(9), "Center");
 		boards[1][2].add(chesspiece_black.get(10), "Center");
 		boards[1][7].add(chesspiece_black.get(11), "Center");
-		boards[4][5].add(chesspiece_black.get(12), "Center");
-		boards[4][3].add(chesspiece_black.get(13), "Center");
+		boards[1][5].add(chesspiece_black.get(12), "Center");
+		boards[1][3].add(chesspiece_black.get(13), "Center");
 		boards[1][6].add(chesspiece_black.get(14), "Center");
 		boards[1][4].add(chesspiece_black.get(15), "Center");
 
