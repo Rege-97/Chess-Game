@@ -53,6 +53,10 @@ public class ChessBoard extends JFrame {
 		p_board = new JPanel(new GridLayout(8, 8));
 		boardSet();
 		this.add(p_board, "Center");
+		
+		JPanel p_west=new JPanel();
+		p_west.setPreferredSize(new Dimension(480,800));
+		this.add(p_west,"East");
 
 		JPanel p_west = new JPanel(new BorderLayout());
 		p_west.setPreferredSize(new Dimension(480, 800));
@@ -65,6 +69,14 @@ public class ChessBoard extends JFrame {
 
 		// 말 배치
 		setChessPiece();
+
+		
+		//팝업창 세팅
+		Popup popup = new Popup();
+		setJMenuBar(popup.getMenuBar());
+		
+
+
 
 		// 블랙 체스말 이벤트
 		for (int i = 0; i < chesspiece_black.size(); i++) {
@@ -136,6 +148,7 @@ public class ChessBoard extends JFrame {
 		chesspiece_black = new ArrayList<ChessPiece>();
 		chesspiece_white = new ArrayList<ChessPiece>();
 
+
 		chesspiece_black
 				.add(new Rook("black", 1, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black
@@ -168,6 +181,7 @@ public class ChessBoard extends JFrame {
 				.add(new Bishop("black", 1, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black
 				.add(new Queen("black", 1, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+
 
 		boards[1][1].add(chesspiece_black.get(0), "Center");
 		boards[1][8].add(chesspiece_black.get(1), "Center");

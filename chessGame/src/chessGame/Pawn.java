@@ -1,11 +1,14 @@
 package chessGame;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Pawn extends ChessPiece {
@@ -348,11 +351,17 @@ public class Pawn extends ChessPiece {
 									row = indexrow;
 									col = indexcol;
 
+
+									// 턴 정보를 상대 턴으로 변경
+									chessBoard.turn = "white";
+
+
 									// 이동 횟수 증가
 									movecount++;
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+
 									
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
@@ -389,9 +398,16 @@ public class Pawn extends ChessPiece {
 									// 무브핀 초기화
 									movepinsNotVisible();
 
+									
 									// 현재 위치 값 저장
 									row = indexrow;
 									col = indexcol;
+									
+									//프로모션 다이얼로그
+									if(row==8) {
+										showImageDialog();
+									}
+									
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "white";
@@ -422,6 +438,7 @@ public class Pawn extends ChessPiece {
 			}
 		}
 	}
+
 
 	// 앙파상 구현을 위해 체스피스 클래스에서 오버라이딩
 	@Override
@@ -470,6 +487,13 @@ public class Pawn extends ChessPiece {
 									row = indexrow;
 									col = indexcol;
 
+									
+									//프로모션 다이얼로그
+									if(row==1) {
+										showImageDialog();
+									}
+									
+
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
 
@@ -478,6 +502,7 @@ public class Pawn extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+
 									
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
@@ -489,6 +514,7 @@ public class Pawn extends ChessPiece {
 
 									// UI 업데이트 호출 (체크 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
+
 
 								}
 							});
@@ -518,6 +544,13 @@ public class Pawn extends ChessPiece {
 									row = indexrow;
 									col = indexcol;
 
+									
+									//프로모션 다이얼로그
+									if(row==8) {
+										showImageDialog();
+									}
+									
+
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
 
@@ -526,6 +559,7 @@ public class Pawn extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+
 									
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
@@ -575,3 +609,4 @@ public class Pawn extends ChessPiece {
 	}
 
 }
+
