@@ -59,6 +59,7 @@ public class Knight extends ChessPiece {
 
 	@Override
 	public void blackMove() {
+
 		// 나 자신 세팅
 		knight = this;
 
@@ -115,9 +116,11 @@ public class Knight extends ChessPiece {
 
 		this.setIcon(white_icon_select);
 
+		
 		movepinsNotVisible();
 		removeAction();
-
+		
+		setMovePinWhite();
 		
 
 		// 공격 액션

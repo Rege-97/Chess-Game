@@ -59,6 +59,7 @@ public class Queen extends ChessPiece {
 
 	@Override
 	public void blackMove() {
+
 		queen = this;
 
 		attack = false;

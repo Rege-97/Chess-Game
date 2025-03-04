@@ -61,6 +61,7 @@ public class King extends ChessPiece {
 
 	@Override
 	public void blackMove() {
+
 		// 나 자신 세팅
 		king = this;
 
@@ -81,7 +82,6 @@ public class King extends ChessPiece {
 		this.setIcon(black_icon_select);
 
 		movepinsNotVisible();
-		removeAction();
 
 		setMovePinBlack();
 
@@ -747,19 +747,4 @@ public class King extends ChessPiece {
 		}
 
 	}
-
-	public void checkMove() {
-		if (side.equals("white")) {
-			ArrayList<ChessPiece> enemypiece = chessBoard.checkpiece_black;
-			// ⬆️방향 탐색
-			if (row - 1 > 0) {
-				for (int i = 0; i < enemypiece.size(); i++) {
-					enemypiece.get(i).isAttackKing();
-				}
-			}
-
-		}
-
-	}
-
 }

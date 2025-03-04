@@ -37,6 +37,10 @@ public class ChessBoard extends JFrame {
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
 
+		checkpiece_black=new ArrayList<ChessPiece>();
+		checkpiece_white=new ArrayList<ChessPiece>();
+		
+		
 		// 화면 중앙 출력
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = getSize();

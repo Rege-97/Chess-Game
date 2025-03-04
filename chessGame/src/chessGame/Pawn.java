@@ -59,6 +59,7 @@ public class Pawn extends ChessPiece {
 
 	@Override
 	public void blackMove() {
+
 		pawn = this;
 
 		attack = false;
@@ -114,6 +115,7 @@ public class Pawn extends ChessPiece {
 		removeAction();
 
 		setMovePinWhite();
+		
 
 		// 공격
 		attackWhite(pawn);

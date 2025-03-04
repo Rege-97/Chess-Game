@@ -132,7 +132,10 @@ public class Bishop extends ChessPiece {
 		// ↖ 이동 무브포인트 및 공격 말 탐색
 		for (int i = 1; i < 8; i++) {
 			if (row - i >= 1 && col - i >= 1 && boards[row - i][col - i].getComponentCount() == 1) {
-				movepins[row - i][col - i].setVisible(true);
+				 // 이동 후에도 체크 상태인지 확인
+	            if (!chessBoard.isKingInCheck("white") || !afterCheckMove(row - i, col - i)) {
+	                movepins[row - i][col - i].setVisible(true);
+	            }
 			} else if (row - i >= 1 && col - i >= 1 && boards[row - i][col - i].getComponentCount() == 2) {
 				if (((ChessPiece) boards[row - i][col - i].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[row - i][col - i].getComponent(1))
