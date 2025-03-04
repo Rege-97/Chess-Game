@@ -58,7 +58,7 @@ public class ChessBoard extends JFrame {
 		p_west.setPreferredSize(new Dimension(480, 800));
 		this.add(p_west, "East");
 
-		check = new JLabel("play", JLabel.CENTER);
+		check = new JLabel("Play", JLabel.CENTER);
 		check.setFont(new Font("Default Font", Font.PLAIN, 50));
 		p_west.add(check, "North");
 
@@ -275,10 +275,22 @@ public class ChessBoard extends JFrame {
 
 		// 킹의 아이콘이 공격 아이콘으로 변경되었는지 확인
 		if (boards[king.row][king.col].getComponentCount() == 2) {
-			if (((ImageIcon) ((ChessPiece) boards[king.row][king.col].getComponent(1)).getIcon()).getDescription()
-					.contains("_attack")) {
-				return true; // 킹이 체크 상태
+			if (kingSide.equals("white")) {
+				if (((ImageIcon) ((ChessPiece) boards[king.row][king.col].getComponent(1)).getIcon()).getDescription()
+						.equals("white_icon_attack")) {
+					((ChessPiece) boards[king.row][king.col].getComponent(1))
+							.setIcon(((ChessPiece) boards[king.row][king.col].getComponent(1)).white_icon);
+					return true; // 화이트 킹이 체크 상태
+				}
+			} else {
+				if (((ImageIcon) ((ChessPiece) boards[king.row][king.col].getComponent(1)).getIcon()).getDescription()
+						.equals("black_icon_attack")) {
+					((ChessPiece) boards[king.row][king.col].getComponent(1))
+					.setIcon(((ChessPiece) boards[king.row][king.col].getComponent(1)).black_icon);
+					return true; // 블랙 킹이 체크 상태
+				}
 			}
+
 		}
 
 		return false;

@@ -353,6 +353,17 @@ public class Pawn extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+									    System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+									    System.out.println("Black King is in Check!");
+									}
+
+									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
 
 								}
 							});
@@ -390,6 +401,17 @@ public class Pawn extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+									    System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+									    System.out.println("Black King is in Check!");
+									}
+
+									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
 
 								}
 							});
@@ -456,6 +478,17 @@ public class Pawn extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+									    System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+									    System.out.println("Black King is in Check!");
+									}
+
+									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
 
 								}
 							});
@@ -493,6 +526,17 @@ public class Pawn extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+									    System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+									    System.out.println("Black King is in Check!");
+									}
+
+									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
 
 								}
 							});

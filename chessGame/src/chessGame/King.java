@@ -433,6 +433,17 @@ public class King extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+									    System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+									    System.out.println("Black King is in Check!");
+									}
+
+									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
 								}
 							});
 
@@ -469,6 +480,22 @@ public class King extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									// 모든 적군말을 일반 아이콘으로 전환
+									for (int k = 0; k < chesspiece_white.size(); k++) {
+										chesspiece_white.get(k).setIcon(chesspiece_white.get(k).white_icon);
+									}
+									
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+									    System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+									    System.out.println("Black King is in Check!");
+									}
+
+									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
 
 								}
 							});
@@ -548,6 +575,17 @@ public class King extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+									    System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+									    System.out.println("Black King is in Check!");
+									}
+
+									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
 								}
 							});
 
@@ -584,6 +622,22 @@ public class King extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									// 모든 적군말을 일반 아이콘으로 전환
+									for (int k = 0; k < chesspiece_black.size(); k++) {
+										chesspiece_black.get(k).setIcon(chesspiece_black.get(k).black_icon);
+									}
+									
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+									    System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+									    System.out.println("Black King is in Check!");
+									}
+
+									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
 
 								}
 							});
@@ -607,6 +661,7 @@ public class King extends ChessPiece {
 		// ⬅️방향 탐색
 		if (col - 1 > 0) {
 			setAttackIconIfKing(row, col - 1);
+			
 		}
 		// ➡️방향 탐색
 		if (col + 1 < 9) {

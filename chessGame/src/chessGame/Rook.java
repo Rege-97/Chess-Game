@@ -265,7 +265,7 @@ public class Rook extends ChessPiece {
 				break;
 			}
 			if (boards[i][col].getComponentCount() == 2) {
-				break;
+				break; // 기물이 있으면 탐색 종료
 			}
 		}
 
@@ -275,7 +275,7 @@ public class Rook extends ChessPiece {
 				break;
 			}
 			if (boards[row][i].getComponentCount() == 2) {
-				break;
+				break; // 기물이 있으면 탐색 종료
 			}
 		}
 
@@ -285,7 +285,7 @@ public class Rook extends ChessPiece {
 				break;
 			}
 			if (boards[row][i].getComponentCount() == 2) {
-				break;
+				break; // 기물이 있으면 탐색 종료
 			}
 		}
 
