@@ -215,7 +215,7 @@ public class King extends ChessPiece {
 										System.out.println("Black King is in Check!");
 									}
 
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 									
 									p_board.getParent().validate();
@@ -269,7 +269,7 @@ public class King extends ChessPiece {
 										System.out.println("Black King is in Check!");
 									}
 									
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
@@ -361,7 +361,7 @@ public class King extends ChessPiece {
 										System.out.println("Black King is in Check!");
 									}
 
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
@@ -414,7 +414,7 @@ public class King extends ChessPiece {
 										System.out.println("Black King is in Check!");
 									}
 
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 
 									p_board.getParent().validate();
