@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 public class Pawn extends ChessPiece {
 	Pawn pawn;
+	int lastmoveturn;	// 마지막으로 이동한 턴수를 저장하는 변수(앙파상 검사)
 
 	public Pawn(String side, int row, int col, ChessBoard chessBoard, JPanel boards[][], JButton movepins[][],
 			JPanel p_board, ArrayList<ChessPiece> chesspiece_black, ArrayList<ChessPiece> chesspiece_white) {
@@ -52,6 +53,7 @@ public class Pawn extends ChessPiece {
 		attackListeners = new ArrayList<ActionListener>();
 
 		movecount = 0;
+		lastmoveturn = 0;
 	}
 
 	@Override
@@ -180,10 +182,12 @@ public class Pawn extends ChessPiece {
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "white";
 									chessBoard.lb_turn.setText("White");
+									lastmoveturn = chessBoard.turn_count;
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 
 									// 이동 횟수 증가
 									movecount++;
-
 
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
@@ -234,10 +238,12 @@ public class Pawn extends ChessPiece {
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "white";
 									chessBoard.lb_turn.setText("White");
+									lastmoveturn = chessBoard.turn_count;
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 
 									// 이동 횟수 증가
 									movecount++;
-
 
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
@@ -246,7 +252,7 @@ public class Pawn extends ChessPiece {
 									if (chessBoard.isKingInCheck("black")) {
 										System.out.println("Black King is in Check!");
 									}
-									
+
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 
@@ -317,6 +323,9 @@ public class Pawn extends ChessPiece {
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
 									chessBoard.lb_turn.setText("Black");
+									lastmoveturn = chessBoard.turn_count;
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 
 									// 이동 횟수 증가
 									movecount++;
@@ -332,7 +341,6 @@ public class Pawn extends ChessPiece {
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 
-									
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
 								}
@@ -371,10 +379,12 @@ public class Pawn extends ChessPiece {
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
 									chessBoard.lb_turn.setText("Black");
+									lastmoveturn = chessBoard.turn_count;
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 
 									// 이동 횟수 증가
 									movecount++;
-
 
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
@@ -383,7 +393,7 @@ public class Pawn extends ChessPiece {
 									if (chessBoard.isKingInCheck("black")) {
 										System.out.println("Black King is in Check!");
 									}
-									
+
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 
@@ -477,7 +487,11 @@ public class Pawn extends ChessPiece {
 					if (((ChessPiece) boards[row][col - 1].getComponent(1)).side.equals("white")
 							&& ((ChessPiece) boards[row][col - 1].getComponent(1)) instanceof Pawn) {
 						if (((ChessPiece) boards[row][col - 1].getComponent(1)).movecount == 1) {
-							movepins[row + 1][col - 1].setVisible(true);
+							// 상대 폰이 이전 턴에 마지막으로 움직인 기물이라면 앙파상 가능
+							if (((Pawn) boards[row][col - 1].getComponent(1)).lastmoveturn == chessBoard.turn_count
+									- 1) {
+								movepins[row + 1][col - 1].setVisible(true);
+							}
 						}
 					}
 				}
@@ -487,7 +501,11 @@ public class Pawn extends ChessPiece {
 					if (((ChessPiece) boards[row][col + 1].getComponent(1)).side.equals("white")
 							&& ((ChessPiece) boards[row][col + 1].getComponent(1)) instanceof Pawn) {
 						if (((ChessPiece) boards[row][col + 1].getComponent(1)).movecount == 1) {
-							movepins[row + 1][col + 1].setVisible(true);
+							// 상대 폰이 이전 턴에 마지막으로 움직인 기물이라면 앙파상 가능
+							if (((Pawn) boards[row][col + 1].getComponent(1)).lastmoveturn == chessBoard.turn_count
+									- 1) {
+								movepins[row + 1][col + 1].setVisible(true);
+							}
 						}
 					}
 				}
@@ -495,7 +513,7 @@ public class Pawn extends ChessPiece {
 		}
 		// 체크 시 체크 해제만을 위한 이동경로로 제한
 		removeCheckMovepin();
-		
+
 		p_board.getParent().validate();
 		p_board.getParent().repaint();
 	}
@@ -574,7 +592,11 @@ public class Pawn extends ChessPiece {
 					if (((ChessPiece) boards[row][col - 1].getComponent(1)).side.equals("black")
 							&& ((ChessPiece) boards[row][col - 1].getComponent(1)) instanceof Pawn) {
 						if (((ChessPiece) boards[row][col - 1].getComponent(1)).movecount == 1) {
-							movepins[row - 1][col - 1].setVisible(true);
+							// 상대 폰이 이전 턴에 마지막으로 움직인 기물이라면 앙파상 가능
+							if (((Pawn) boards[row][col - 1].getComponent(1)).lastmoveturn == chessBoard.turn_count
+									- 1) {
+								movepins[row - 1][col - 1].setVisible(true);
+							}
 						}
 					}
 				}
@@ -584,7 +606,11 @@ public class Pawn extends ChessPiece {
 					if (((ChessPiece) boards[row][col + 1].getComponent(1)).side.equals("black")
 							&& ((ChessPiece) boards[row][col + 1].getComponent(1)) instanceof Pawn) {
 						if (((ChessPiece) boards[row][col + 1].getComponent(1)).movecount == 1) {
-							movepins[row - 1][col + 1].setVisible(true);
+							// 상대 폰이 이전 턴에 마지막으로 움직인 기물이라면 앙파상 가능
+							if (((Pawn) boards[row][col + 1].getComponent(1)).lastmoveturn == chessBoard.turn_count
+									- 1) {
+								movepins[row - 1][col + 1].setVisible(true);
+							}
 						}
 					}
 				}
@@ -592,7 +618,7 @@ public class Pawn extends ChessPiece {
 		}
 		// 체크 시 체크 해제만을 위한 이동경로로 제한
 		removeCheckMovepin();
-		
+
 		p_board.getParent().validate();
 		p_board.getParent().repaint();
 	}

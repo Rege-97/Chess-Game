@@ -26,6 +26,9 @@ public class ChessBoard extends JFrame {
 	ArrayList<ChessPiece> chesspiece_black, chesspiece_white;
 	JLabel lb_check;
 	JLabel lb_turn;
+	JLabel lb_turn_count;	
+	String checkpiece;
+	int turn_count;
 
 	public ChessBoard() {
 
@@ -47,6 +50,7 @@ public class ChessBoard extends JFrame {
 
 		// 초기 턴 화이트
 		turn = "white";
+		turn_count=1;
 
 		// 보드 세팅
 		p_board = new JPanel(new GridLayout(8, 8));
@@ -62,9 +66,15 @@ public class ChessBoard extends JFrame {
 		lb_check.setFont(new Font("Default Font", Font.PLAIN, 50));
 		p_west.add(lb_check, "North");
 
+		// 턴을 표시하기 위한 임시 라벨
 		lb_turn = new JLabel("White", JLabel.CENTER);
 		lb_turn.setFont(new Font("Default Font", Font.PLAIN, 50));
 		p_west.add(lb_turn, "Center");
+		
+		// 턴수를 표기하기 위한 임시 라벨
+		lb_turn_count = new JLabel(turn_count+"", JLabel.CENTER);
+		lb_turn_count.setFont(new Font("Default Font", Font.PLAIN, 50));
+		p_west.add(lb_turn_count, "South");
 
 		// 말 배치
 		setChessPiece();

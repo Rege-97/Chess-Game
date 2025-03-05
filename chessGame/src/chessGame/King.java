@@ -3,7 +3,6 @@ package chessGame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Locale.Category;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -202,6 +201,8 @@ public class King extends ChessPiece {
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "white";
 									chessBoard.lb_turn.setText("White");
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count+"");
 
 									// 이동 횟수 증가
 									movecount++;
@@ -251,6 +252,8 @@ public class King extends ChessPiece {
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "white";
 									chessBoard.lb_turn.setText("White");
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count+"");
 
 									// 이동 횟수 증가
 									movecount++;
@@ -348,6 +351,8 @@ public class King extends ChessPiece {
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
 									chessBoard.lb_turn.setText("Black");
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count+"");
 
 									// 이동 횟수 증가
 									movecount++;
@@ -396,6 +401,8 @@ public class King extends ChessPiece {
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
 									chessBoard.lb_turn.setText("Black");
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count+"");
 
 									// 이동 횟수 증가
 									movecount++;
@@ -533,7 +540,9 @@ public class King extends ChessPiece {
 			if (boards[row][col + 3].getComponentCount() == 2) {
 				if (boards[row][col + 3].getComponent(1) instanceof Rook
 						&& ((ChessPiece) boards[row][col + 3].getComponent(1)).movecount == 0) {
-					movepins[row][col + 2].setVisible(true);
+					if(!chessBoard.isKingInCheck(side)) { // 현재 체크가 아닐 시에만 캐슬링 가능
+						movepins[row][col + 2].setVisible(true);						
+					}
 				}
 			}
 		}
@@ -544,7 +553,9 @@ public class King extends ChessPiece {
 			if (boards[row][col - 4].getComponentCount() == 2) {
 				if (boards[row][col - 4].getComponent(1) instanceof Rook
 						&& ((ChessPiece) boards[row][col - 4].getComponent(1)).movecount == 0) {
-					movepins[row][col - 2].setVisible(true);
+					if(!chessBoard.isKingInCheck(side)) { // 현재 체크가 아닐 시에만 캐슬링 가능					
+						movepins[row][col - 2].setVisible(true);
+					}
 				}
 			}
 		}
@@ -659,7 +670,9 @@ public class King extends ChessPiece {
 			if (boards[row][col + 3].getComponentCount() == 2) {
 				if (boards[row][col + 3].getComponent(1) instanceof Rook
 						&& ((ChessPiece) boards[row][col + 3].getComponent(1)).movecount == 0) {
-					movepins[row][col + 2].setVisible(true);
+					if(!chessBoard.isKingInCheck(side)) { // 현재 체크가 아닐 시에만 캐슬링 가능
+						movepins[row][col + 2].setVisible(true);						
+					}
 				}
 			}
 		}
@@ -670,7 +683,9 @@ public class King extends ChessPiece {
 			if (boards[row][col - 4].getComponentCount() == 2) {
 				if (boards[row][col - 4].getComponent(1) instanceof Rook
 						&& ((ChessPiece) boards[row][col - 4].getComponent(1)).movecount == 0) {
-					movepins[row][col - 2].setVisible(true);
+					if(!chessBoard.isKingInCheck(side)) { // 현재 체크가 아닐 시에만 캐슬링 가능
+						movepins[row][col - 2].setVisible(true);						
+					}
 				}
 			}
 		}
