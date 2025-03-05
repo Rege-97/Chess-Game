@@ -257,6 +257,9 @@ public class Queen extends ChessPiece {
 		}
 		// 체크 시 체크 해제만을 위한 이동경로로 제한
 		removeCheckMovepin();
+		
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
 	}
 
 	@Override
@@ -382,6 +385,9 @@ public class Queen extends ChessPiece {
 		}
 		// 체크 시 체크 해제만을 위한 이동경로로 제한
 		removeCheckMovepin();
+		
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
 	}
 
 	// 현재 킹을 공격할 수 있는지 확인하는 메서드

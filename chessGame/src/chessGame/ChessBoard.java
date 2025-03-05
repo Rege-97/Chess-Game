@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Label;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +25,7 @@ public class ChessBoard extends JFrame {
 	ImageIcon movepin;
 	ArrayList<ChessPiece> chesspiece_black, chesspiece_white;
 	JLabel lb_check;
+	JLabel lb_turn;
 
 	public ChessBoard() {
 
@@ -34,7 +34,7 @@ public class ChessBoard extends JFrame {
 		this.setSize(1280, 800);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
-		
+
 		// 화면 중앙 출력
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = getSize();
@@ -53,7 +53,7 @@ public class ChessBoard extends JFrame {
 		boardSet();
 		this.add(p_board, "Center");
 
-		JPanel p_west = new JPanel();
+		JPanel p_west = new JPanel(new BorderLayout());
 		p_west.setPreferredSize(new Dimension(480, 800));
 		this.add(p_west, "East");
 
@@ -61,6 +61,10 @@ public class ChessBoard extends JFrame {
 		lb_check = new JLabel("Play", JLabel.CENTER);
 		lb_check.setFont(new Font("Default Font", Font.PLAIN, 50));
 		p_west.add(lb_check, "North");
+
+		lb_turn = new JLabel("White", JLabel.CENTER);
+		lb_turn.setFont(new Font("Default Font", Font.PLAIN, 50));
+		p_west.add(lb_turn, "Center");
 
 		// 말 배치
 		setChessPiece();
@@ -90,6 +94,7 @@ public class ChessBoard extends JFrame {
 						chesspiece_white.get(index).whiteMove();
 					}
 				}
+
 			});
 		}
 		this.validate();
@@ -299,21 +304,107 @@ public class ChessBoard extends JFrame {
 	// 체크 상태가 되면 화면 업데이트 메서드
 	public void updateCheckStatus() {
 		if (isKingInCheck("white")) {
+			if (checkMate("white")) {
+				lb_check.setText("White Checkmate!");
+			} else {
 			lb_check.setText("White King in Check!");
-			white_check = true;
+		}
 		} else if (isKingInCheck("black")) {
+			if (checkMate("black")) {
+				lb_check.setText("Black Checkmate!");
+			} else {
 			lb_check.setText("Black King in Check!");
-			black_check = true;
-		} else {
+			}
+		} else
+
+		{
 			lb_check.setText("Play");
-			white_check = false;
-			black_check = false;
 		}
 
 		// UI 즉시 새로고침
 		lb_check.repaint();
 		this.validate();
 		this.repaint();
+	}
+
+	public boolean checkMate(String kingSide) {
+		int movepincount = 0;
+		int attackcount = 0;
+
+		if (kingSide.equals("white")) {
+			for (int z = 0; z < chesspiece_white.size(); z++) {
+				if (chesspiece_white.get(z).isEnabled()) {
+					chesspiece_white.get(z).whiteMove();
+				}
+
+				for (int i = 1; i <= 8; i++) {
+					for (int j = 1; j <= 8; j++) {
+						if (movepins[i][j].isVisible()) {
+							movepincount++;
+						}
+						if (boards[i][j].getComponentCount() == 2) {
+							if (((ImageIcon) ((ChessPiece) boards[i][j].getComponent(1)).getIcon()).getDescription()
+									.equals("black_icon_attack")) {
+								attackcount++;
+							}
+							if (((ChessPiece) boards[i][j].getComponent(1)).side.equals("black")) {
+								((ChessPiece) boards[i][j].getComponent(1))
+										.setIcon(((ChessPiece) boards[i][j].getComponent(1)).black_icon);
+							} else {
+								((ChessPiece) boards[i][j].getComponent(1))
+										.setIcon(((ChessPiece) boards[i][j].getComponent(1)).white_icon);
+							}
+						}
+					}
+				}
+			}
+			System.out.println("Wm=" + movepincount);
+			System.out.println("Wa=" + attackcount);
+
+			if (movepincount == 0 && attackcount == 0) {
+				return true;
+			} else {
+				return false;
+			}
+
+		} else if (kingSide.equals("black")) {
+			for (int z = 0; z < chesspiece_black.size(); z++) {
+				if (chesspiece_black.get(z).isEnabled()) {
+					chesspiece_black.get(z).blackMove();
+				}
+
+				for (int i = 1; i <= 8; i++) {
+					for (int j = 1; j <= 8; j++) {
+						if (movepins[i][j].isVisible()) {
+							movepincount++;
+						}
+						movepins[i][j].setVisible(false);
+						if (boards[i][j].getComponentCount() == 2) {
+							if (((ImageIcon) ((ChessPiece) boards[i][j].getComponent(1)).getIcon()).getDescription()
+									.equals("white_icon_attack")) {
+								attackcount++;
+							}
+							if (((ChessPiece) boards[i][j].getComponent(1)).side.equals("white")) {
+								((ChessPiece) boards[i][j].getComponent(1))
+										.setIcon(((ChessPiece) boards[i][j].getComponent(1)).white_icon);
+							} else {
+								((ChessPiece) boards[i][j].getComponent(1))
+										.setIcon(((ChessPiece) boards[i][j].getComponent(1)).black_icon);
+							}
+						}
+					}
+				}
+			}
+			System.out.println("Bm=" + movepincount);
+			System.out.println("Ba=" + attackcount);
+
+			if (movepincount == 0 && attackcount == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return false;
 	}
 
 	public static void main(String[] args) {

@@ -140,10 +140,10 @@ public class Bishop extends ChessPiece {
 		// ↖ 이동 무브포인트 및 공격 말 탐색
 		for (int i = 1; i < 8; i++) {
 			if (row - i >= 1 && col - i >= 1 && boards[row - i][col - i].getComponentCount() == 1) {
-				 // 이동 후에도 체크 상태인지 확인
+				// 이동 후에도 체크 상태인지 확인
 
-	                movepins[row - i][col - i].setVisible(true);
-	           
+				movepins[row - i][col - i].setVisible(true);
+
 			} else if (row - i >= 1 && col - i >= 1 && boards[row - i][col - i].getComponentCount() == 2) {
 				if (((ChessPiece) boards[row - i][col - i].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[row - i][col - i].getComponent(1))
@@ -201,6 +201,9 @@ public class Bishop extends ChessPiece {
 		}
 		// 체크 시 체크 해제만을 위한 이동경로로 제한
 		removeCheckMovepin();
+		
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
 	}
 
 	@Override
@@ -266,6 +269,9 @@ public class Bishop extends ChessPiece {
 		}
 		// 체크 시 체크 해제만을 위한 이동경로로 제한
 		removeCheckMovepin();
+		
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
 	}
 
 	// 현재 킹을 공격할 수 있는지 확인하는 메서드
