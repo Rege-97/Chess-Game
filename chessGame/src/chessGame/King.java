@@ -3,7 +3,6 @@ package chessGame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Locale.Category;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -533,7 +532,9 @@ public class King extends ChessPiece {
 			if (boards[row][col + 3].getComponentCount() == 2) {
 				if (boards[row][col + 3].getComponent(1) instanceof Rook
 						&& ((ChessPiece) boards[row][col + 3].getComponent(1)).movecount == 0) {
-					movepins[row][col + 2].setVisible(true);
+					if(!chessBoard.isKingInCheck(side)) { // 현재 체크가 아닐 시에만 캐슬링 가능
+						movepins[row][col + 2].setVisible(true);						
+					}
 				}
 			}
 		}
@@ -544,7 +545,9 @@ public class King extends ChessPiece {
 			if (boards[row][col - 4].getComponentCount() == 2) {
 				if (boards[row][col - 4].getComponent(1) instanceof Rook
 						&& ((ChessPiece) boards[row][col - 4].getComponent(1)).movecount == 0) {
-					movepins[row][col - 2].setVisible(true);
+					if(!chessBoard.isKingInCheck(side)) { // 현재 체크가 아닐 시에만 캐슬링 가능					
+						movepins[row][col - 2].setVisible(true);
+					}
 				}
 			}
 		}
@@ -659,7 +662,9 @@ public class King extends ChessPiece {
 			if (boards[row][col + 3].getComponentCount() == 2) {
 				if (boards[row][col + 3].getComponent(1) instanceof Rook
 						&& ((ChessPiece) boards[row][col + 3].getComponent(1)).movecount == 0) {
-					movepins[row][col + 2].setVisible(true);
+					if(!chessBoard.isKingInCheck(side)) { // 현재 체크가 아닐 시에만 캐슬링 가능
+						movepins[row][col + 2].setVisible(true);						
+					}
 				}
 			}
 		}
@@ -670,7 +675,9 @@ public class King extends ChessPiece {
 			if (boards[row][col - 4].getComponentCount() == 2) {
 				if (boards[row][col - 4].getComponent(1) instanceof Rook
 						&& ((ChessPiece) boards[row][col - 4].getComponent(1)).movecount == 0) {
-					movepins[row][col - 2].setVisible(true);
+					if(!chessBoard.isKingInCheck(side)) { // 현재 체크가 아닐 시에만 캐슬링 가능
+						movepins[row][col - 2].setVisible(true);						
+					}
 				}
 			}
 		}

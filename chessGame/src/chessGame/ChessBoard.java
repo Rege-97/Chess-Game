@@ -26,6 +26,7 @@ public class ChessBoard extends JFrame {
 	ArrayList<ChessPiece> chesspiece_black, chesspiece_white;
 	JLabel lb_check;
 	JLabel lb_turn;
+	String checkpiece;
 
 	public ChessBoard() {
 
