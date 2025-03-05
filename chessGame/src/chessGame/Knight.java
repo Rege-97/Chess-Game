@@ -67,7 +67,7 @@ public class Knight extends ChessPiece {
 		attack = false;
 		attackListener = null;
 
-		// 버튼 클릭 시 초기화
+		// 버튼 클릭 시 아이콘과 공격 액션 초기화
 		for (int i = 0; i < chesspiece_black.size(); i++) {
 			if (chesspiece_black.get(i) != knight) {
 				chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
@@ -84,6 +84,7 @@ public class Knight extends ChessPiece {
 		movepinsNotVisible();
 		removeAction();
 
+		// 이동 경로와 공격 세팅
 		setMovePinBlack();
 
 		// 공격 액션
@@ -106,7 +107,7 @@ public class Knight extends ChessPiece {
 		attack = false;
 		attackListener = null;
 
-		// 버튼 클릭 시 초기화
+		// 버튼 클릭 시 아이콘과 공격 액션 초기화
 		for (int i = 0; i < chesspiece_white.size(); i++) {
 			if (chesspiece_white.get(i) != knight) {
 				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
@@ -123,6 +124,7 @@ public class Knight extends ChessPiece {
 		movepinsNotVisible();
 		removeAction();
 
+		// 이동 경로와 공격 세팅
 		setMovePinWhite();
 
 		// 공격 액션
@@ -229,6 +231,7 @@ public class Knight extends ChessPiece {
 				}
 			}
 		}
+		// 체크 시 체크 해제만을 위한 이동경로로 제한
 		removeCheckMovepin();
 	}
 
@@ -325,6 +328,7 @@ public class Knight extends ChessPiece {
 				}
 			}
 		}
+		// 체크 시 체크 해제만을 위한 이동경로로 제한
 		removeCheckMovepin();
 	}
 

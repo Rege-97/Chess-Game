@@ -451,36 +451,40 @@ abstract public class ChessPiece extends JButton {
 		return false; // 킹이 아니면 계속 탐색 가능
 	}
 
+	// 체크시 체크 해제를 위한 이동이 맞는지 판단하는 메서드
 	public boolean afterCheckMove(int moverow, int movecol) {
 		int originalrow = row;
 		int originalcol = col;
 
+		// 이동하려는 경로에 상대 기물이 있을 경우
 		ChessPiece capturedPiece = null;
 		if (boards[moverow][movecol].getComponentCount() == 2
 				&& !((ChessPiece) boards[moverow][movecol].getComponent(1)).side.equals(side)) {
 			capturedPiece = (ChessPiece) boards[moverow][movecol].getComponent(1);
 			boards[moverow][movecol].remove(capturedPiece); // 상대 기물 임시 제거
 		}
-		
+		// 상대 기물을 기물 모음 리스트에서 잠시 제거 후 인덱스 값 저장
+		// 인덱스가 -1인채면 공격을 한것이 아닌 것으로 간주
 		ArrayList<ChessPiece> opponentList = side.equals("white") ? chesspiece_black : chesspiece_white;
 		int removedIndex = -1;
 
 		if (capturedPiece != null) {
-		    for (int i = 0; i < opponentList.size(); i++) {
-		        if (opponentList.get(i) == capturedPiece) {
-		            removedIndex = i;
-		            opponentList.remove(i);
-		            break;
-		        }
-		    }
+			for (int i = 0; i < opponentList.size(); i++) {
+				if (opponentList.get(i) == capturedPiece) {
+					removedIndex = i;
+					opponentList.remove(i);
+					break;
+				}
+			}
 		}
-
+		// 예상 이동 경로로 아군 기물 임시 이동
 		boards[row][col].remove(this);
 		boards[moverow][movecol].add(this, "Center");
 
 		row = moverow;
 		col = movecol;
 
+		// 이동된 상태에서 체크가 되는지 판단 후 결과 저장
 		boolean kingInCheck = chessBoard.isKingInCheck(side);
 
 		// 원래 위치로 복구
@@ -489,51 +493,26 @@ abstract public class ChessPiece extends JButton {
 		row = originalrow;
 		col = originalcol;
 
+		// 상대 기물을 공격한 상황이였다면 상대 기물 복구
 		if (capturedPiece != null && removedIndex != -1) {
-		    opponentList.add(removedIndex, capturedPiece);
+			opponentList.add(removedIndex, capturedPiece);
 		}
-		
+
 		if (capturedPiece != null) {
-			boards[moverow][movecol].add(capturedPiece,"Center");
+			boards[moverow][movecol].add(capturedPiece, "Center");
 		}
 
 		p_board.getParent().validate();
 		p_board.getParent().repaint();
-		
+
+		// 결과값 리턴
 		return kingInCheck;
 
 	}
 
-	public boolean afterCheckAttack(int targetrow, int targetcol, ChessPiece target) {
-		int prevRow = row;
-		int prevCol = col;
-		JPanel prevpanel = boards[row][col];
-		JPanel targetpanel = boards[targetrow][targetcol];
-
-		// 상대 기물 임시 제거
-		targetpanel.remove(target);
-		prevpanel.remove(this);
-		targetpanel.add(this, "Center");
-
-		row = targetrow;
-		col = targetcol;
-
-		// 공격 후 체크 상태 확인
-		boolean isStillInCheck = chessBoard.isKingInCheck(side);
-
-		// 원래 상태로 복구
-		targetpanel.remove(this);
-		prevpanel.add(this, "Center");
-		targetpanel.add(target, "Center");
-
-		row = prevRow;
-		col = prevCol;
-
-		return isStillInCheck;
-	}
-
+	// 체크 시 체크 해제만을 위한 이동경로로 제한하는 메서드
 	public void removeCheckMovepin() {
-		int count = 0;
+		// 현재 보드에 보여지는 무브핀으로 이동 시 체크인지 판단 후 체크라면 무브핀 제거
 		for (int i = 1; i <= 8; i++) {
 			for (int j = 1; j <= 8; j++) {
 				if (movepins[i][j].isVisible()) {
@@ -541,6 +520,7 @@ abstract public class ChessPiece extends JButton {
 						movepins[i][j].setVisible(false);
 					}
 				}
+				// 현재 공격 아이콘이 활성화된 곳으로 공격 시 체크인지 판단 후 체크라면 공격 아이콘 일반으로 변경
 				if (boards[i][j].getComponentCount() == 2) {
 					ChessPiece targetpiece = (ChessPiece) boards[i][j].getComponent(1);
 					if ((side.equals("black") && targetpiece.side.equals("white"))
@@ -549,10 +529,8 @@ abstract public class ChessPiece extends JButton {
 							if (afterCheckMove(i, j)) {
 								if (targetpiece.side.equals("white")) {
 									targetpiece.setIcon(targetpiece.white_icon);
-									count++;
 								} else {
 									targetpiece.setIcon(targetpiece.black_icon);
-									count++;
 								}
 							}
 						}
@@ -562,9 +540,6 @@ abstract public class ChessPiece extends JButton {
 
 			}
 		}
-		
-		
-		System.out.println(count);
 
 	}
 
