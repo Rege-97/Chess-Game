@@ -74,9 +74,11 @@ public class King extends ChessPiece {
 			if (chesspiece_black.get(i) != king) {
 				chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
 			}
+			chesspiece_black.get(i).removeAttackBlack();
 		}
 		for (int i = 0; i < chesspiece_white.size(); i++) {
 			chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
+			chesspiece_white.get(i).removeAttackWhite();
 		}
 
 		this.setIcon(black_icon_select);
@@ -109,9 +111,11 @@ public class King extends ChessPiece {
 			if (chesspiece_white.get(i) != king) {
 				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
 			}
+			chesspiece_white.get(i).removeAttackWhite();
 		}
 		for (int i = 0; i < chesspiece_black.size(); i++) {
 			chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
+			chesspiece_black.get(i).removeAttackBlack();
 		}
 
 		this.setIcon(white_icon_select);
@@ -537,7 +541,7 @@ public class King extends ChessPiece {
 				}
 			}
 		}
-
+		removeCheckMovepin();
 	}
 
 	@Override
@@ -659,6 +663,7 @@ public class King extends ChessPiece {
 				}
 			}
 		}
+		removeCheckMovepin();
 	}
 
 	// 현재 킹을 공격할 수 있는지 확인하는 메서드
@@ -666,84 +671,35 @@ public class King extends ChessPiece {
 	public void isAttackKing() {
 		// ⬆️방향 탐색
 		if (row - 1 > 0) {
-			if (setAttackIconIfKing(row - 1, col)) {
-				if (side.equals("white")) {
-					chessBoard.checkpiece_white.add(this);
-				} else {
-					chessBoard.checkpiece_black.add(this);
-				}
-			}
+			setAttackIconIfKing(row - 1, col);
 		}
 		// ⬇️방향 탐색
 		if (row + 1 < 9) {
-			if (setAttackIconIfKing(row + 1, col)) {
-				if (side.equals("white")) {
-					chessBoard.checkpiece_white.add(this);
-				} else {
-					chessBoard.checkpiece_black.add(this);
-				}
-			}
+			setAttackIconIfKing(row + 1, col);
 		}
 		// ⬅️방향 탐색
 		if (col - 1 > 0) {
-			if (setAttackIconIfKing(row, col - 1)) {
-				if (side.equals("white")) {
-					chessBoard.checkpiece_white.add(this);
-				} else {
-					chessBoard.checkpiece_black.add(this);
-				}
-			}
-
+			setAttackIconIfKing(row, col - 1);
 		}
 		// ➡️방향 탐색
 		if (col + 1 < 9) {
-			if (setAttackIconIfKing(row, col + 1)) {
-				if (side.equals("white")) {
-					chessBoard.checkpiece_white.add(this);
-				} else {
-					chessBoard.checkpiece_black.add(this);
-				}
-			}
+			setAttackIconIfKing(row, col + 1);
 		}
 		// ↖️방향 탐색
 		if (row - 1 > 0 && col - 1 > 0) {
-			if (setAttackIconIfKing(row - 1, col - 1)) {
-				if (side.equals("white")) {
-					chessBoard.checkpiece_white.add(this);
-				} else {
-					chessBoard.checkpiece_black.add(this);
-				}
-			}
+			setAttackIconIfKing(row - 1, col - 1);
 		}
 		// ↗️방향 탐색
 		if (row - 1 > 0 && col + 1 < 9) {
-			if (setAttackIconIfKing(row - 1, col + 1)) {
-				if (side.equals("white")) {
-					chessBoard.checkpiece_white.add(this);
-				} else {
-					chessBoard.checkpiece_black.add(this);
-				}
-			}
+			setAttackIconIfKing(row - 1, col + 1);
 		}
 		// ↙️방향 탐색
 		if (row + 1 < 9 && col - 1 > 0) {
-			if (setAttackIconIfKing(row + 1, col - 1)) {
-				if (side.equals("white")) {
-					chessBoard.checkpiece_white.add(this);
-				} else {
-					chessBoard.checkpiece_black.add(this);
-				}
-			}
+			setAttackIconIfKing(row + 1, col - 1);
 		}
 		// ↘️방향 탐색
 		if (row + 1 < 9 && col + 1 < 9) {
-			if (setAttackIconIfKing(row + 1, col + 1)) {
-				if (side.equals("white")) {
-					chessBoard.checkpiece_white.add(this);
-				} else {
-					chessBoard.checkpiece_black.add(this);
-				}
-			}
+			setAttackIconIfKing(row + 1, col + 1);
 		}
 
 	}

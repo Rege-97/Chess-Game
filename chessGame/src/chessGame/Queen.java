@@ -69,9 +69,11 @@ public class Queen extends ChessPiece {
 			if (chesspiece_black.get(i) != queen) {
 				chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
 			}
+			chesspiece_black.get(i).removeAttackBlack();
 		}
 		for (int i = 0; i < chesspiece_white.size(); i++) {
 			chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
+			chesspiece_white.get(i).removeAttackWhite();
 		}
 
 		this.setIcon(black_icon_select);
@@ -103,9 +105,11 @@ public class Queen extends ChessPiece {
 			if (chesspiece_white.get(i) != queen) {
 				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
 			}
+			chesspiece_white.get(i).removeAttackWhite();
 		}
 		for (int i = 0; i < chesspiece_black.size(); i++) {
 			chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
+			chesspiece_black.get(i).removeAttackBlack();
 		}
 
 		this.setIcon(white_icon_select);
@@ -247,7 +251,7 @@ public class Queen extends ChessPiece {
 						}
 					}
 				}
-		
+				removeCheckMovepin();
 	}
 	
 	@Override
@@ -371,7 +375,7 @@ public class Queen extends ChessPiece {
 						}
 					}
 				}
-		
+				removeCheckMovepin();
 	}
 
 	// 현재 킹을 공격할 수 있는지 확인하는 메서드
@@ -380,11 +384,6 @@ public class Queen extends ChessPiece {
 		// 위쪽 탐색
 		for (int i = row - 1; i >= 1; i--) {
 			if (setAttackIconIfKing(i, col)) {
-				if (side.equals("white")) {
-					chessBoard.checkpiece_white.add(this);
-				} else {
-					chessBoard.checkpiece_black.add(this);
-				}
 				break;
 			}
 			if (boards[i][col].getComponentCount() == 2) {
@@ -395,11 +394,6 @@ public class Queen extends ChessPiece {
 		// 아래쪽 탐색
 		for (int i = row + 1; i <= 8; i++) {
 			if (setAttackIconIfKing(i, col)) {
-				if (side.equals("white")) {
-					chessBoard.checkpiece_white.add(this);
-				} else {
-					chessBoard.checkpiece_black.add(this);
-				}
 				break;
 			}
 			if (boards[i][col].getComponentCount() == 2) {
@@ -410,11 +404,6 @@ public class Queen extends ChessPiece {
 		// 왼쪽 탐색
 		for (int i = col - 1; i >= 1; i--) {
 			if (setAttackIconIfKing(row, i)) {
-				if (side.equals("white")) {
-					chessBoard.checkpiece_white.add(this);
-				} else {
-					chessBoard.checkpiece_black.add(this);
-				}
 				break;
 			}
 			if (boards[row][i].getComponentCount() == 2) {
@@ -425,11 +414,6 @@ public class Queen extends ChessPiece {
 		// 오른쪽 탐색
 		for (int i = col + 1; i <= 8; i++) {
 			if (setAttackIconIfKing(row, i)) {
-				if (side.equals("white")) {
-					chessBoard.checkpiece_white.add(this);
-				} else {
-					chessBoard.checkpiece_black.add(this);
-				}
 				break;
 			}
 			if (boards[row][i].getComponentCount() == 2) {
@@ -440,11 +424,6 @@ public class Queen extends ChessPiece {
 		for (int i = 1; i < 8; i++) {
 			if (row - i >= 1 && col - i >= 1) {
 				if (setAttackIconIfKing(row - i, col - i)) {
-					if (side.equals("white")) {
-						chessBoard.checkpiece_white.add(this);
-					} else {
-						chessBoard.checkpiece_black.add(this);
-					}
 					break;
 				}
 				if (boards[row - i][col - i].getComponentCount() == 2) {
@@ -456,11 +435,6 @@ public class Queen extends ChessPiece {
 		for (int i = 1; i < 8; i++) {
 			if (row - i >= 1 && col + i <= 8) {
 				if (setAttackIconIfKing(row - i, col + i)) {
-					if (side.equals("white")) {
-						chessBoard.checkpiece_white.add(this);
-					} else {
-						chessBoard.checkpiece_black.add(this);
-					}
 					break;
 				}
 				if (boards[row - i][col + i].getComponentCount() == 2) {
@@ -472,11 +446,6 @@ public class Queen extends ChessPiece {
 		for (int i = 1; i < 8; i++) {
 			if (row + i <= 8 && col - i >= 1) {
 				if (setAttackIconIfKing(row + i, col - i)) {
-					if (side.equals("white")) {
-						chessBoard.checkpiece_white.add(this);
-					} else {
-						chessBoard.checkpiece_black.add(this);
-					}
 					break;
 				}
 				if (boards[row + i][col - i].getComponentCount() == 2) {
@@ -488,11 +457,6 @@ public class Queen extends ChessPiece {
 		for (int i = 1; i < 8; i++) {
 			if (row + i <= 8 && col + i <= 8) {
 				if (setAttackIconIfKing(row + i, col + i)) {
-					if (side.equals("white")) {
-						chessBoard.checkpiece_white.add(this);
-					} else {
-						chessBoard.checkpiece_black.add(this);
-					}
 					break;
 				}
 				if (boards[row + i][col + i].getComponentCount() == 2) {

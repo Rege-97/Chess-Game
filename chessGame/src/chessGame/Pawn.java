@@ -70,9 +70,11 @@ public class Pawn extends ChessPiece {
 			if (chesspiece_black.get(i) != pawn) {
 				chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
 			}
+			chesspiece_black.get(i).removeAttackBlack();
 		}
 		for (int i = 0; i < chesspiece_white.size(); i++) {
 			chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
+			chesspiece_white.get(i).removeAttackWhite();
 		}
 
 		this.setIcon(black_icon_select);
@@ -104,9 +106,11 @@ public class Pawn extends ChessPiece {
 			if (chesspiece_white.get(i) != pawn) {
 				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
 			}
+			chesspiece_white.get(i).removeAttackWhite();
 		}
 		for (int i = 0; i < chesspiece_black.size(); i++) {
 			chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
+			chesspiece_black.get(i).removeAttackBlack();
 		}
 
 		this.setIcon(white_icon_select);
@@ -115,7 +119,6 @@ public class Pawn extends ChessPiece {
 		removeAction();
 
 		setMovePinWhite();
-		
 
 		// 공격
 		attackWhite(pawn);
@@ -487,6 +490,7 @@ public class Pawn extends ChessPiece {
 				}
 			}
 		}
+		removeCheckMovepin();
 	}
 
 	@Override
@@ -579,7 +583,7 @@ public class Pawn extends ChessPiece {
 				}
 			}
 		}
-
+		removeCheckMovepin();
 	}
 
 	// 현재 킹을 공격할 수 있는지 확인하는 메서드
@@ -589,43 +593,20 @@ public class Pawn extends ChessPiece {
 		if (side.equals("white")) {
 			// 백 폰은 위쪽 대각선 공격 가능
 			if (row - 1 > 0 && col - 1 > 0) {
-				if (setAttackIconIfKing(row - 1, col - 1)) {
-					if (side.equals("white")) {
-						chessBoard.checkpiece_white.add(this);
-					} else {
-						chessBoard.checkpiece_black.add(this);
-					}
-				}
+				setAttackIconIfKing(row - 1, col - 1);
+
 			}
 			if (row - 1 > 0 && col + 1 < 9) {
-				if (setAttackIconIfKing(row - 1, col + 1)) {
-					if (side.equals("white")) {
-						chessBoard.checkpiece_white.add(this);
-					} else {
-						chessBoard.checkpiece_black.add(this);
-					}
-				}
+				setAttackIconIfKing(row - 1, col + 1);
 			}
 
 		} else {
 			// 흑 폰은 아래쪽 대각선 공격 가능
 			if (row + 1 < 9 && col - 1 > 0) {
-				if (setAttackIconIfKing(row + 1, col - 1)) {
-					if (side.equals("white")) {
-						chessBoard.checkpiece_white.add(this);
-					} else {
-						chessBoard.checkpiece_black.add(this);
-					}
-				}
+				setAttackIconIfKing(row + 1, col - 1);
 			}
 			if (row + 1 < 9 && col + 1 < 9) {
-				if (setAttackIconIfKing(row + 1, col + 1)) {
-					if (side.equals("white")) {
-						chessBoard.checkpiece_white.add(this);
-					} else {
-						chessBoard.checkpiece_black.add(this);
-					}
-				}
+				setAttackIconIfKing(row + 1, col + 1);
 			}
 
 		}

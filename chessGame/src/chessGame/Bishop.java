@@ -69,9 +69,11 @@ public class Bishop extends ChessPiece {
 			if (chesspiece_black.get(i) != bishop) {
 				chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
 			}
+			chesspiece_black.get(i).removeAttackBlack();
 		}
 		for (int i = 0; i < chesspiece_white.size(); i++) {
 			chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
+			chesspiece_white.get(i).removeAttackWhite();
 		}
 
 		this.setIcon(black_icon_select);
@@ -104,9 +106,11 @@ public class Bishop extends ChessPiece {
 			if (chesspiece_white.get(i) != bishop) {
 				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
 			}
+			chesspiece_white.get(i).removeAttackWhite();
 		}
 		for (int i = 0; i < chesspiece_black.size(); i++) {
 			chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
+			chesspiece_black.get(i).removeAttackBlack();
 		}
 
 		this.setIcon(white_icon_select);
@@ -133,9 +137,9 @@ public class Bishop extends ChessPiece {
 		for (int i = 1; i < 8; i++) {
 			if (row - i >= 1 && col - i >= 1 && boards[row - i][col - i].getComponentCount() == 1) {
 				 // 이동 후에도 체크 상태인지 확인
-	            if (!chessBoard.isKingInCheck("white") || !afterCheckMove(row - i, col - i)) {
+
 	                movepins[row - i][col - i].setVisible(true);
-	            }
+	           
 			} else if (row - i >= 1 && col - i >= 1 && boards[row - i][col - i].getComponentCount() == 2) {
 				if (((ChessPiece) boards[row - i][col - i].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[row - i][col - i].getComponent(1))
@@ -191,7 +195,7 @@ public class Bishop extends ChessPiece {
 				}
 			}
 		}
-
+		removeCheckMovepin();
 	}
 
 	@Override
@@ -255,7 +259,7 @@ public class Bishop extends ChessPiece {
 				}
 			}
 		}
-
+		removeCheckMovepin();
 	}
 
 	// 현재 킹을 공격할 수 있는지 확인하는 메서드
@@ -265,11 +269,6 @@ public class Bishop extends ChessPiece {
 		for (int i = 1; i < 8; i++) {
 			if (row - i >= 1 && col - i >= 1) {
 				if (setAttackIconIfKing(row - i, col - i)) {
-					if (side.equals("white")) {
-						chessBoard.checkpiece_white.add(this);
-					} else {
-						chessBoard.checkpiece_black.add(this);
-					}
 					break;
 				}
 				if (boards[row - i][col - i].getComponentCount() == 2) {
@@ -281,11 +280,6 @@ public class Bishop extends ChessPiece {
 		for (int i = 1; i < 8; i++) {
 			if (row - i >= 1 && col + i <= 8) {
 				if (setAttackIconIfKing(row - i, col + i)) {
-					if (side.equals("white")) {
-						chessBoard.checkpiece_white.add(this);
-					} else {
-						chessBoard.checkpiece_black.add(this);
-					}
 					break;
 				}
 				if (boards[row - i][col + i].getComponentCount() == 2) {
@@ -297,11 +291,6 @@ public class Bishop extends ChessPiece {
 		for (int i = 1; i < 8; i++) {
 			if (row + i <= 8 && col - i >= 1) {
 				if (setAttackIconIfKing(row + i, col - i)) {
-					if (side.equals("white")) {
-						chessBoard.checkpiece_white.add(this);
-					} else {
-						chessBoard.checkpiece_black.add(this);
-					}
 					break;
 				}
 				if (boards[row + i][col - i].getComponentCount() == 2) {
@@ -313,11 +302,6 @@ public class Bishop extends ChessPiece {
 		for (int i = 1; i < 8; i++) {
 			if (row + i <= 8 && col + i <= 8) {
 				if (setAttackIconIfKing(row + i, col + i)) {
-					if (side.equals("white")) {
-						chessBoard.checkpiece_white.add(this);
-					} else {
-						chessBoard.checkpiece_black.add(this);
-					}
 					break;
 				}
 				if (boards[row + i][col + i].getComponentCount() == 2) {

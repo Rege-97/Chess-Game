@@ -26,7 +26,7 @@ public class ChessBoard extends JFrame {
 	JButton movepins[][];
 	String turn;
 	ImageIcon movepin;
-	ArrayList<ChessPiece> chesspiece_black, chesspiece_white, checkpiece_black, checkpiece_white;
+	ArrayList<ChessPiece> chesspiece_black, chesspiece_white;
 	JLabel lb_check;
 
 	public ChessBoard() {
@@ -36,10 +36,6 @@ public class ChessBoard extends JFrame {
 		this.setSize(1280, 800);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
-
-		checkpiece_black=new ArrayList<ChessPiece>();
-		checkpiece_white=new ArrayList<ChessPiece>();
-		
 		
 		// 화면 중앙 출력
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
