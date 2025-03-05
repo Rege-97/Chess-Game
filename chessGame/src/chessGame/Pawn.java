@@ -1,14 +1,11 @@
 package chessGame;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Pawn extends ChessPiece {
@@ -182,12 +179,11 @@ public class Pawn extends ChessPiece {
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "white";
+									chessBoard.lb_turn.setText("White");
 
 									// 이동 횟수 증가
 									movecount++;
 
-									p_board.getParent().validate();
-									p_board.getParent().repaint();
 
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
@@ -197,9 +193,11 @@ public class Pawn extends ChessPiece {
 										System.out.println("Black King is in Check!");
 									}
 
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
 								}
 							});
 							// 일반 이동 시 이동 액션
@@ -235,12 +233,11 @@ public class Pawn extends ChessPiece {
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "white";
+									chessBoard.lb_turn.setText("White");
 
 									// 이동 횟수 증가
 									movecount++;
 
-									p_board.getParent().validate();
-									p_board.getParent().repaint();
 
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
@@ -249,10 +246,12 @@ public class Pawn extends ChessPiece {
 									if (chessBoard.isKingInCheck("black")) {
 										System.out.println("Black King is in Check!");
 									}
-
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
 								}
 							});
 						}
@@ -317,12 +316,10 @@ public class Pawn extends ChessPiece {
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
+									chessBoard.lb_turn.setText("Black");
 
 									// 이동 횟수 증가
 									movecount++;
-
-									p_board.getParent().validate();
-									p_board.getParent().repaint();
 
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
@@ -332,9 +329,12 @@ public class Pawn extends ChessPiece {
 										System.out.println("Black King is in Check!");
 									}
 
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 
+									
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
 								}
 							});
 							// 일반 이동 시 이동 액션
@@ -370,12 +370,11 @@ public class Pawn extends ChessPiece {
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
+									chessBoard.lb_turn.setText("Black");
 
 									// 이동 횟수 증가
 									movecount++;
 
-									p_board.getParent().validate();
-									p_board.getParent().repaint();
 
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
@@ -384,10 +383,12 @@ public class Pawn extends ChessPiece {
 									if (chessBoard.isKingInCheck("black")) {
 										System.out.println("Black King is in Check!");
 									}
-
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
 								}
 							});
 						}
@@ -494,6 +495,9 @@ public class Pawn extends ChessPiece {
 		}
 		// 체크 시 체크 해제만을 위한 이동경로로 제한
 		removeCheckMovepin();
+		
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
 	}
 
 	@Override
@@ -588,6 +592,9 @@ public class Pawn extends ChessPiece {
 		}
 		// 체크 시 체크 해제만을 위한 이동경로로 제한
 		removeCheckMovepin();
+		
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
 	}
 
 	// 현재 킹을 공격할 수 있는지 확인하는 메서드

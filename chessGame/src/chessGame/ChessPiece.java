@@ -113,9 +113,8 @@ abstract public class ChessPiece extends JButton {
 
 								// 턴 정보를 상대 턴으로 변경
 								chessBoard.turn = "white";
+								chessBoard.lb_turn.setText("White");
 
-								p_board.getParent().validate();
-								p_board.getParent().repaint();
 
 								// 공격을 한 상태로 변경
 								attack = true;
@@ -134,9 +133,11 @@ abstract public class ChessPiece extends JButton {
 									System.out.println("Black King is in Check!");
 								}
 
-								// UI 업데이트 호출 (체크 상태 즉시 반영)
+								// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 								chessBoard.updateCheckStatus();
 
+								p_board.getParent().validate();
+								p_board.getParent().repaint();
 							}
 
 						};
@@ -186,12 +187,11 @@ abstract public class ChessPiece extends JButton {
 
 								// 턴 정보를 상대 턴으로 변경
 								chessBoard.turn = "white";
-
+								chessBoard.lb_turn.setText("White");
+								
 								// 이동 횟수 증가
 								movecount++;
 
-								p_board.getParent().validate();
-								p_board.getParent().repaint();
 
 								// 모든 적군말을 일반 아이콘으로 전환
 								for (int k = 0; k < chesspiece_white.size(); k++) {
@@ -206,8 +206,11 @@ abstract public class ChessPiece extends JButton {
 									System.out.println("Black King is in Check!");
 								}
 
-								// UI 업데이트 호출 (체크 상태 즉시 반영)
+								// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 								chessBoard.updateCheckStatus();
+								
+								p_board.getParent().validate();
+								p_board.getParent().repaint();
 							}
 						});
 
@@ -271,9 +274,8 @@ abstract public class ChessPiece extends JButton {
 
 								// 턴 정보를 상대 턴으로 변경
 								chessBoard.turn = "black";
+								chessBoard.lb_turn.setText("Black");
 
-								p_board.getParent().validate();
-								p_board.getParent().repaint();
 
 								// 공격을 한 상태로 변경
 								attack = true;
@@ -291,9 +293,12 @@ abstract public class ChessPiece extends JButton {
 								if (chessBoard.isKingInCheck("black")) {
 									System.out.println("Black King is in Check!");
 								}
-
-								// UI 업데이트 호출 (체크 상태 즉시 반영)
+								
+								// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 								chessBoard.updateCheckStatus();
+								
+								p_board.getParent().validate();
+								p_board.getParent().repaint();
 							}
 
 						};
@@ -343,12 +348,11 @@ abstract public class ChessPiece extends JButton {
 
 								// 턴 정보를 상대 턴으로 변경
 								chessBoard.turn = "black";
+								chessBoard.lb_turn.setText("Black");
 
 								// 이동 횟수 증가
 								movecount++;
 
-								p_board.getParent().validate();
-								p_board.getParent().repaint();
 
 								// 모든 적군말을 일반 아이콘으로 전환
 								for (int k = 0; k < chesspiece_black.size(); k++) {
@@ -363,8 +367,11 @@ abstract public class ChessPiece extends JButton {
 									System.out.println("Black King is in Check!");
 								}
 
-								// UI 업데이트 호출 (체크 상태 즉시 반영)
+								// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 								chessBoard.updateCheckStatus();
+								
+								p_board.getParent().validate();
+								p_board.getParent().repaint();
 							}
 						});
 
@@ -495,7 +502,7 @@ abstract public class ChessPiece extends JButton {
 
 		// 상대 기물을 공격한 상황이였다면 상대 기물 복구
 		if (capturedPiece != null && removedIndex != -1) {
-			opponentList.add(removedIndex, capturedPiece);
+			opponentList.add(removedIndex, capturedPiece); 
 		}
 
 		if (capturedPiece != null) {
