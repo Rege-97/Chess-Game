@@ -65,13 +65,16 @@ public class Bishop extends ChessPiece {
 		attack = false;
 		attackListener = null;
 
+		// 버튼 클릭 시 아이콘과 공격 액션 초기화
 		for (int i = 0; i < chesspiece_black.size(); i++) {
 			if (chesspiece_black.get(i) != bishop) {
 				chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
 			}
+			chesspiece_black.get(i).removeAttackBlack();
 		}
 		for (int i = 0; i < chesspiece_white.size(); i++) {
 			chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
+			chesspiece_white.get(i).removeAttackWhite();
 		}
 
 		this.setIcon(black_icon_select);
@@ -79,10 +82,68 @@ public class Bishop extends ChessPiece {
 		movepinsNotVisible();
 		removeAction();
 
+		// 이동 경로와 공격 세팅
+		setMovePinBlack();
+
+		// 공격 액션
+		attackBlack(bishop);
+
+		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
+		removeAction();
+
+		// 공격을 안했을 시 일반 이동 액션
+		moveBlack(bishop);
+
+	}
+
+	@Override
+	public void whiteMove() {
+
+		bishop = this;
+
+		attack = false;
+		attackListener = null;
+
+		// 버튼 클릭 시 아이콘과 공격 액션 초기화
+		for (int i = 0; i < chesspiece_white.size(); i++) {
+			if (chesspiece_white.get(i) != bishop) {
+				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
+			}
+			chesspiece_white.get(i).removeAttackWhite();
+		}
+		for (int i = 0; i < chesspiece_black.size(); i++) {
+			chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
+			chesspiece_black.get(i).removeAttackBlack();
+		}
+
+		this.setIcon(white_icon_select);
+
+		movepinsNotVisible();
+		removeAction();
+
+		// 이동 경로와 공격 세팅
+		setMovePinWhite();
+
+		// 공격 액션
+		attackWhite(bishop);
+
+		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
+		removeAction();
+
+		// 공격을 안했을 시 일반 이동 액션
+		moveWhite(bishop);
+
+	}
+
+	@Override
+	public void setMovePinBlack() {
 		// ↖ 이동 무브포인트 및 공격 말 탐색
 		for (int i = 1; i < 8; i++) {
 			if (row - i >= 1 && col - i >= 1 && boards[row - i][col - i].getComponentCount() == 1) {
-				movepins[row - i][col - i].setVisible(true);
+				 // 이동 후에도 체크 상태인지 확인
+
+	                movepins[row - i][col - i].setVisible(true);
+	           
 			} else if (row - i >= 1 && col - i >= 1 && boards[row - i][col - i].getComponentCount() == 2) {
 				if (((ChessPiece) boards[row - i][col - i].getComponent(1)).side.equals("white")) {
 					((ChessPiece) boards[row - i][col - i].getComponent(1))
@@ -138,40 +199,12 @@ public class Bishop extends ChessPiece {
 				}
 			}
 		}
-
-		// 공격 액션
-		attackBlack(bishop);
-
-		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
-		removeAction();
-
-		// 공격을 안했을 시 일반 이동 액션
-		moveBlack(bishop);
-
+		// 체크 시 체크 해제만을 위한 이동경로로 제한
+		removeCheckMovepin();
 	}
 
 	@Override
-	public void whiteMove() {
-
-		bishop = this;
-
-		attack = false;
-		attackListener = null;
-
-		for (int i = 0; i < chesspiece_white.size(); i++) {
-			if (chesspiece_white.get(i) != bishop) {
-				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
-			}
-		}
-		for (int i = 0; i < chesspiece_black.size(); i++) {
-			chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
-		}
-
-		this.setIcon(white_icon_select);
-
-		movepinsNotVisible();
-		removeAction();
-
+	public void setMovePinWhite() {
 		// ↖ 이동 무브포인트 및 공격 말 탐색
 		for (int i = 1; i < 8; i++) {
 			if (row - i >= 1 && col - i >= 1 && boards[row - i][col - i].getComponentCount() == 1) {
@@ -231,16 +264,8 @@ public class Bishop extends ChessPiece {
 				}
 			}
 		}
-
-		// 공격 액션
-		attackWhite(bishop);
-
-		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
-		removeAction();
-
-		// 공격을 안했을 시 일반 이동 액션
-		moveWhite(bishop);
-
+		// 체크 시 체크 해제만을 위한 이동경로로 제한
+		removeCheckMovepin();
 	}
 
 	// 현재 킹을 공격할 수 있는지 확인하는 메서드

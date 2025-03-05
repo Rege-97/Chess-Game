@@ -18,15 +18,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class ChessBoard extends JFrame {
-	int row, col;
+	boolean white_check, black_check;
 	JPanel p_board;
 	JPanel boards[][];
-	JButton bt_pawn;
 	JButton movepins[][];
 	String turn;
 	ImageIcon movepin;
 	ArrayList<ChessPiece> chesspiece_black, chesspiece_white;
-	JLabel check;
+	JLabel lb_check;
 
 	public ChessBoard() {
 
@@ -35,7 +34,7 @@ public class ChessBoard extends JFrame {
 		this.setSize(1280, 800);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
-
+		
 		// 화면 중앙 출력
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = getSize();
@@ -53,30 +52,18 @@ public class ChessBoard extends JFrame {
 		p_board = new JPanel(new GridLayout(8, 8));
 		boardSet();
 		this.add(p_board, "Center");
-		
-		JPanel p_west=new JPanel();
-		p_west.setPreferredSize(new Dimension(480,800));
-		this.add(p_west,"East");
 
-		JPanel p_west = new JPanel(new BorderLayout());
+		JPanel p_west = new JPanel();
 		p_west.setPreferredSize(new Dimension(480, 800));
 		this.add(p_west, "East");
 
 		// 체크 상태를 표시하기 위한 임시 라벨
-		check = new JLabel("Play", JLabel.CENTER);
-		check.setFont(new Font("Default Font", Font.PLAIN, 50));
-		p_west.add(check, "North");
+		lb_check = new JLabel("Play", JLabel.CENTER);
+		lb_check.setFont(new Font("Default Font", Font.PLAIN, 50));
+		p_west.add(lb_check, "North");
 
 		// 말 배치
 		setChessPiece();
-
-		
-		//팝업창 세팅
-		Popup popup = new Popup();
-		setJMenuBar(popup.getMenuBar());
-		
-
-
 
 		// 블랙 체스말 이벤트
 		for (int i = 0; i < chesspiece_black.size(); i++) {
@@ -148,7 +135,6 @@ public class ChessBoard extends JFrame {
 		chesspiece_black = new ArrayList<ChessPiece>();
 		chesspiece_white = new ArrayList<ChessPiece>();
 
-
 		chesspiece_black
 				.add(new Rook("black", 1, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black
@@ -181,7 +167,6 @@ public class ChessBoard extends JFrame {
 				.add(new Bishop("black", 1, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black
 				.add(new Queen("black", 1, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-
 
 		boards[1][1].add(chesspiece_black.get(0), "Center");
 		boards[1][8].add(chesspiece_black.get(1), "Center");
@@ -251,8 +236,7 @@ public class ChessBoard extends JFrame {
 		boards[8][4].add(chesspiece_white.get(15), "Center");
 	}
 
-	
-	// 킹이 체스상태인지 확인하는 메서드
+	// 킹이 체크상태인지 확인하는 메서드
 	public boolean isKingInCheck(String kingSide) {
 		King king = null;
 		ArrayList<ChessPiece> opponentPieces;
@@ -303,28 +287,31 @@ public class ChessBoard extends JFrame {
 				if (((ImageIcon) ((ChessPiece) boards[king.row][king.col].getComponent(1)).getIcon()).getDescription()
 						.equals("black_icon_attack")) {
 					((ChessPiece) boards[king.row][king.col].getComponent(1))
-					.setIcon(((ChessPiece) boards[king.row][king.col].getComponent(1)).black_icon);
+							.setIcon(((ChessPiece) boards[king.row][king.col].getComponent(1)).black_icon);
 					return true; // 블랙 킹이 체크 상태
 				}
 			}
 
 		}
-
 		return false;
 	}
-	
+
 	// 체크 상태가 되면 화면 업데이트 메서드
 	public void updateCheckStatus() {
 		if (isKingInCheck("white")) {
-			check.setText("White King in Check!");
+			lb_check.setText("White King in Check!");
+			white_check = true;
 		} else if (isKingInCheck("black")) {
-			check.setText("Black King in Check!");
+			lb_check.setText("Black King in Check!");
+			black_check = true;
 		} else {
-			check.setText("Play");
+			lb_check.setText("Play");
+			white_check = false;
+			black_check = false;
 		}
 
 		// UI 즉시 새로고침
-		check.repaint();
+		lb_check.repaint();
 		this.validate();
 		this.repaint();
 	}
