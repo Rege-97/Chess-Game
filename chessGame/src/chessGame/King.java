@@ -195,6 +195,8 @@ public class King extends ChessPiece {
 									movepinsNotVisible();
 
 									// 현재 위치 값 저장
+									int originalrow = row;
+									int originalcol = col;
 									row = indexrow;
 									col = indexcol;
 
@@ -215,6 +217,9 @@ public class King extends ChessPiece {
 									if (chessBoard.isKingInCheck("black")) {
 										System.out.println("Black King is in Check!");
 									}
+									
+									// 이동한 보드 칸 색상 표시
+									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
@@ -246,6 +251,8 @@ public class King extends ChessPiece {
 									movepinsNotVisible();
 
 									// 현재 위치 값 저장
+									int originalrow = row;
+									int originalcol = col;
 									row = indexrow;
 									col = indexcol;
 
@@ -271,6 +278,9 @@ public class King extends ChessPiece {
 									if (chessBoard.isKingInCheck("black")) {
 										System.out.println("Black King is in Check!");
 									}
+									
+									// 이동한 보드 칸 색상 표시
+									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 									
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
@@ -345,6 +355,8 @@ public class King extends ChessPiece {
 									movepinsNotVisible();
 
 									// 현재 위치 값 저장
+									int originalrow = row;
+									int originalcol = col;
 									row = indexrow;
 									col = indexcol;
 
@@ -365,6 +377,9 @@ public class King extends ChessPiece {
 									if (chessBoard.isKingInCheck("black")) {
 										System.out.println("Black King is in Check!");
 									}
+									
+									// 이동한 보드 칸 색상 표시
+									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
@@ -395,6 +410,8 @@ public class King extends ChessPiece {
 									movepinsNotVisible();
 
 									// 현재 위치 값 저장
+									int originalrow = row;
+									int originalcol = col;
 									row = indexrow;
 									col = indexcol;
 
@@ -420,6 +437,9 @@ public class King extends ChessPiece {
 									if (chessBoard.isKingInCheck("black")) {
 										System.out.println("Black King is in Check!");
 									}
+									
+									// 이동한 보드 칸 색상 표시
+									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
