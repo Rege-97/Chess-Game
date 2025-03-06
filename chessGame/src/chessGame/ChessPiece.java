@@ -575,7 +575,9 @@ abstract public class ChessPiece extends JButton {
 
 	}
 	
+	// 기물 이동 시 원래 위치와 이동한 위치를 색상으로 표시하는 메서드
 	public void setMoveBoard(int originalrow,int originalcol,int moverow,int movecol) {
+		// 보드를 기본 색상으로 초기화
 		for (int i = 1; i <= 8; i++) {
 			for (int j = 1; j <= 8; j++) {
 				if (i % 2 == 0) {
@@ -594,12 +596,14 @@ abstract public class ChessPiece extends JButton {
 			}
 		}
 
+		// 원래 있던 위치 색 변경
 		if(boards[originalrow][originalcol].getBackground().equals(Color.white)) {
 			boards[originalrow][originalcol].setBackground(new Color(209,254,164));
 		}else {
 			boards[originalrow][originalcol].setBackground(new Color(124,188,0));
 		}
 		
+		// 이동한 위치 색 변경
 		if(boards[moverow][movecol].getBackground().equals(Color.white)) {
 			boards[moverow][movecol].setBackground(new Color(209,254,164));
 		}else {
