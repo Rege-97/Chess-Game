@@ -1,18 +1,16 @@
 package chessGame;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Pawn extends ChessPiece {
 	Pawn pawn;
+	int lastmoveturn;	// 마지막으로 이동한 턴수를 저장하는 변수(앙파상 검사)
 
 	public Pawn(String side, int row, int col, ChessBoard chessBoard, JPanel boards[][], JButton movepins[][],
 			JPanel p_board, ArrayList<ChessPiece> chesspiece_black, ArrayList<ChessPiece> chesspiece_white) {
@@ -55,23 +53,27 @@ public class Pawn extends ChessPiece {
 		attackListeners = new ArrayList<ActionListener>();
 
 		movecount = 0;
+		lastmoveturn = 0;
 	}
 
 	@Override
 	public void blackMove() {
+
 		pawn = this;
 
 		attack = false;
 		attackListener = null;
 
-		// size가 뭘까
+		// 버튼 클릭 시 아이콘과 공격 액션 초기화
 		for (int i = 0; i < chesspiece_black.size(); i++) {
 			if (chesspiece_black.get(i) != pawn) {
 				chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
 			}
+			chesspiece_black.get(i).removeAttackBlack();
 		}
 		for (int i = 0; i < chesspiece_white.size(); i++) {
 			chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
+			chesspiece_white.get(i).removeAttackWhite();
 		}
 
 		this.setIcon(black_icon_select);
@@ -79,98 +81,8 @@ public class Pawn extends ChessPiece {
 		movepinsNotVisible();
 		removeAction();
 
-		// 처음 움직일 때 무브포인트 탐색
-		if (row == 2) {
-			for (int i = row + 1; i <= row + 2; i++) {
-				if (boards[i][col].getComponentCount() == 1) {
-					movepins[i][col].setVisible(true);
-				}
-				if (boards[row + 1][col].getComponentCount() == 2) {
-					movepins[row + 2][col].setVisible(false);
-				}
-			}
-			for (int i = row + 1; i <= row + 1; i++) {
-				if (col + 1 <= 8 && boards[i][col + 1].getComponentCount() == 2) {
-					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("white")) {
-						((ChessPiece) boards[i][col + 1].getComponent(1))
-								.setIcon(((ChessPiece) boards[i][col + 1].getComponent(1)).white_icon_attack);
-						break;
-					} else {
-						break;
-					}
-
-				}
-			}
-
-			for (int i = row + 1; i <= row + 1; i++) {
-				if (col - 1 >= 1 && boards[i][col - 1].getComponentCount() == 2) {
-					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("white")) {
-						((ChessPiece) boards[i][col - 1].getComponent(1))
-								.setIcon(((ChessPiece) boards[i][col - 1].getComponent(1)).white_icon_attack);
-						break;
-					} else {
-						break;
-					}
-
-				}
-			}
-		} else if (row != 2) {
-			// 처음 이후 무브 포인트 탐색
-			for (int i = row + 1; i <= row + 1; i++) {
-				if (boards[i][col].getComponentCount() == 1) {
-					movepins[i][col].setVisible(true);
-				}
-			}
-			for (int i = row + 1; i <= row + 1; i++) {
-				if (col + 1 <= 8 && boards[i][col + 1].getComponentCount() == 2) {
-					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("white")) {
-						((ChessPiece) boards[i][col + 1].getComponent(1))
-								.setIcon(((ChessPiece) boards[i][col + 1].getComponent(1)).white_icon_attack);
-						break;
-					} else {
-						break;
-					}
-
-				}
-			}
-
-			for (int i = row + 1; i <= row + 1; i++) {
-				if (col - 1 >= 1 && boards[i][col - 1].getComponentCount() == 2) {
-					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("white")) {
-						((ChessPiece) boards[i][col - 1].getComponent(1))
-								.setIcon(((ChessPiece) boards[i][col - 1].getComponent(1)).white_icon_attack);
-						break;
-					} else {
-						break;
-					}
-
-				}
-			}
-		}
-
-		// 앙파상 무브포인트 탐색
-		if (row == 5) {
-			if (col - 1 > 0) {
-				if (boards[row][col - 1].getComponentCount() == 2) {
-					if (((ChessPiece) boards[row][col - 1].getComponent(1)).side.equals("white")
-							&& ((ChessPiece) boards[row][col - 1].getComponent(1)) instanceof Pawn) {
-						if (((ChessPiece) boards[row][col - 1].getComponent(1)).movecount == 1) {
-							movepins[row + 1][col - 1].setVisible(true);
-						}
-					}
-				}
-			}
-			if (col + 1 < 9) {
-				if (boards[row][col + 1].getComponentCount() == 2) {
-					if (((ChessPiece) boards[row][col + 1].getComponent(1)).side.equals("white")
-							&& ((ChessPiece) boards[row][col + 1].getComponent(1)) instanceof Pawn) {
-						if (((ChessPiece) boards[row][col + 1].getComponent(1)).movecount == 1) {
-							movepins[row + 1][col + 1].setVisible(true);
-						}
-					}
-				}
-			}
-		}
+		// 이동 경로와 공격 세팅
+		setMovePinBlack();
 
 		// 공격
 		attackBlack(pawn);
@@ -189,14 +101,16 @@ public class Pawn extends ChessPiece {
 		attack = false;
 		attackListener = null;
 
-		// 버튼 클릭시 초기화
+		// 버튼 클릭 시 아이콘과 공격 액션 초기화
 		for (int i = 0; i < chesspiece_white.size(); i++) {
 			if (chesspiece_white.get(i) != pawn) {
 				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
 			}
+			chesspiece_white.get(i).removeAttackWhite();
 		}
 		for (int i = 0; i < chesspiece_black.size(); i++) {
 			chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
+			chesspiece_black.get(i).removeAttackBlack();
 		}
 
 		this.setIcon(white_icon_select);
@@ -204,94 +118,8 @@ public class Pawn extends ChessPiece {
 		movepinsNotVisible();
 		removeAction();
 
-		// 처음 움직일 때 무브포인트 탐색
-		if (row == 7) {
-			for (int i = row - 1; i >= row - 2; i--) {
-				if (boards[i][col].getComponentCount() == 1) {
-					movepins[i][col].setVisible(true);
-				}
-				if (boards[row - 1][col].getComponentCount() == 2) {
-					movepins[row - 2][col].setVisible(false);
-				}
-			}
-			for (int i = row - 1; i >= row - 1; i--) {
-				if (col + 1 <= 8 && boards[i][col + 1].getComponentCount() == 2) {
-					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("black")) {
-						((ChessPiece) boards[i][col + 1].getComponent(1))
-								.setIcon(((ChessPiece) boards[i][col + 1].getComponent(1)).black_icon_attack);
-						break;
-					} else {
-						break;
-					}
-
-				}
-			}
-			for (int i = row - 1; i >= row - 1; i--) {
-				if (col - 1 >= 1 && boards[i][col - 1].getComponentCount() == 2) {
-					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("black")) {
-						((ChessPiece) boards[i][col - 1].getComponent(1))
-								.setIcon(((ChessPiece) boards[i][col - 1].getComponent(1)).black_icon_attack);
-						break;
-					} else {
-						break;
-					}
-				}
-			}
-		} else if (row != 7) {
-			// 처음 이후 무브 포인트 탐색
-			for (int i = row - 1; i >= row - 1; i--) {
-				if (boards[i][col].getComponentCount() == 1) {
-					movepins[i][col].setVisible(true);
-				}
-			}
-			for (int i = row - 1; i >= row - 1; i--) {
-				if (col + 1 <= 8 && boards[i][col + 1].getComponentCount() == 2) {
-					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("black")) {
-						((ChessPiece) boards[i][col + 1].getComponent(1))
-								.setIcon(((ChessPiece) boards[i][col + 1].getComponent(1)).black_icon_attack);
-						break;
-					} else {
-						break;
-					}
-
-				}
-			}
-			for (int i = row - 1; i >= row - 1; i--) {
-				if (col - 1 >= 1 && boards[i][col - 1].getComponentCount() == 2) {
-					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("black")) {
-						((ChessPiece) boards[i][col - 1].getComponent(1))
-								.setIcon(((ChessPiece) boards[i][col - 1].getComponent(1)).black_icon_attack);
-						break;
-					} else {
-						break;
-					}
-				}
-			}
-		}
-
-		// 앙파상 무브포인트 탐색
-		if (row == 4) {
-			if (col - 1 > 0) {
-				if (boards[row][col - 1].getComponentCount() == 2) {
-					if (((ChessPiece) boards[row][col - 1].getComponent(1)).side.equals("black")
-							&& ((ChessPiece) boards[row][col - 1].getComponent(1)) instanceof Pawn) {
-						if (((ChessPiece) boards[row][col - 1].getComponent(1)).movecount == 1) {
-							movepins[row - 1][col - 1].setVisible(true);
-						}
-					}
-				}
-			}
-			if (col + 1 < 9) {
-				if (boards[row][col + 1].getComponentCount() == 2) {
-					if (((ChessPiece) boards[row][col + 1].getComponent(1)).side.equals("black")
-							&& ((ChessPiece) boards[row][col + 1].getComponent(1)) instanceof Pawn) {
-						if (((ChessPiece) boards[row][col + 1].getComponent(1)).movecount == 1) {
-							movepins[row - 1][col + 1].setVisible(true);
-						}
-					}
-				}
-			}
-		}
+		// 이동 경로와 공격 세팅
+		setMovePinWhite();
 
 		// 공격
 		attackWhite(pawn);
@@ -348,32 +176,37 @@ public class Pawn extends ChessPiece {
 									movepinsNotVisible();
 
 									// 현재 위치 값 저장
+									int originalrow = row;
+									int originalcol = col;
 									row = indexrow;
 									col = indexcol;
 
-
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "white";
-
+									chessBoard.lb_turn.setText("White");
+									lastmoveturn = chessBoard.turn_count;
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 
 									// 이동 횟수 증가
 									movecount++;
 
-									p_board.getParent().validate();
-									p_board.getParent().repaint();
-
-									
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
-									    System.out.println("White King is in Check!");
+										System.out.println("White King is in Check!");
 									}
 									if (chessBoard.isKingInCheck("black")) {
-									    System.out.println("Black King is in Check!");
+										System.out.println("Black King is in Check!");
 									}
+									
+									// 이동한 보드 칸 색상 표시
+									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
 								}
 							});
 							// 일반 이동 시 이동 액션
@@ -398,37 +231,43 @@ public class Pawn extends ChessPiece {
 									// 무브핀 초기화
 									movepinsNotVisible();
 
-									
 									// 현재 위치 값 저장
+									int originalrow = row;
+									int originalcol = col;
 									row = indexrow;
 									col = indexcol;
-									
-									//프로모션 다이얼로그
-									if(row==8) {
-										showImageDialog();
+
+									// 프로모션 다이얼로그
+									if (row == 8) {
+										showblackImageDialog(me);
 									}
-									
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "white";
+									chessBoard.lb_turn.setText("White");
+									lastmoveturn = chessBoard.turn_count;
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 
 									// 이동 횟수 증가
 									movecount++;
 
-									p_board.getParent().validate();
-									p_board.getParent().repaint();
-									
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
-									    System.out.println("White King is in Check!");
+										System.out.println("White King is in Check!");
 									}
 									if (chessBoard.isKingInCheck("black")) {
-									    System.out.println("Black King is in Check!");
+										System.out.println("Black King is in Check!");
 									}
+									
+									// 이동한 보드 칸 색상 표시
+									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
 								}
 							});
 						}
@@ -438,7 +277,6 @@ public class Pawn extends ChessPiece {
 			}
 		}
 	}
-
 
 	// 앙파상 구현을 위해 체스피스 클래스에서 오버라이딩
 	@Override
@@ -484,38 +322,43 @@ public class Pawn extends ChessPiece {
 									movepinsNotVisible();
 
 									// 현재 위치 값 저장
+									int originalrow = row;
+									int originalcol = col;
 									row = indexrow;
 									col = indexcol;
 
-									
-									//프로모션 다이얼로그
-									if(row==1) {
-										showImageDialog();
+									// 프로모션 다이얼로그
+									if (row == 1) {
+										showblackImageDialog(me);
+								
 									}
-									
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
+									chessBoard.lb_turn.setText("Black");
+									lastmoveturn = chessBoard.turn_count;
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 
 									// 이동 횟수 증가
 									movecount++;
 
-									p_board.getParent().validate();
-									p_board.getParent().repaint();
-
-									
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
-									    System.out.println("White King is in Check!");
+										System.out.println("White King is in Check!");
 									}
 									if (chessBoard.isKingInCheck("black")) {
-									    System.out.println("Black King is in Check!");
+										System.out.println("Black King is in Check!");
 									}
+									
+									// 이동한 보드 칸 색상 표시
+									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 
-
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
 								}
 							});
 							// 일반 이동 시 이동 액션
@@ -541,37 +384,42 @@ public class Pawn extends ChessPiece {
 									movepinsNotVisible();
 
 									// 현재 위치 값 저장
+									int originalrow = row;
+									int originalcol = col;
 									row = indexrow;
 									col = indexcol;
 
-									
-									//프로모션 다이얼로그
-									if(row==8) {
-										showImageDialog();
+									// 프로모션 다이얼로그
+									if (row == 8) {
+										showblackImageDialog(me);
 									}
-									
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
+									chessBoard.lb_turn.setText("Black");
+									lastmoveturn = chessBoard.turn_count;
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 
 									// 이동 횟수 증가
 									movecount++;
 
-									p_board.getParent().validate();
-									p_board.getParent().repaint();
-
-									
 									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 									if (chessBoard.isKingInCheck("white")) {
-									    System.out.println("White King is in Check!");
+										System.out.println("White King is in Check!");
 									}
 									if (chessBoard.isKingInCheck("black")) {
-									    System.out.println("Black King is in Check!");
+										System.out.println("Black King is in Check!");
 									}
+									
+									// 이동한 보드 칸 색상 표시
+									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
 
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
 								}
 							});
 						}
@@ -581,7 +429,221 @@ public class Pawn extends ChessPiece {
 			}
 		}
 	}
-	
+
+	@Override
+	public void setMovePinBlack() {
+		// 처음 움직일 때 무브포인트 탐색
+		if (row == 2) {
+			for (int i = row + 1; i <= row + 2; i++) {
+				if (boards[i][col].getComponentCount() == 1) {
+					movepins[i][col].setVisible(true);
+				}
+				if (boards[row + 1][col].getComponentCount() == 2) {
+					movepins[row + 2][col].setVisible(false);
+				}
+			}
+			for (int i = row + 1; i <= row + 1; i++) {
+				if (col + 1 <= 8 && boards[i][col + 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("white")) {
+						((ChessPiece) boards[i][col + 1].getComponent(1))
+								.setIcon(((ChessPiece) boards[i][col + 1].getComponent(1)).white_icon_attack);
+						break;
+					} else {
+						break;
+					}
+
+				}
+			}
+
+			for (int i = row + 1; i <= row + 1; i++) {
+				if (col - 1 >= 1 && boards[i][col - 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("white")) {
+						((ChessPiece) boards[i][col - 1].getComponent(1))
+								.setIcon(((ChessPiece) boards[i][col - 1].getComponent(1)).white_icon_attack);
+						break;
+					} else {
+						break;
+					}
+
+				}
+			}
+		} else if (row != 2 ||row!=8) {
+			// 처음 이후 무브 포인트 탐색
+			for (int i = row + 1; i <= row + 1; i++) {
+				if (boards[i][col].getComponentCount() == 1) {
+					movepins[i][col].setVisible(true);
+				}
+			}
+			for (int i = row + 1; i <= row + 1; i++) {
+				if (col + 1 <= 8 && boards[i][col + 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("white")) {
+						((ChessPiece) boards[i][col + 1].getComponent(1))
+								.setIcon(((ChessPiece) boards[i][col + 1].getComponent(1)).white_icon_attack);
+						break;
+					} else {
+						break;
+					}
+
+				}
+			}
+
+			for (int i = row + 1; i <= row + 1; i++) {
+				if (col - 1 >= 1 && boards[i][col - 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("white")) {
+						((ChessPiece) boards[i][col - 1].getComponent(1))
+								.setIcon(((ChessPiece) boards[i][col - 1].getComponent(1)).white_icon_attack);
+						break;
+					} else {
+						break;
+					}
+
+				}
+			}
+		}
+
+		// 앙파상 무브포인트 탐색
+		if (row == 5) {
+			if (col - 1 > 0) {
+				if (boards[row][col - 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[row][col - 1].getComponent(1)).side.equals("white")
+							&& ((ChessPiece) boards[row][col - 1].getComponent(1)) instanceof Pawn) {
+						if (((ChessPiece) boards[row][col - 1].getComponent(1)).movecount == 1) {
+							// 상대 폰이 이전 턴에 마지막으로 움직인 기물이라면 앙파상 가능
+							if (((Pawn) boards[row][col - 1].getComponent(1)).lastmoveturn == chessBoard.turn_count
+									- 1) {
+								movepins[row + 1][col - 1].setVisible(true);
+							}
+						}
+					}
+				}
+			}
+			if (col + 1 < 9) {
+				if (boards[row][col + 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[row][col + 1].getComponent(1)).side.equals("white")
+							&& ((ChessPiece) boards[row][col + 1].getComponent(1)) instanceof Pawn) {
+						if (((ChessPiece) boards[row][col + 1].getComponent(1)).movecount == 1) {
+							// 상대 폰이 이전 턴에 마지막으로 움직인 기물이라면 앙파상 가능
+							if (((Pawn) boards[row][col + 1].getComponent(1)).lastmoveturn == chessBoard.turn_count
+									- 1) {
+								movepins[row + 1][col + 1].setVisible(true);
+							}
+						}
+					}
+				}
+			}
+		}
+		// 체크 시 체크 해제만을 위한 이동경로로 제한
+		removeCheckMovepin();
+
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
+	}
+
+	@Override
+	public void setMovePinWhite() {
+		// 처음 움직일 때 무브포인트 탐색
+		if (row == 7) {
+			for (int i = row - 1; i >= row - 2; i--) {
+				if (boards[i][col].getComponentCount() == 1) {
+					movepins[i][col].setVisible(true);
+				}
+				if (boards[row - 1][col].getComponentCount() == 2) {
+					movepins[row - 2][col].setVisible(false);
+				}
+			}
+			for (int i = row - 1; i >= row - 1; i--) {
+				if (col + 1 <= 8 && boards[i][col + 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("black")) {
+						((ChessPiece) boards[i][col + 1].getComponent(1))
+								.setIcon(((ChessPiece) boards[i][col + 1].getComponent(1)).black_icon_attack);
+						break;
+					} else {
+						break;
+					}
+
+				}
+			}
+			for (int i = row - 1; i >= row - 1; i--) {
+				if (col - 1 >= 1 && boards[i][col - 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("black")) {
+						((ChessPiece) boards[i][col - 1].getComponent(1))
+								.setIcon(((ChessPiece) boards[i][col - 1].getComponent(1)).black_icon_attack);
+						break;
+					} else {
+						break;
+					}
+				}
+			}
+		} else if (row != 7||row !=1) {
+			// 처음 이후 무브 포인트 탐색
+			for (int i = row - 1; i >= row - 1; i--) {
+				if (boards[i][col].getComponentCount() == 1) {
+					movepins[i][col].setVisible(true);
+				}
+			}
+			for (int i = row - 1; i >= row - 1; i--) {
+				if (col + 1 <= 8 && boards[i][col + 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col + 1].getComponent(1)).side.equals("black")) {
+						((ChessPiece) boards[i][col + 1].getComponent(1))
+								.setIcon(((ChessPiece) boards[i][col + 1].getComponent(1)).black_icon_attack);
+						break;
+					} else {
+						break;
+					}
+
+				}
+			}
+			for (int i = row - 1; i >= row - 1; i--) {
+				if (col - 1 >= 1 && boards[i][col - 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[i][col - 1].getComponent(1)).side.equals("black")) {
+						((ChessPiece) boards[i][col - 1].getComponent(1))
+								.setIcon(((ChessPiece) boards[i][col - 1].getComponent(1)).black_icon_attack);
+						break;
+					} else {
+						break;
+					}
+				}
+			}
+		}
+
+		// 앙파상 무브포인트 탐색
+		if (row == 4) {
+			if (col - 1 > 0) {
+				if (boards[row][col - 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[row][col - 1].getComponent(1)).side.equals("black")
+							&& ((ChessPiece) boards[row][col - 1].getComponent(1)) instanceof Pawn) {
+						if (((ChessPiece) boards[row][col - 1].getComponent(1)).movecount == 1) {
+							// 상대 폰이 이전 턴에 마지막으로 움직인 기물이라면 앙파상 가능
+							if (((Pawn) boards[row][col - 1].getComponent(1)).lastmoveturn == chessBoard.turn_count
+									- 1) {
+								movepins[row - 1][col - 1].setVisible(true);
+							}
+						}
+					}
+				}
+			}
+			if (col + 1 < 9) {
+				if (boards[row][col + 1].getComponentCount() == 2) {
+					if (((ChessPiece) boards[row][col + 1].getComponent(1)).side.equals("black")
+							&& ((ChessPiece) boards[row][col + 1].getComponent(1)) instanceof Pawn) {
+						if (((ChessPiece) boards[row][col + 1].getComponent(1)).movecount == 1) {
+							// 상대 폰이 이전 턴에 마지막으로 움직인 기물이라면 앙파상 가능
+							if (((Pawn) boards[row][col + 1].getComponent(1)).lastmoveturn == chessBoard.turn_count
+									- 1) {
+								movepins[row - 1][col + 1].setVisible(true);
+							}
+						}
+					}
+				}
+			}
+		}
+		// 체크 시 체크 해제만을 위한 이동경로로 제한
+		removeCheckMovepin();
+
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
+	}
+
 	// 현재 킹을 공격할 수 있는지 확인하는 메서드
 	@Override
 	public void isAttackKing() {
@@ -590,6 +652,7 @@ public class Pawn extends ChessPiece {
 			// 백 폰은 위쪽 대각선 공격 가능
 			if (row - 1 > 0 && col - 1 > 0) {
 				setAttackIconIfKing(row - 1, col - 1);
+
 			}
 			if (row - 1 > 0 && col + 1 < 9) {
 				setAttackIconIfKing(row - 1, col + 1);
@@ -609,4 +672,3 @@ public class Pawn extends ChessPiece {
 	}
 
 }
-

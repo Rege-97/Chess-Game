@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Label;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,18 +17,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class ChessBoard extends JFrame {
-	int row, col;
+	boolean white_check, black_check;
 	JPanel p_board;
 	JPanel boards[][];
-	JButton bt_pawn;
 	JButton movepins[][];
 	String turn;
 	ImageIcon movepin;
 	ArrayList<ChessPiece> chesspiece_black, chesspiece_white;
-	JLabel check;
+	JLabel lb_check;
+	JLabel lb_turn;
+	JLabel lb_turn_count;	
+	String checkpiece;
+	int turn_count;
 
 	public ChessBoard() {
-
+		
 		super("테스트");
 
 		this.setSize(1280, 800);
@@ -48,35 +50,34 @@ public class ChessBoard extends JFrame {
 
 		// 초기 턴 화이트
 		turn = "white";
+		turn_count=1;
 
 		// 보드 세팅
 		p_board = new JPanel(new GridLayout(8, 8));
 		boardSet();
 		this.add(p_board, "Center");
-		
-		JPanel p_west=new JPanel();
-		p_west.setPreferredSize(new Dimension(480,800));
-		this.add(p_west,"East");
 
 		JPanel p_west = new JPanel(new BorderLayout());
 		p_west.setPreferredSize(new Dimension(480, 800));
 		this.add(p_west, "East");
 
 		// 체크 상태를 표시하기 위한 임시 라벨
-		check = new JLabel("Play", JLabel.CENTER);
-		check.setFont(new Font("Default Font", Font.PLAIN, 50));
-		p_west.add(check, "North");
+		lb_check = new JLabel("Play", JLabel.CENTER);
+		lb_check.setFont(new Font("Default Font", Font.PLAIN, 50));
+		p_west.add(lb_check, "North");
+
+		// 턴을 표시하기 위한 임시 라벨
+		lb_turn = new JLabel("White", JLabel.CENTER);
+		lb_turn.setFont(new Font("Default Font", Font.PLAIN, 50));
+		p_west.add(lb_turn, "Center");
+		
+		// 턴수를 표기하기 위한 임시 라벨
+		lb_turn_count = new JLabel(turn_count+"", JLabel.CENTER);
+		lb_turn_count.setFont(new Font("Default Font", Font.PLAIN, 50));
+		p_west.add(lb_turn_count, "South");
 
 		// 말 배치
 		setChessPiece();
-
-		
-		//팝업창 세팅
-		Popup popup = new Popup();
-		setJMenuBar(popup.getMenuBar());
-		
-
-
 
 		// 블랙 체스말 이벤트
 		for (int i = 0; i < chesspiece_black.size(); i++) {
@@ -103,11 +104,12 @@ public class ChessBoard extends JFrame {
 						chesspiece_white.get(index).whiteMove();
 					}
 				}
+
 			});
 		}
 		this.validate();
 	}
-
+	
 	// 체스 보드 그리기;
 	public void boardSet() {
 
@@ -148,7 +150,6 @@ public class ChessBoard extends JFrame {
 		chesspiece_black = new ArrayList<ChessPiece>();
 		chesspiece_white = new ArrayList<ChessPiece>();
 
-
 		chesspiece_black
 				.add(new Rook("black", 1, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black
@@ -181,7 +182,6 @@ public class ChessBoard extends JFrame {
 				.add(new Bishop("black", 1, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black
 				.add(new Queen("black", 1, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-
 
 		boards[1][1].add(chesspiece_black.get(0), "Center");
 		boards[1][8].add(chesspiece_black.get(1), "Center");
@@ -251,8 +251,7 @@ public class ChessBoard extends JFrame {
 		boards[8][4].add(chesspiece_white.get(15), "Center");
 	}
 
-	
-	// 킹이 체스상태인지 확인하는 메서드
+	// 킹이 체크상태인지 확인하는 메서드
 	public boolean isKingInCheck(String kingSide) {
 		King king = null;
 		ArrayList<ChessPiece> opponentPieces;
@@ -303,32 +302,125 @@ public class ChessBoard extends JFrame {
 				if (((ImageIcon) ((ChessPiece) boards[king.row][king.col].getComponent(1)).getIcon()).getDescription()
 						.equals("black_icon_attack")) {
 					((ChessPiece) boards[king.row][king.col].getComponent(1))
-					.setIcon(((ChessPiece) boards[king.row][king.col].getComponent(1)).black_icon);
+							.setIcon(((ChessPiece) boards[king.row][king.col].getComponent(1)).black_icon);
 					return true; // 블랙 킹이 체크 상태
 				}
 			}
 
 		}
-
 		return false;
 	}
-	
+
 	// 체크 상태가 되면 화면 업데이트 메서드
+	// 체크메이트가 된 상태면 체크가 아닌 체크메이트 출력
 	public void updateCheckStatus() {
 		if (isKingInCheck("white")) {
-			check.setText("White King in Check!");
+			if (isCheckMate("white")) {
+				lb_check.setText("White Checkmate!");
+			} else {
+			lb_check.setText("White King in Check!");
+		}
 		} else if (isKingInCheck("black")) {
-			check.setText("Black King in Check!");
-		} else {
-			check.setText("Play");
+			if (isCheckMate("black")) {
+				lb_check.setText("Black Checkmate!");
+			} else {
+			lb_check.setText("Black King in Check!");
+			}
+		} else
+
+		{
+			lb_check.setText("Play");
 		}
 
 		// UI 즉시 새로고침
-		check.repaint();
+		lb_check.repaint();
 		this.validate();
 		this.repaint();
 	}
 
+	// 체크메이트 확인 메서드
+	public boolean isCheckMate(String kingSide) {
+		int movepincount = 0;
+		int attackcount = 0;
+
+		// 화이트 체크메이트 확인
+		if (kingSide.equals("white")) {
+			// 화이트 기물 중 활성화 되어있는 기물의 체크 해제가 가능한 무브핀을 체크
+			for (int z = 0; z < chesspiece_white.size(); z++) {
+				if (chesspiece_white.get(z).isEnabled()) {
+					chesspiece_white.get(z).whiteMove();
+				}
+				// 무브핀이 깔린 후 무브핀을 카운트
+				for (int i = 1; i <= 8; i++) {
+					for (int j = 1; j <= 8; j++) {
+						if (movepins[i][j].isVisible()) {
+							movepincount++;
+						}
+						// 체크 해제가 가능한 공격 아이콘을 카운트
+						if (boards[i][j].getComponentCount() == 2) {
+							if (((ImageIcon) ((ChessPiece) boards[i][j].getComponent(1)).getIcon()).getDescription()
+									.equals("black_icon_attack")) {
+								attackcount++;
+							}
+							// 공격 아이콘 기본 아이콘으로 복구
+							if (((ChessPiece) boards[i][j].getComponent(1)).side.equals("black")) {
+								((ChessPiece) boards[i][j].getComponent(1))
+										.setIcon(((ChessPiece) boards[i][j].getComponent(1)).black_icon);
+							} else {
+								((ChessPiece) boards[i][j].getComponent(1))
+										.setIcon(((ChessPiece) boards[i][j].getComponent(1)).white_icon);
+							}
+						}
+					}
+				}
+			}
+			// 무브핀과 공격아이콘이 전혀 카운트되어 있지 않으면 체크메이트 상태를 반환
+			if (movepincount == 0 && attackcount == 0) {
+				return true;
+			} else {
+				return false;
+			}
+			// 블랙 체크메이트 확인
+		} else if (kingSide.equals("black")) {
+			// 블랙 기물 중 활성화 되어있는 기물의 체크 해제가 가능한 무브핀을 체크
+			for (int z = 0; z < chesspiece_black.size(); z++) {
+				if (chesspiece_black.get(z).isEnabled()) {
+					chesspiece_black.get(z).blackMove();
+				}
+				// 무브핀이 깔린 후 무브핀을 카운트
+				for (int i = 1; i <= 8; i++) {
+					for (int j = 1; j <= 8; j++) {
+						if (movepins[i][j].isVisible()) {
+							movepincount++;
+						}
+						// 체크 해제가 가능한 공격 아이콘을 카운트
+						if (boards[i][j].getComponentCount() == 2) {
+							if (((ImageIcon) ((ChessPiece) boards[i][j].getComponent(1)).getIcon()).getDescription()
+									.equals("white_icon_attack")) {
+								attackcount++;
+							}
+							// 공격 아이콘 기본 아이콘으로 복구
+							if (((ChessPiece) boards[i][j].getComponent(1)).side.equals("white")) {
+								((ChessPiece) boards[i][j].getComponent(1))
+										.setIcon(((ChessPiece) boards[i][j].getComponent(1)).white_icon);
+							} else {
+								((ChessPiece) boards[i][j].getComponent(1))
+										.setIcon(((ChessPiece) boards[i][j].getComponent(1)).black_icon);
+							}
+						}
+					}
+				}
+			}
+			// 무브핀과 공격아이콘이 전혀 카운트되어 있지 않으면 체크메이트 상태를 반환
+			if (movepincount == 0 && attackcount == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
+	
 	public static void main(String[] args) {
 		System.setProperty("sun.java2d.uiScale", "1");
 		new ChessBoard();

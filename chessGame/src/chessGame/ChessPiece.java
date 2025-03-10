@@ -1,6 +1,8 @@
 package chessGame;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 abstract public class ChessPiece extends JButton {
+	
 	String side;
 	int row;
 	int col;
@@ -22,18 +25,21 @@ abstract public class ChessPiece extends JButton {
 	ArrayList<ActionListener> attackListeners;
 	ChessBoard chessBoard;
 	ArrayList<ChessPiece> chesspiece_black, chesspiece_white;
-	JPanel boards[][]; 
-	JButton movepins[][]; 
+	JPanel boards[][];
+	JButton movepins[][];
 	JPanel p_board;
 	ImageIcon black_icon, white_icon, black_icon_select, white_icon_select, black_icon_attack, white_icon_attack;
 
 	public abstract void blackMove();
 
 	public abstract void whiteMove();
-	
+
+	public abstract void setMovePinWhite();
+
+	public abstract void setMovePinBlack();
+
 	public abstract void isAttackKing();
-	
-	
+
 	// 무브핀 일괄 비활성화 메서드
 	public void movepinsNotVisible() {
 		for (int i = 1; i <= 8; i++) {
@@ -55,6 +61,7 @@ abstract public class ChessPiece extends JButton {
 		}
 
 	}
+
 	// blackMove()용 공격 메서드
 	public void attackBlack(ChessPiece me) {
 		for (int i = 1; i <= 8; i++) {
@@ -97,44 +104,49 @@ abstract public class ChessPiece extends JButton {
 								movepinsNotVisible();
 
 								// 현재 위치 값 저장
+								int originalrow = row;
+								int originalcol = col;
 								row = indexrow;
 								col = indexcol;
-								
-								//프로모션 다이얼로그
-								if(me instanceof Pawn) {
-									if(row==8) {
-										showImageDialog();
+
+								// 프로모션 다이얼로그
+								if (me instanceof Pawn) {
+									if (row == 8) {
+										showblackImageDialog(me);
 									}
 								}
-									
-								
+
 								// 턴 정보를 상대 턴으로 변경
 								chessBoard.turn = "white";
-
-								p_board.getParent().validate();
-								p_board.getParent().repaint();
+								chessBoard.lb_turn.setText("White");
+								chessBoard.turn_count++;
+								chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 
 								// 공격을 한 상태로 변경
 								attack = true;
-								
+
 								// 이동 횟수 증가
 								movecount++;
 
-								
 								// 사용 했거나 하지 않은 어택 리스너 제거
 								removeAttackBlack();
-								
+
 								// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 								if (chessBoard.isKingInCheck("white")) {
-								    System.out.println("White King is in Check!");
+									System.out.println("White King is in Check!");
 								}
 								if (chessBoard.isKingInCheck("black")) {
-								    System.out.println("Black King is in Check!");
+									System.out.println("Black King is in Check!");
 								}
+								
+								// 이동한 보드 칸 색상 표시
+								setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
-								// UI 업데이트 호출 (체크 상태 즉시 반영)
+								// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 								chessBoard.updateCheckStatus();
 
+								p_board.getParent().validate();
+								p_board.getParent().repaint();
 							}
 
 						};
@@ -147,7 +159,7 @@ abstract public class ChessPiece extends JButton {
 			}
 		}
 	}
-	
+
 	// blackMove()용 이동 메서드
 	public void moveBlack(ChessPiece me) {
 		if (!attack) {
@@ -179,19 +191,20 @@ abstract public class ChessPiece extends JButton {
 								movepinsNotVisible();
 
 								// 현재 위치 값 저장
+								int originalrow = row;
+								int originalcol = col;
 								row = indexrow;
 								col = indexcol;
 
 								// 턴 정보를 상대 턴으로 변경
 								chessBoard.turn = "white";
-								
-								
+								chessBoard.lb_turn.setText("White");
+								chessBoard.turn_count++;
+								chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
+
 								// 이동 횟수 증가
 								movecount++;
-								
-								p_board.getParent().validate();
-								p_board.getParent().repaint();
-								
+
 								// 모든 적군말을 일반 아이콘으로 전환
 								for (int k = 0; k < chesspiece_white.size(); k++) {
 									chesspiece_white.get(k).setIcon(chesspiece_white.get(k).white_icon);
@@ -199,14 +212,20 @@ abstract public class ChessPiece extends JButton {
 
 								// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 								if (chessBoard.isKingInCheck("white")) {
-								    System.out.println("White King is in Check!");
+									System.out.println("White King is in Check!");
 								}
 								if (chessBoard.isKingInCheck("black")) {
-								    System.out.println("Black King is in Check!");
+									System.out.println("Black King is in Check!");
 								}
+								
+								// 이동한 보드 칸 색상 표시
+								setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
-								// UI 업데이트 호출 (체크 상태 즉시 반영)
+								// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 								chessBoard.updateCheckStatus();
+
+								p_board.getParent().validate();
+								p_board.getParent().repaint();
 							}
 						});
 
@@ -215,7 +234,7 @@ abstract public class ChessPiece extends JButton {
 			}
 		}
 	}
-	
+
 	// whiteMove()용 공격 메서드
 	public void attackWhite(ChessPiece me) {
 		for (int i = 1; i <= 8; i++) {
@@ -258,41 +277,49 @@ abstract public class ChessPiece extends JButton {
 								movepinsNotVisible();
 
 								// 현재 위치 값 저장
+								int originalrow = row;
+								int originalcol = col;
 								row = indexrow;
 								col = indexcol;
-								
-								//프로모션 다이얼로그
-								if(me instanceof Pawn) {
-									if(row==1) {
-										showImageDialog();
+
+								// 프로모션 다이얼로그
+								if (me instanceof Pawn) {
+									if (row == 1) {
+										showblackImageDialog(me);
 									}
 								}
-								
+
 								// 턴 정보를 상대 턴으로 변경
 								chessBoard.turn = "black";
-
-								p_board.getParent().validate();
-								p_board.getParent().repaint();
+								chessBoard.lb_turn.setText("Black");
+								chessBoard.turn_count++;
+								chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 
 								// 공격을 한 상태로 변경
 								attack = true;
-								
+
 								// 이동 횟수 증가
 								movecount++;
 
 								// 사용 했거나 하지 않은 어택 리스너 제거
 								removeAttackWhite();
-								
+
 								// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 								if (chessBoard.isKingInCheck("white")) {
-								    System.out.println("White King is in Check!");
+									System.out.println("White King is in Check!");
 								}
 								if (chessBoard.isKingInCheck("black")) {
-								    System.out.println("Black King is in Check!");
+									System.out.println("Black King is in Check!");
 								}
 
-								// UI 업데이트 호출 (체크 상태 즉시 반영)
+								// 이동한 보드 칸 색상 표시
+								setMoveBoard(originalrow, originalcol, indexrow, indexcol);
+								
+								// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 								chessBoard.updateCheckStatus();
+
+								p_board.getParent().validate();
+								p_board.getParent().repaint();
 							}
 
 						};
@@ -305,7 +332,7 @@ abstract public class ChessPiece extends JButton {
 			}
 		}
 	}
-	
+
 	// whiteMove()용 이동 메서드
 	public void moveWhite(ChessPiece me) {
 		if (!attack) {
@@ -337,19 +364,20 @@ abstract public class ChessPiece extends JButton {
 								movepinsNotVisible();
 
 								// 현재 위치 값 저장
+								int originalrow = row;
+								int originalcol = col;
 								row = indexrow;
 								col = indexcol;
 
 								// 턴 정보를 상대 턴으로 변경
 								chessBoard.turn = "black";
-								
+								chessBoard.lb_turn.setText("Black");
+								chessBoard.turn_count++;
+								chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
+
 								// 이동 횟수 증가
 								movecount++;
 
-
-								p_board.getParent().validate();
-								p_board.getParent().repaint();
-								
 								// 모든 적군말을 일반 아이콘으로 전환
 								for (int k = 0; k < chesspiece_black.size(); k++) {
 									chesspiece_black.get(k).setIcon(chesspiece_black.get(k).black_icon);
@@ -357,14 +385,20 @@ abstract public class ChessPiece extends JButton {
 
 								// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
 								if (chessBoard.isKingInCheck("white")) {
-								    System.out.println("White King is in Check!");
+									System.out.println("White King is in Check!");
 								}
 								if (chessBoard.isKingInCheck("black")) {
-								    System.out.println("Black King is in Check!");
+									System.out.println("Black King is in Check!");
 								}
 
-								// UI 업데이트 호출 (체크 상태 즉시 반영)
+								// 이동한 보드 칸 색상 표시
+								setMoveBoard(originalrow, originalcol, indexrow, indexcol);
+
+								// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 								chessBoard.updateCheckStatus();
+
+								p_board.getParent().validate();
+								p_board.getParent().repaint();
 							}
 						});
 
@@ -374,7 +408,7 @@ abstract public class ChessPiece extends JButton {
 		}
 
 	}
-	
+
 	// blackMove()용 어택 리스너 제거 메서드
 	public void removeAttackBlack() {
 		// 공격대상이 여러개일 경우 리스너는 등록되지만 수행이 안되는 경우가 있기 떄문에
@@ -406,52 +440,219 @@ abstract public class ChessPiece extends JButton {
 		// 리스트 초기화
 		attackListeners.clear();
 	}
-	
 
-	//프로모션 적용을 위한 다이얼 로그
-    public void showImageDialog() {
-        ImageIcon p_queen = new ImageIcon("image/your_image.png");
-        ImageIcon p_bishop = new ImageIcon("image/your_image.png");
-        ImageIcon p_rook = new ImageIcon("image/your_image.png");
-        ImageIcon p_knight = new ImageIcon("image/your_image.png");
-        ImageIcon p_pone = new ImageIcon("image/your_image.png");
-        
-        JLabel imageLabel = new JLabel("111");
-        JButton selectButton = new JButton("선택");
+	// 프로모션 적용을 위한 다이얼 로그
+	public void showblackImageDialog(ChessPiece me) {
+	    
 
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(imageLabel, BorderLayout.CENTER);
-        panel.add(selectButton, BorderLayout.SOUTH);
+	    ImageIcon p_queen_black = new ImageIcon("image/Queen-black.png");
+	    ImageIcon p_bishop_black = new ImageIcon("image/Bishop-black.png");
+	    ImageIcon p_rook_black = new ImageIcon("image/Rook-black.png");
+	    ImageIcon p_knight_black = new ImageIcon("image/Knight-black.png");
 
-        JOptionPane.showMessageDialog(this, panel, "이미지 선택", JOptionPane.PLAIN_MESSAGE);
+	    JButton selectButton[] = new JButton[4];
 
-        selectButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // 이미지 선택 시 처리 로직
-                JOptionPane.showMessageDialog(null, "이미지가 선택되었습니다!", "알림", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-    }
-}
+	    JPanel panel = new JPanel(new GridLayout(1, 4));
+
+	    for (int i = 0; i < selectButton.length; i++) {
+	        selectButton[i] = new JButton();
+	        panel.add(selectButton[i]);
+	    }
+	    selectButton[0].setIcon(p_queen_black);
+	    selectButton[1].setIcon(p_bishop_black);
+	    selectButton[2].setIcon(p_rook_black);
+	    selectButton[3].setIcon(p_knight_black);
+
+	    ActionListener buttonListener = new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            JButton clickedButton = (JButton) e.getSource();
+	            
+	            // 선택한 버튼에 따라 chesspiece_black 객체 변경
+	            if (clickedButton.getIcon() == p_queen_black) {
+	                changeChessPiece(new Queen("black", me.row, me.col, me.chessBoard, me.boards, me.movepins, me.p_board, me.chesspiece_black, me.chesspiece_white));
+	            } else if (clickedButton.getIcon() == p_bishop_black) {
+	                changeChessPiece(new Bishop("black", me.row, me.col, me.chessBoard, me.boards, me.movepins, me.p_board, me.chesspiece_black, me.chesspiece_white));
+	            } else if (clickedButton.getIcon() == p_rook_black) {
+	                changeChessPiece(new Rook("black", me.row, me.col, me.chessBoard, me.boards, me.movepins, me.p_board, me.chesspiece_black, me.chesspiece_white));
+	            } else if (clickedButton.getIcon() == p_knight_black) {
+	                changeChessPiece(new Knight("black", me.row, me.col, me.chessBoard, me.boards, me.movepins, me.p_board, me.chesspiece_black, me.chesspiece_white));
+	            }
+	            
+	            
+	        }
+
+	        private void changeChessPiece(ChessPiece newPiece) {
+	            for (int i = 0; i < chesspiece_black.size(); i++) {
+	                if (chesspiece_black.get(i) == me) {
+	                	
+	                	//boards[row][col].remove(chesspiece_black.get(i));
+	                	//chesspiece_black.remove(i);
+	                	
+	                	chesspiece_black.set(i, newPiece);
+	                	
+	                	
+	                	boards[row][col].add(chesspiece_black.get(i),"Center");
+	                	
+	                	p_board.getParent().validate();
+						p_board.getParent().repaint();
+	                } 
+	            }
+	        }
+	    };
+	    
+	    for (int i = 0; i < selectButton.length; i++) {
+	        selectButton[i].addActionListener(buttonListener);
+	    }
+	    
+	    JOptionPane.showMessageDialog(this, panel, "변경 말 선택", JOptionPane.NO_OPTION);
+	}
+
 
 	// 체크 상태를 확인하기 위해 구분하는 킹 아이콘 변경 메서드
 	public boolean setAttackIconIfKing(int targetRow, int targetCol) {
-	    if (boards[targetRow][targetCol].getComponentCount() == 2) {
-	        ChessPiece targetPiece = (ChessPiece) boards[targetRow][targetCol].getComponent(1);
+		if (boards[targetRow][targetCol].getComponentCount() == 2) {
+			ChessPiece targetPiece = (ChessPiece) boards[targetRow][targetCol].getComponent(1);
 
-	        // 대상이 상대 킹인지 확인
-	        if (targetPiece instanceof King && !targetPiece.side.equals(this.side)) {
-	            if (this.side.equals("white")) {
-	                targetPiece.setIcon(targetPiece.black_icon_attack);
-	            } else {
-	                targetPiece.setIcon(targetPiece.white_icon_attack);
-	            }
-	            return true; // 킹이 발견되었으므로 탐색 종료
-	        }
-	    }
-	    return false; // 킹이 아니면 계속 탐색 가능
+			// 대상이 상대 킹인지 확인
+			if (targetPiece instanceof King && !targetPiece.side.equals(this.side)) {
+				if (this.side.equals("white")) {
+					targetPiece.setIcon(targetPiece.black_icon_attack);
+				} else {
+					targetPiece.setIcon(targetPiece.white_icon_attack);
+				}
+				return true; // 킹이 발견되었으므로 탐색 종료
+			}
+		}
+		return false; // 킹이 아니면 계속 탐색 가능
+	}
+
+	// 체크시 체크 해제를 위한 이동이 맞는지 판단하는 메서드
+	public boolean afterCheckMove(int moverow, int movecol) {
+		int originalrow = row;
+		int originalcol = col;
+
+		// 이동하려는 경로에 상대 기물이 있을 경우
+		ChessPiece capturedPiece = null;
+		if (boards[moverow][movecol].getComponentCount() == 2
+				&& !((ChessPiece) boards[moverow][movecol].getComponent(1)).side.equals(side)) {
+			capturedPiece = (ChessPiece) boards[moverow][movecol].getComponent(1);
+			boards[moverow][movecol].remove(capturedPiece); // 상대 기물 임시 제거
+		}
+		// 상대 기물을 기물 모음 리스트에서 잠시 제거 후 인덱스 값 저장
+		// 인덱스가 -1인채면 공격을 한것이 아닌 것으로 간주
+		ArrayList<ChessPiece> opponentList = side.equals("white") ? chesspiece_black : chesspiece_white;
+		int removedIndex = -1;
+
+		if (capturedPiece != null) {
+			for (int i = 0; i < opponentList.size(); i++) {
+				if (opponentList.get(i) == capturedPiece) {
+					removedIndex = i;
+					opponentList.remove(i);
+					break;
+				}
+			}
+		}
+		// 예상 이동 경로로 아군 기물 임시 이동
+		boards[row][col].remove(this);
+		boards[moverow][movecol].add(this, "Center");
+
+		row = moverow;
+		col = movecol;
+
+		// 이동된 상태에서 체크가 되는지 판단 후 결과 저장
+		boolean kingInCheck = chessBoard.isKingInCheck(side);
+
+		// 원래 위치로 복구
+		boards[moverow][movecol].remove(this);
+		boards[originalrow][originalcol].add(this, "Center");
+		row = originalrow;
+		col = originalcol;
+
+		// 상대 기물을 공격한 상황이였다면 상대 기물 복구
+		if (capturedPiece != null && removedIndex != -1) {
+			opponentList.add(removedIndex, capturedPiece);
+		}
+
+		if (capturedPiece != null) {
+			boards[moverow][movecol].add(capturedPiece, "Center");
+		}
+
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
+
+		// 결과값 리턴
+		return kingInCheck;
+
+	}
+
+	// 체크 시 체크 해제만을 위한 이동경로로 제한하는 메서드
+	public void removeCheckMovepin() {
+		// 현재 보드에 보여지는 무브핀으로 이동 시 체크인지 판단 후 체크라면 무브핀 제거
+		for (int i = 1; i <= 8; i++) {
+			for (int j = 1; j <= 8; j++) {
+				if (movepins[i][j].isVisible()) {
+					if (afterCheckMove(i, j)) {
+						movepins[i][j].setVisible(false);
+					}
+				}
+				// 현재 공격 아이콘이 활성화된 곳으로 공격 시 체크인지 판단 후 체크라면 공격 아이콘 일반으로 변경
+				if (boards[i][j].getComponentCount() == 2) {
+					ChessPiece targetpiece = (ChessPiece) boards[i][j].getComponent(1);
+					if ((side.equals("black") && targetpiece.side.equals("white"))
+							|| (side.equals("white") && targetpiece.side.equals("black"))) {
+						if (((ImageIcon) targetpiece.getIcon()).getDescription().contains("_attack")) {
+							if (afterCheckMove(i, j)) {
+								if (targetpiece.side.equals("white")) {
+									targetpiece.setIcon(targetpiece.white_icon);
+								} else {
+									targetpiece.setIcon(targetpiece.black_icon);
+								}
+							}
+						}
+					}
+
+				}
+
+			}
+		}
+
+	}
+	
+	// 기물 이동 시 원래 위치와 이동한 위치를 색상으로 표시하는 메서드
+	public void setMoveBoard(int originalrow,int originalcol,int moverow,int movecol) {
+		// 보드를 기본 색상으로 초기화
+		for (int i = 1; i <= 8; i++) {
+			for (int j = 1; j <= 8; j++) {
+				if (i % 2 == 0) {
+					if (j % 2 == 0) {
+						boards[i][j].setBackground(Color.white);
+					} else {
+						boards[i][j].setBackground(Color.darkGray);
+					}
+				} else {
+					if (j % 2 == 0) {
+						boards[i][j].setBackground(Color.darkGray);
+					} else {
+						boards[i][j].setBackground(Color.white);
+					}
+				}
+			}
+		}
+
+		// 원래 있던 위치 색 변경
+		if(boards[originalrow][originalcol].getBackground().equals(Color.white)) {
+			boards[originalrow][originalcol].setBackground(new Color(209,254,164));
+		}else {
+			boards[originalrow][originalcol].setBackground(new Color(124,188,0));
+		}
+		
+		// 이동한 위치 색 변경
+		if(boards[moverow][movecol].getBackground().equals(Color.white)) {
+			boards[moverow][movecol].setBackground(new Color(209,254,164));
+		}else {
+			boards[moverow][movecol].setBackground(new Color(124,188,0));
+		}
 	}
 
 }
-

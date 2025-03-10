@@ -59,6 +59,7 @@ public class Knight extends ChessPiece {
 
 	@Override
 	public void blackMove() {
+
 		// 나 자신 세팅
 		knight = this;
 
@@ -66,14 +67,16 @@ public class Knight extends ChessPiece {
 		attack = false;
 		attackListener = null;
 
-		// 버튼 클릭 시 초기화
+		// 버튼 클릭 시 아이콘과 공격 액션 초기화
 		for (int i = 0; i < chesspiece_black.size(); i++) {
 			if (chesspiece_black.get(i) != knight) {
 				chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
 			}
+			chesspiece_black.get(i).removeAttackBlack();
 		}
 		for (int i = 0; i < chesspiece_white.size(); i++) {
 			chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
+			chesspiece_white.get(i).removeAttackWhite();
 		}
 
 		this.setIcon(black_icon_select);
@@ -81,6 +84,62 @@ public class Knight extends ChessPiece {
 		movepinsNotVisible();
 		removeAction();
 
+		// 이동 경로와 공격 세팅
+		setMovePinBlack();
+
+		// 공격 액션
+		attackBlack(knight);
+
+		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
+		removeAction();
+
+		// 공격을 안했을 시 일반 이동 액션
+		moveBlack(knight);
+
+	}
+
+	@Override
+	public void whiteMove() {
+		// 나 자신 세팅
+		knight = this;
+
+		// 공격 유무 세팅
+		attack = false;
+		attackListener = null;
+
+		// 버튼 클릭 시 아이콘과 공격 액션 초기화
+		for (int i = 0; i < chesspiece_white.size(); i++) {
+			if (chesspiece_white.get(i) != knight) {
+				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
+			}
+			chesspiece_white.get(i).removeAttackWhite();
+		}
+		for (int i = 0; i < chesspiece_black.size(); i++) {
+			chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
+			chesspiece_black.get(i).removeAttackBlack();
+		}
+
+		this.setIcon(white_icon_select);
+
+		movepinsNotVisible();
+		removeAction();
+
+		// 이동 경로와 공격 세팅
+		setMovePinWhite();
+
+		// 공격 액션
+		attackWhite(knight);
+
+		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
+		removeAction();
+
+		// 공격을 안했을 시 일반 이동 액션
+		moveWhite(knight);
+
+	}
+
+	@Override
+	public void setMovePinBlack() {
 		// ↖️방향 이동 무브포인트 및 공격 말 탐색
 		if (row - 2 > 0 && col - 1 > 0) {
 			if (boards[row - 2][col - 1].getComponentCount() == 1) {
@@ -172,42 +231,15 @@ public class Knight extends ChessPiece {
 				}
 			}
 		}
-
-		// 공격 액션
-		attackBlack(knight);
-
-		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
-		removeAction();
-
-		// 공격을 안했을 시 일반 이동 액션
-		moveBlack(knight);
-
+		// 체크 시 체크 해제만을 위한 이동경로로 제한
+		removeCheckMovepin();
+		
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
 	}
 
 	@Override
-	public void whiteMove() {
-		// 나 자신 세팅
-		knight = this;
-
-		// 공격 유무 세팅
-		attack = false;
-		attackListener = null;
-
-		// 버튼 클릭 시 초기화
-		for (int i = 0; i < chesspiece_white.size(); i++) {
-			if (chesspiece_white.get(i) != knight) {
-				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
-			}
-		}
-		for (int i = 0; i < chesspiece_black.size(); i++) {
-			chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
-		}
-
-		this.setIcon(white_icon_select);
-
-		movepinsNotVisible();
-		removeAction();
-
+	public void setMovePinWhite() {
 		// ↖️방향 이동 무브포인트 및 공격 말 탐색
 		if (row - 2 > 0 && col - 1 > 0) {
 			if (boards[row - 2][col - 1].getComponentCount() == 1) {
@@ -299,16 +331,11 @@ public class Knight extends ChessPiece {
 				}
 			}
 		}
-
-		// 공격 액션
-		attackWhite(knight);
-
-		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
-		removeAction();
-
-		// 공격을 안했을 시 일반 이동 액션
-		moveWhite(knight);
-
+		// 체크 시 체크 해제만을 위한 이동경로로 제한
+		removeCheckMovepin();
+		
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
 	}
 
 	// 현재 킹을 공격할 수 있는지 확인하는 메서드

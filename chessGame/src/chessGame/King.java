@@ -3,7 +3,6 @@ package chessGame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Locale.Category;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -61,6 +60,7 @@ public class King extends ChessPiece {
 
 	@Override
 	public void blackMove() {
+
 		// 나 자신 세팅
 		king = this;
 
@@ -68,21 +68,396 @@ public class King extends ChessPiece {
 		attack = false;
 		attackListener = null;
 
-		// 버튼 클릭 시 초기화
+		// 버튼 클릭 시 아이콘과 공격 액션 초기화
 		for (int i = 0; i < chesspiece_black.size(); i++) {
 			if (chesspiece_black.get(i) != king) {
 				chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
 			}
+			chesspiece_black.get(i).removeAttackBlack();
 		}
 		for (int i = 0; i < chesspiece_white.size(); i++) {
 			chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
+			chesspiece_white.get(i).removeAttackWhite();
 		}
 
 		this.setIcon(black_icon_select);
 
 		movepinsNotVisible();
+
+		// 이동 경로와 공격 세팅
+		setMovePinBlack();
+
+		// 공격 액션
+		attackBlack(king);
+
+		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
 		removeAction();
 
+		// 공격을 안했을 시 일반 이동 액션
+		moveBlack(king);
+	}
+
+	@Override
+	public void whiteMove() {
+		// 나 자신 세팅
+		king = this;
+
+		// 공격 유무 세팅
+		attack = false;
+		attackListener = null;
+
+		// 버튼 클릭 시 아이콘과 공격 액션 초기화
+		for (int i = 0; i < chesspiece_white.size(); i++) {
+			if (chesspiece_white.get(i) != king) {
+				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
+			}
+			chesspiece_white.get(i).removeAttackWhite();
+		}
+		for (int i = 0; i < chesspiece_black.size(); i++) {
+			chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
+			chesspiece_black.get(i).removeAttackBlack();
+		}
+
+		this.setIcon(white_icon_select);
+
+		movepinsNotVisible();
+		removeAction();
+
+		// 이동 경로와 공격 세팅
+		setMovePinWhite();
+
+		// 공격 액션
+		attackWhite(king);
+
+		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
+		removeAction();
+
+		// 공격을 안했을 시 일반 이동 액션
+		moveWhite(king);
+
+	}
+
+	// 캐슬링 구현을 위해 체스피스 클래스에서 오버라이딩
+	@Override
+	public void moveBlack(ChessPiece me) {
+		if (!attack) {
+			for (int i = 1; i <= 8; i++) {
+				for (int j = 1; j <= 8; j++) {
+					final int indexrow = i;
+					final int indexcol = j;
+
+					// 조건 : 현재 보여지고 있는 무브핀
+					if (movepins[indexrow][indexcol].isVisible()) {
+						// 캐슬링 조건 달성 시 이동 액션
+						if (indexcol == col + 2 || indexcol == col - 2) {
+
+							movepins[indexrow][indexcol].addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									// 킹 사이드 캐슬링
+									if (indexcol == col + 2) {
+										ChessPiece castlingrook = null;
+										for (int k = 0; k < chesspiece_black.size(); k++) {
+											if (chesspiece_black.get(k) == boards[row][col + 3].getComponent(1)) {
+												castlingrook = chesspiece_black.get(k);
+												break;
+											}
+										}
+										boards[row][col + 3].remove(1);
+										boards[row][col + 1].add(castlingrook);
+										// 퀸 사이드 캐슬링
+									} else if (indexcol == col - 2) {
+										ChessPiece castlingrook = null;
+										for (int k = 0; k < chesspiece_black.size(); k++) {
+											if (chesspiece_black.get(k) == boards[row][col - 4].getComponent(1)) {
+												castlingrook = chesspiece_black.get(k);
+												break;
+											}
+										}
+										boards[row][col - 4].remove(1);
+										boards[row][col - 1].add(castlingrook);
+									}
+
+									// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
+									boards[row][col].remove(me);
+									boards[indexrow][indexcol].add(me, "Center");
+
+									// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
+									for (int k = 0; k < chesspiece_black.size(); k++) {
+										chesspiece_black.get(k).setIcon(chesspiece_black.get(k).black_icon);
+									}
+
+									// 사용 안한 어택 리스너 제거
+									removeAttackBlack();
+
+									// 무브핀 초기화
+									movepinsNotVisible();
+
+									// 현재 위치 값 저장
+									int originalrow = row;
+									int originalcol = col;
+									row = indexrow;
+									col = indexcol;
+
+									// 턴 정보를 상대 턴으로 변경
+									chessBoard.turn = "white";
+									chessBoard.lb_turn.setText("White");
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count+"");
+
+									// 이동 횟수 증가
+									movecount++;
+
+
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+										System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+										System.out.println("Black King is in Check!");
+									}
+									
+									// 이동한 보드 칸 색상 표시
+									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
+
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
+									
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
+								}
+							});
+
+						} else {
+							movepins[indexrow][indexcol].addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+
+									// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
+									boards[row][col].remove(me);
+									boards[indexrow][indexcol].add(me, "Center");
+
+									// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
+									for (int k = 0; k < chesspiece_black.size(); k++) {
+										chesspiece_black.get(k).setIcon(chesspiece_black.get(k).black_icon);
+									}
+
+									// 사용 안한 어택 리스너 제거
+									removeAttackBlack();
+
+									// 무브핀 초기화
+									movepinsNotVisible();
+
+									// 현재 위치 값 저장
+									int originalrow = row;
+									int originalcol = col;
+									row = indexrow;
+									col = indexcol;
+
+									// 턴 정보를 상대 턴으로 변경
+									chessBoard.turn = "white";
+									chessBoard.lb_turn.setText("White");
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count+"");
+
+									// 이동 횟수 증가
+									movecount++;
+
+
+									// 모든 적군말을 일반 아이콘으로 전환
+									for (int k = 0; k < chesspiece_white.size(); k++) {
+										chesspiece_white.get(k).setIcon(chesspiece_white.get(k).white_icon);
+									}
+
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+										System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+										System.out.println("Black King is in Check!");
+									}
+									
+									// 이동한 보드 칸 색상 표시
+									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
+									
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
+
+								}
+
+							});
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// 캐슬링 구현을 위해 체스피스 클래스에서 오버라이딩
+	@Override
+	public void moveWhite(ChessPiece me) {
+		if (!attack) {
+			for (int i = 1; i <= 8; i++) {
+				for (int j = 1; j <= 8; j++) {
+					final int indexrow = i;
+					final int indexcol = j;
+
+					// 조건 : 현재 보여지고 있는 무브핀
+					if (movepins[indexrow][indexcol].isVisible()) {
+						// 캐슬링 조건 달성 시 이동 액션
+						if (indexcol == col + 2 || indexcol == col - 2) {
+
+							movepins[indexrow][indexcol].addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									// 킹 사이드 캐슬링
+									if (indexcol == col + 2) {
+										ChessPiece castlingrook = null;
+										for (int k = 0; k < chesspiece_white.size(); k++) {
+											if (chesspiece_white.get(k) == boards[row][col + 3].getComponent(1)) {
+												castlingrook = chesspiece_white.get(k);
+												break;
+											}
+										}
+										boards[row][col + 3].remove(1);
+										boards[row][col + 1].add(castlingrook);
+										// 퀸 사이드 캐슬링
+									} else if (indexcol == col - 2) {
+										ChessPiece castlingrook = null;
+										for (int k = 0; k < chesspiece_white.size(); k++) {
+											if (chesspiece_white.get(k) == boards[row][col - 4].getComponent(1)) {
+												castlingrook = chesspiece_white.get(k);
+												break;
+											}
+										}
+										boards[row][col - 4].remove(1);
+										boards[row][col - 1].add(castlingrook);
+									}
+
+									// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
+									boards[row][col].remove(me);
+									boards[indexrow][indexcol].add(me, "Center");
+
+									// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
+									for (int k = 0; k < chesspiece_white.size(); k++) {
+										chesspiece_white.get(k).setIcon(chesspiece_white.get(k).white_icon);
+									}
+
+									// 사용 안한 어택 리스너 제거
+									removeAttackWhite();
+
+									// 무브핀 초기화
+									movepinsNotVisible();
+
+									// 현재 위치 값 저장
+									int originalrow = row;
+									int originalcol = col;
+									row = indexrow;
+									col = indexcol;
+
+									// 턴 정보를 상대 턴으로 변경
+									chessBoard.turn = "black";
+									chessBoard.lb_turn.setText("Black");
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count+"");
+
+									// 이동 횟수 증가
+									movecount++;
+
+
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+										System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+										System.out.println("Black King is in Check!");
+									}
+									
+									// 이동한 보드 칸 색상 표시
+									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
+
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
+								}
+							});
+
+						} else {
+							movepins[indexrow][indexcol].addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+
+									// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
+									boards[row][col].remove(me);
+									boards[indexrow][indexcol].add(me, "Center");
+
+									// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
+									for (int k = 0; k < chesspiece_white.size(); k++) {
+										chesspiece_white.get(k).setIcon(chesspiece_white.get(k).white_icon);
+									}
+
+									// 사용 안한 어택 리스너 제거
+									removeAttackWhite();
+
+									// 무브핀 초기화
+									movepinsNotVisible();
+
+									// 현재 위치 값 저장
+									int originalrow = row;
+									int originalcol = col;
+									row = indexrow;
+									col = indexcol;
+
+									// 턴 정보를 상대 턴으로 변경
+									chessBoard.turn = "black";
+									chessBoard.lb_turn.setText("Black");
+									chessBoard.turn_count++;
+									chessBoard.lb_turn_count.setText(chessBoard.turn_count+"");
+
+									// 이동 횟수 증가
+									movecount++;
+
+
+									// 모든 적군말을 일반 아이콘으로 전환
+									for (int k = 0; k < chesspiece_black.size(); k++) {
+										chesspiece_black.get(k).setIcon(chesspiece_black.get(k).black_icon);
+									}
+
+									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
+									if (chessBoard.isKingInCheck("white")) {
+										System.out.println("White King is in Check!");
+									}
+									if (chessBoard.isKingInCheck("black")) {
+										System.out.println("Black King is in Check!");
+									}
+									
+									// 이동한 보드 칸 색상 표시
+									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
+
+									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
+									chessBoard.updateCheckStatus();
+
+									p_board.getParent().validate();
+									p_board.getParent().repaint();
+								}
+
+							});
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public void setMovePinBlack() {
 		// ⬆️방향 이동 무브포인트 및 공격 말 탐색
 		if (row - 1 > 0) {
 			if (boards[row - 1][col].getComponentCount() == 1) {
@@ -185,7 +560,9 @@ public class King extends ChessPiece {
 			if (boards[row][col + 3].getComponentCount() == 2) {
 				if (boards[row][col + 3].getComponent(1) instanceof Rook
 						&& ((ChessPiece) boards[row][col + 3].getComponent(1)).movecount == 0) {
-					movepins[row][col + 2].setVisible(true);
+					if(!chessBoard.isKingInCheck(side)) { // 현재 체크가 아닐 시에만 캐슬링 가능
+						movepins[row][col + 2].setVisible(true);						
+					}
 				}
 			}
 		}
@@ -196,45 +573,21 @@ public class King extends ChessPiece {
 			if (boards[row][col - 4].getComponentCount() == 2) {
 				if (boards[row][col - 4].getComponent(1) instanceof Rook
 						&& ((ChessPiece) boards[row][col - 4].getComponent(1)).movecount == 0) {
-					movepins[row][col - 2].setVisible(true);
+					if(!chessBoard.isKingInCheck(side)) { // 현재 체크가 아닐 시에만 캐슬링 가능					
+						movepins[row][col - 2].setVisible(true);
+					}
 				}
 			}
 		}
-
-		// 공격 액션
-		attackBlack(king);
-
-		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
-		removeAction();
-
-		// 공격을 안했을 시 일반 이동 액션
-		moveBlack(king);
+		// 체크 시 체크 해제만을 위한 이동경로로 제한
+		removeCheckMovepin();
+		
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
 	}
 
 	@Override
-	public void whiteMove() {
-		// 나 자신 세팅
-		king = this;
-
-		// 공격 유무 세팅
-		attack = false;
-		attackListener = null;
-
-		// 버튼 클릭 시 초기화
-		for (int i = 0; i < chesspiece_white.size(); i++) {
-			if (chesspiece_white.get(i) != king) {
-				chesspiece_white.get(i).setIcon(chesspiece_white.get(i).white_icon);
-			}
-		}
-		for (int i = 0; i < chesspiece_black.size(); i++) {
-			chesspiece_black.get(i).setIcon(chesspiece_black.get(i).black_icon);
-		}
-
-		this.setIcon(white_icon_select);
-
-		movepinsNotVisible();
-		removeAction();
-
+	public void setMovePinWhite() {
 		// ⬆️방향 이동 무브포인트 및 공격 말 탐색
 		if (row - 1 > 0) {
 			if (boards[row - 1][col].getComponentCount() == 1) {
@@ -337,7 +690,9 @@ public class King extends ChessPiece {
 			if (boards[row][col + 3].getComponentCount() == 2) {
 				if (boards[row][col + 3].getComponent(1) instanceof Rook
 						&& ((ChessPiece) boards[row][col + 3].getComponent(1)).movecount == 0) {
-					movepins[row][col + 2].setVisible(true);
+					if(!chessBoard.isKingInCheck(side)) { // 현재 체크가 아닐 시에만 캐슬링 가능
+						movepins[row][col + 2].setVisible(true);						
+					}
 				}
 			}
 		}
@@ -348,304 +703,17 @@ public class King extends ChessPiece {
 			if (boards[row][col - 4].getComponentCount() == 2) {
 				if (boards[row][col - 4].getComponent(1) instanceof Rook
 						&& ((ChessPiece) boards[row][col - 4].getComponent(1)).movecount == 0) {
-					movepins[row][col - 2].setVisible(true);
-				}
-			}
-		}
-
-		// 공격 액션
-		attackWhite(king);
-
-		// 무브핀의 중복 액션 이벤트를 막기 위해 이벤트 초기화
-		removeAction();
-
-		// 공격을 안했을 시 일반 이동 액션
-		moveWhite(king);
-
-	}
-
-	// 캐슬링 구현을 위해 체스피스 클래스에서 오버라이딩
-	@Override
-	public void moveBlack(ChessPiece me) {
-		if (!attack) {
-			for (int i = 1; i <= 8; i++) {
-				for (int j = 1; j <= 8; j++) {
-					final int indexrow = i;
-					final int indexcol = j;
-
-					// 조건 : 현재 보여지고 있는 무브핀
-					if (movepins[indexrow][indexcol].isVisible()) {
-						// 캐슬링 조건 달성 시 이동 액션
-						if (indexcol == col + 2 || indexcol == col - 2) {
-
-							movepins[indexrow][indexcol].addActionListener(new ActionListener() {
-
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									// 킹 사이드 캐슬링
-									if (indexcol == col + 2) {
-										ChessPiece castlingrook = null;
-										for (int k = 0; k < chesspiece_black.size(); k++) {
-											if (chesspiece_black.get(k) == boards[row][col + 3].getComponent(1)) {
-												castlingrook = chesspiece_black.get(k);
-												break;
-											}
-										}
-										boards[row][col + 3].remove(1);
-										boards[row][col + 1].add(castlingrook);
-										// 퀸 사이드 캐슬링
-									} else if (indexcol == col - 2) {
-										ChessPiece castlingrook = null;
-										for (int k = 0; k < chesspiece_black.size(); k++) {
-											if (chesspiece_black.get(k) == boards[row][col - 4].getComponent(1)) {
-												castlingrook = chesspiece_black.get(k);
-												break;
-											}
-										}
-										boards[row][col - 4].remove(1);
-										boards[row][col - 1].add(castlingrook);
-									}
-
-									// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
-									boards[row][col].remove(me);
-									boards[indexrow][indexcol].add(me, "Center");
-
-									// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
-									for (int k = 0; k < chesspiece_black.size(); k++) {
-										chesspiece_black.get(k).setIcon(chesspiece_black.get(k).black_icon);
-									}
-
-									// 사용 안한 어택 리스너 제거
-									removeAttackBlack();
-
-									// 무브핀 초기화
-									movepinsNotVisible();
-
-									// 현재 위치 값 저장
-									row = indexrow;
-									col = indexcol;
-
-									// 턴 정보를 상대 턴으로 변경
-									chessBoard.turn = "white";
-
-									// 이동 횟수 증가
-									movecount++;
-
-									p_board.getParent().validate();
-									p_board.getParent().repaint();
-									
-									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
-									if (chessBoard.isKingInCheck("white")) {
-									    System.out.println("White King is in Check!");
-									}
-									if (chessBoard.isKingInCheck("black")) {
-									    System.out.println("Black King is in Check!");
-									}
-
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
-									chessBoard.updateCheckStatus();
-								}
-							});
-
-						} else {
-							movepins[indexrow][indexcol].addActionListener(new ActionListener() {
-
-								@Override
-								public void actionPerformed(ActionEvent e) {
-
-									// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
-									boards[row][col].remove(me);
-									boards[indexrow][indexcol].add(me, "Center");
-
-									// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
-									for (int k = 0; k < chesspiece_black.size(); k++) {
-										chesspiece_black.get(k).setIcon(chesspiece_black.get(k).black_icon);
-									}
-
-									// 사용 안한 어택 리스너 제거
-									removeAttackBlack();
-
-									// 무브핀 초기화
-									movepinsNotVisible();
-
-									// 현재 위치 값 저장
-									row = indexrow;
-									col = indexcol;
-
-									// 턴 정보를 상대 턴으로 변경
-									chessBoard.turn = "white";
-
-									// 이동 횟수 증가
-									movecount++;
-
-									p_board.getParent().validate();
-									p_board.getParent().repaint();
-									
-									// 모든 적군말을 일반 아이콘으로 전환
-									for (int k = 0; k < chesspiece_white.size(); k++) {
-										chesspiece_white.get(k).setIcon(chesspiece_white.get(k).white_icon);
-									}
-									
-									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
-									if (chessBoard.isKingInCheck("white")) {
-									    System.out.println("White King is in Check!");
-									}
-									if (chessBoard.isKingInCheck("black")) {
-									    System.out.println("Black King is in Check!");
-									}
-
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
-									chessBoard.updateCheckStatus();
-
-								}
-							});
-						}
+					if(!chessBoard.isKingInCheck(side)) { // 현재 체크가 아닐 시에만 캐슬링 가능
+						movepins[row][col - 2].setVisible(true);						
 					}
 				}
 			}
 		}
-	}
-
-	// 캐슬링 구현을 위해 체스피스 클래스에서 오버라이딩
-	@Override
-	public void moveWhite(ChessPiece me) {
-		if (!attack) {
-			for (int i = 1; i <= 8; i++) {
-				for (int j = 1; j <= 8; j++) {
-					final int indexrow = i;
-					final int indexcol = j;
-
-					// 조건 : 현재 보여지고 있는 무브핀
-					if (movepins[indexrow][indexcol].isVisible()) {
-						// 캐슬링 조건 달성 시 이동 액션
-						if (indexcol == col + 2 || indexcol == col - 2) {
-
-							movepins[indexrow][indexcol].addActionListener(new ActionListener() {
-
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									// 킹 사이드 캐슬링
-									if (indexcol == col + 2) {
-										ChessPiece castlingrook = null;
-										for (int k = 0; k < chesspiece_white.size(); k++) {
-											if (chesspiece_white.get(k) == boards[row][col + 3].getComponent(1)) {
-												castlingrook = chesspiece_white.get(k);
-												break;
-											}
-										}
-										boards[row][col + 3].remove(1);
-										boards[row][col + 1].add(castlingrook);
-										// 퀸 사이드 캐슬링
-									} else if (indexcol == col - 2) {
-										ChessPiece castlingrook = null;
-										for (int k = 0; k < chesspiece_white.size(); k++) {
-											if (chesspiece_white.get(k) == boards[row][col - 4].getComponent(1)) {
-												castlingrook = chesspiece_white.get(k);
-												break;
-											}
-										}
-										boards[row][col - 4].remove(1);
-										boards[row][col - 1].add(castlingrook);
-									}
-
-									// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
-									boards[row][col].remove(me);
-									boards[indexrow][indexcol].add(me, "Center");
-
-									// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
-									for (int k = 0; k < chesspiece_white.size(); k++) {
-										chesspiece_white.get(k).setIcon(chesspiece_white.get(k).white_icon);
-									}
-
-									// 사용 안한 어택 리스너 제거
-									removeAttackWhite();
-
-									// 무브핀 초기화
-									movepinsNotVisible();
-
-									// 현재 위치 값 저장
-									row = indexrow;
-									col = indexcol;
-
-									// 턴 정보를 상대 턴으로 변경
-									chessBoard.turn = "black";
-
-									// 이동 횟수 증가
-									movecount++;
-
-									p_board.getParent().validate();
-									p_board.getParent().repaint();
-									
-									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
-									if (chessBoard.isKingInCheck("white")) {
-									    System.out.println("White King is in Check!");
-									}
-									if (chessBoard.isKingInCheck("black")) {
-									    System.out.println("Black King is in Check!");
-									}
-
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
-									chessBoard.updateCheckStatus();
-								}
-							});
-
-						} else {
-							movepins[indexrow][indexcol].addActionListener(new ActionListener() {
-
-								@Override
-								public void actionPerformed(ActionEvent e) {
-
-									// 기준 위치에서 아군말 제거 후 이동할 위치에 아군 말 추가 후 일반 아이콘으로 변경
-									boards[row][col].remove(me);
-									boards[indexrow][indexcol].add(me, "Center");
-
-									// 이동이 끝나면 모든 아군말을 일반 아이콘으로 전환
-									for (int k = 0; k < chesspiece_white.size(); k++) {
-										chesspiece_white.get(k).setIcon(chesspiece_white.get(k).white_icon);
-									}
-
-									// 사용 안한 어택 리스너 제거
-									removeAttackWhite();
-
-									// 무브핀 초기화
-									movepinsNotVisible();
-
-									// 현재 위치 값 저장
-									row = indexrow;
-									col = indexcol;
-
-									// 턴 정보를 상대 턴으로 변경
-									chessBoard.turn = "black";
-
-									// 이동 횟수 증가
-									movecount++;
-
-									p_board.getParent().validate();
-									p_board.getParent().repaint();
-									
-									// 모든 적군말을 일반 아이콘으로 전환
-									for (int k = 0; k < chesspiece_black.size(); k++) {
-										chesspiece_black.get(k).setIcon(chesspiece_black.get(k).black_icon);
-									}
-									
-									// 기물이 이동한 후 킹이 체크 상태인지 다시 확인
-									if (chessBoard.isKingInCheck("white")) {
-									    System.out.println("White King is in Check!");
-									}
-									if (chessBoard.isKingInCheck("black")) {
-									    System.out.println("Black King is in Check!");
-									}
-
-									// UI 업데이트 호출 (체크 상태 즉시 반영)
-									chessBoard.updateCheckStatus();
-
-								}
-							});
-						}
-					}
-				}
-			}
-		}
+		// 체크 시 체크 해제만을 위한 이동경로로 제한
+		removeCheckMovepin();
+		
+		p_board.getParent().validate();
+		p_board.getParent().repaint();
 	}
 
 	// 현재 킹을 공격할 수 있는지 확인하는 메서드
@@ -662,7 +730,6 @@ public class King extends ChessPiece {
 		// ⬅️방향 탐색
 		if (col - 1 > 0) {
 			setAttackIconIfKing(row, col - 1);
-			
 		}
 		// ➡️방향 탐색
 		if (col + 1 < 9) {
@@ -686,5 +753,4 @@ public class King extends ChessPiece {
 		}
 
 	}
-
 }
