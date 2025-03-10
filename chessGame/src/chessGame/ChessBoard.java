@@ -286,7 +286,10 @@ public class ChessBoard extends JFrame {
 
 		// 상대 기물들의 공격 가능 위치 확인
 		for (int i = 0; i < opponentPieces.size(); i++) {
+			// 활성화가 되어있는 말만 적용되도록 해야함(아니면 죽은 말도 체크 여부에 포함됨)
+			if(opponentPieces.get(i).isEnabled()) {
 			opponentPieces.get(i).isAttackKing();
+			}
 		}
 
 		// 킹의 아이콘이 공격 아이콘으로 변경되었는지 확인
