@@ -31,7 +31,7 @@ public class ChessBoard extends JFrame {
 	int turn_count;
 
 	public ChessBoard() {
-
+		
 		super("테스트");
 
 		this.setSize(1280, 800);
@@ -109,7 +109,7 @@ public class ChessBoard extends JFrame {
 		}
 		this.validate();
 	}
-
+	
 	// 체스 보드 그리기;
 	public void boardSet() {
 
