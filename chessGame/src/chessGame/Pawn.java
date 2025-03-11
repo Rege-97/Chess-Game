@@ -327,12 +327,7 @@ public class Pawn extends ChessPiece {
 									row = indexrow;
 									col = indexcol;
 
-									// 프로모션 다이얼로그
-									if (row == 1) {
-										showblackImageDialog(me);
-								
-									}
-
+									
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
 									chessBoard.lb_turn.setText("Black");
@@ -390,8 +385,8 @@ public class Pawn extends ChessPiece {
 									col = indexcol;
 
 									// 프로모션 다이얼로그
-									if (row == 8) {
-										showblackImageDialog(me);
+									if (row == 1) {
+										showwhiteImageDialog(me);
 									}
 
 									// 턴 정보를 상대 턴으로 변경
