@@ -239,7 +239,9 @@ public class Pawn extends ChessPiece {
 
 									// 프로모션 다이얼로그
 									if (row == 8) {
+
 										showblackImageDialog(me);
+
 									}
 
 									// 턴 정보를 상대 턴으로 변경
@@ -327,7 +329,7 @@ public class Pawn extends ChessPiece {
 									row = indexrow;
 									col = indexcol;
 
-									
+
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
 									chessBoard.lb_turn.setText("Black");
@@ -385,8 +387,10 @@ public class Pawn extends ChessPiece {
 									col = indexcol;
 
 									// 프로모션 다이얼로그
+
 									if (row == 1) {
 										showwhiteImageDialog(me);
+
 									}
 
 									// 턴 정보를 상대 턴으로 변경
@@ -462,7 +466,9 @@ public class Pawn extends ChessPiece {
 
 				}
 			}
+
 		} else if (row != 2 ||row!=8) {
+
 			// 처음 이후 무브 포인트 탐색
 			for (int i = row + 1; i <= row + 1; i++) {
 				if (boards[i][col].getComponentCount() == 1) {
@@ -569,7 +575,9 @@ public class Pawn extends ChessPiece {
 					}
 				}
 			}
+
 		} else if (row != 7||row !=1) {
+
 			// 처음 이후 무브 포인트 탐색
 			for (int i = row - 1; i >= row - 1; i--) {
 				if (boards[i][col].getComponentCount() == 1) {
@@ -666,4 +674,6 @@ public class Pawn extends ChessPiece {
 
 	}
 
+
 }
+

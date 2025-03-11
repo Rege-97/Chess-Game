@@ -2,7 +2,9 @@ package chessGame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+
 import java.awt.GridLayout;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -112,7 +114,9 @@ abstract public class ChessPiece extends JButton {
 								// 프로모션 다이얼로그
 								if (me instanceof Pawn) {
 									if (row == 8) {
+
 										showblackImageDialog(me);
+
 									}
 								}
 
@@ -285,7 +289,9 @@ abstract public class ChessPiece extends JButton {
 								// 프로모션 다이얼로그
 								if (me instanceof Pawn) {
 									if (row == 1) {
+
 										showwhiteImageDialog(me);
+
 									}
 								}
 
@@ -442,6 +448,7 @@ abstract public class ChessPiece extends JButton {
 	}
 
 	// 프로모션 적용을 위한 다이얼 로그
+
 	public void showblackImageDialog(ChessPiece me) {
 	    
 
@@ -602,6 +609,7 @@ abstract public class ChessPiece extends JButton {
 		
 	    JOptionPane.showMessageDialog(this, panel, "변경 말 선택", JOptionPane.NO_OPTION);
 	}
+
 	// 체크 상태를 확인하기 위해 구분하는 킹 아이콘 변경 메서드
 	public boolean setAttackIconIfKing(int targetRow, int targetCol) {
 		if (boards[targetRow][targetCol].getComponentCount() == 2) {
@@ -618,6 +626,7 @@ abstract public class ChessPiece extends JButton {
 			}
 		}
 		return false; // 킹이 아니면 계속 탐색 가능
+
 	}
 
 	// 체크시 체크 해제를 위한 이동이 맞는지 판단하는 메서드
@@ -749,3 +758,4 @@ abstract public class ChessPiece extends JButton {
 	}
 
 }
+
