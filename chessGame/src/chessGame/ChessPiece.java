@@ -395,7 +395,7 @@ abstract public class ChessPiece extends JButton {
 								}
 								if (chessBoard.isKingInCheck("black")) {
 									System.out.println("Black King is in Check!");
-								}
+								} 
 
 								// 이동한 보드 칸 색상 표시
 								setMoveBoard(originalrow, originalcol, indexrow, indexcol);
@@ -451,165 +451,171 @@ abstract public class ChessPiece extends JButton {
 
 	public void showblackImageDialog(ChessPiece me) {
 
-		ImageIcon p_queen_black = new ImageIcon("image/Queen-black.png");
-		ImageIcon p_bishop_black = new ImageIcon("image/Bishop-black.png");
-		ImageIcon p_rook_black = new ImageIcon("image/Rook-black.png");
-		ImageIcon p_knight_black = new ImageIcon("image/Knight-black.png");
+	    
 
-		JButton selectButton[] = new JButton[4];
+	    ImageIcon p_queen_black = new ImageIcon("image/Queen-black.png");
+	    ImageIcon p_bishop_black = new ImageIcon("image/Bishop-black.png");
+	    ImageIcon p_rook_black = new ImageIcon("image/Rook-black.png");
+	    ImageIcon p_knight_black = new ImageIcon("image/Knight-black.png");
 
-		JPanel panel = new JPanel(new GridLayout(1, 4));
+	    JButton selectButton[] = new JButton[4];
 
-		for (int i = 0; i < selectButton.length; i++) {
-			selectButton[i] = new JButton();
-			panel.add(selectButton[i]);
-		}
-		selectButton[0].setIcon(p_queen_black);
-		selectButton[1].setIcon(p_bishop_black);
-		selectButton[2].setIcon(p_rook_black);
-		selectButton[3].setIcon(p_knight_black);
+	    JPanel panel = new JPanel(new GridLayout(1, 4));
 
-		ActionListener buttonListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JButton clickedButton = (JButton) e.getSource();
+	    for (int i = 0; i < selectButton.length; i++) {
+	        selectButton[i] = new JButton();
+	        panel.add(selectButton[i]);
+	    }
+	    selectButton[0].setIcon(p_queen_black);
+	    selectButton[1].setIcon(p_bishop_black);
+	    selectButton[2].setIcon(p_rook_black);
+	    selectButton[3].setIcon(p_knight_black);
 
-				// 선택한 버튼에 따라 chesspiece_black 객체 변경
-				if (clickedButton.getIcon() == p_queen_black) {
-					changeChessPiece(new Queen("black", me.row, me.col, me.chessBoard, me.boards, me.movepins,
-							me.p_board, me.chesspiece_black, me.chesspiece_white));
-				} else if (clickedButton.getIcon() == p_bishop_black) {
-					changeChessPiece(new Bishop("black", me.row, me.col, me.chessBoard, me.boards, me.movepins,
-							me.p_board, me.chesspiece_black, me.chesspiece_white));
-				} else if (clickedButton.getIcon() == p_rook_black) {
-					changeChessPiece(new Rook("black", me.row, me.col, me.chessBoard, me.boards, me.movepins,
-							me.p_board, me.chesspiece_black, me.chesspiece_white));
-				} else if (clickedButton.getIcon() == p_knight_black) {
-					changeChessPiece(new Knight("black", me.row, me.col, me.chessBoard, me.boards, me.movepins,
-							me.p_board, me.chesspiece_black, me.chesspiece_white));
-				}
-				for (int i = 0; i < chesspiece_black.size(); i++) {
-					final int index = i;
-					chesspiece_black.get(index).addActionListener(new ActionListener() {
-
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							if (chessBoard.turn.equals("black") && chesspiece_black.get(index).isEnabled()) {
-								chesspiece_black.get(index).blackMove();
-							}
-						}
-					});
-				}
-
-				p_board.getParent().validate();
+	    ActionListener buttonListener = new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            JButton clickedButton = (JButton) e.getSource();
+	            
+	            // 선택한 버튼에 따라 chesspiece_black 객체 변경
+	            if (clickedButton.getIcon() == p_queen_black) {
+	                changeChessPiece(new Queen("black", me.row, me.col, me.chessBoard, me.boards, me.movepins, me.p_board, me.chesspiece_black, me.chesspiece_white));
+	            } else if (clickedButton.getIcon() == p_bishop_black) {
+	                changeChessPiece(new Bishop("black", me.row, me.col, me.chessBoard, me.boards, me.movepins, me.p_board, me.chesspiece_black, me.chesspiece_white));
+	            } else if (clickedButton.getIcon() == p_rook_black) {
+	                changeChessPiece(new Rook("black", me.row, me.col, me.chessBoard, me.boards, me.movepins, me.p_board, me.chesspiece_black, me.chesspiece_white));
+	            } else if (clickedButton.getIcon() == p_knight_black) {
+	                changeChessPiece(new Knight("black", me.row, me.col, me.chessBoard, me.boards, me.movepins, me.p_board, me.chesspiece_black, me.chesspiece_white));
+	            }
+	            for (int i = 0; i < chesspiece_black.size(); i++) {
+	    			final int index = i;
+	    			
+		    			chesspiece_black.get(index).addActionListener(new ActionListener() {
+	
+		    				@Override
+		    				public void actionPerformed(ActionEvent e) {
+		    					if (chessBoard.turn.equals("black") && chesspiece_black.get(index).isEnabled()) {
+		    						chesspiece_black.get(index).blackMove();
+		    					}
+		    				}
+		    			});
+	    			
+	    		}
+	            
+	            
+	            p_board.getParent().validate();
 				p_board.getParent().repaint();
+	            
+	        }
 
-			}
+	        private void changeChessPiece(ChessPiece newPiece) {
+	            for (int i = 0; i < chesspiece_black.size(); i++) {
+	                if (chesspiece_black.get(i) == me) {
+	                	
+	                	boards[row][col].remove(chesspiece_black.get(i));
+	                	chesspiece_black.remove(i);
+	                	
+	                	chesspiece_black.add(i, newPiece);
+	                	
+	                	
+	                	boards[row][col].add(chesspiece_black.get(i),"Center");
+	                	
+	                } 
+	            }
+	        }
+	    };
+	    
+	    for (int i = 0; i < selectButton.length; i++) {
+	        selectButton[i].addActionListener(buttonListener);
+	    }
+	    
+		
+	    JOptionPane.showMessageDialog(this, panel, "변경 말 선택", JOptionPane.NO_OPTION);
 
-			private void changeChessPiece(ChessPiece newPiece) {
-				for (int i = 0; i < chesspiece_black.size(); i++) {
-					if (chesspiece_black.get(i) == me) {
-
-						boards[row][col].remove(chesspiece_black.get(i));
-						chesspiece_black.remove(i);
-
-						chesspiece_black.set(i, newPiece);
-
-						boards[row][col].add(chesspiece_black.get(i), "Center");
-
-					}
-				}
-			}
-		};
-
-		for (int i = 0; i < selectButton.length; i++) {
-			selectButton[i].addActionListener(buttonListener);
-		}
-
-		JOptionPane.showMessageDialog(this, panel, "변경 말 선택", JOptionPane.NO_OPTION);
 	}
 
 	// 프로모션 적용을 위한 다이얼 로그
 	public void showwhiteImageDialog(ChessPiece me) {
 
-		ImageIcon p_queen_white = new ImageIcon("image/Queen-white.png");
-		ImageIcon p_bishop_white = new ImageIcon("image/Bishop-white.png");
-		ImageIcon p_rook_white = new ImageIcon("image/Rook-white.png");
-		ImageIcon p_knight_white = new ImageIcon("image/Knight-white.png");
+	    
 
-		JButton selectButton[] = new JButton[4];
+	    ImageIcon p_queen_white = new ImageIcon("image/Queen-white.png");
+	    ImageIcon p_bishop_white = new ImageIcon("image/Bishop-white.png");
+	    ImageIcon p_rook_white = new ImageIcon("image/Rook-white.png");
+	    ImageIcon p_knight_white = new ImageIcon("image/Knight-white.png");
 
-		JPanel panel = new JPanel(new GridLayout(1, 4));
+	    JButton selectButton[] = new JButton[4];
 
-		for (int i = 0; i < selectButton.length; i++) {
-			selectButton[i] = new JButton();
-			panel.add(selectButton[i]);
-		}
-		selectButton[0].setIcon(p_queen_white);
-		selectButton[1].setIcon(p_bishop_white);
-		selectButton[2].setIcon(p_rook_white);
-		selectButton[3].setIcon(p_knight_white);
+	    JPanel panel = new JPanel(new GridLayout(1, 4));
 
-		ActionListener buttonListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JButton clickedButton = (JButton) e.getSource();
+	    for (int i = 0; i < selectButton.length; i++) {
+	        selectButton[i] = new JButton();
+	        panel.add(selectButton[i]);
+	    }
+	    selectButton[0].setIcon(p_queen_white);
+	    selectButton[1].setIcon(p_bishop_white);
+	    selectButton[2].setIcon(p_rook_white);
+	    selectButton[3].setIcon(p_knight_white);
 
-				// 선택한 버튼에 따라 chesspiece_black 객체 변경
-				if (clickedButton.getIcon() == p_queen_white) {
-					changeChessPiece(new Queen("white", me.row, me.col, me.chessBoard, me.boards, me.movepins,
-							me.p_board, me.chesspiece_black, me.chesspiece_white));
-				} else if (clickedButton.getIcon() == p_bishop_white) {
-					changeChessPiece(new Bishop("white", me.row, me.col, me.chessBoard, me.boards, me.movepins,
-							me.p_board, me.chesspiece_black, me.chesspiece_white));
-				} else if (clickedButton.getIcon() == p_rook_white) {
-					changeChessPiece(new Rook("white", me.row, me.col, me.chessBoard, me.boards, me.movepins,
-							me.p_board, me.chesspiece_black, me.chesspiece_white));
-				} else if (clickedButton.getIcon() == p_knight_white) {
-					changeChessPiece(new Knight("white", me.row, me.col, me.chessBoard, me.boards, me.movepins,
-							me.p_board, me.chesspiece_black, me.chesspiece_white));
-				}
-				// 화이트 체스말 이벤트
-				for (int i = 0; i < chesspiece_white.size(); i++) {
-					final int index = i;
-					chesspiece_white.get(index).addActionListener(new ActionListener() {
+	    ActionListener buttonListener = new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            JButton clickedButton = (JButton) e.getSource();
+	            
+	            // 선택한 버튼에 따라 chesspiece_black 객체 변경
+	            if (clickedButton.getIcon() == p_queen_white) {
+	                changeChessPiece(new Queen("white", me.row, me.col, me.chessBoard, me.boards, me.movepins, me.p_board, me.chesspiece_black, me.chesspiece_white));
+	            } else if (clickedButton.getIcon() == p_bishop_white) {
+	                changeChessPiece(new Bishop("white", me.row, me.col, me.chessBoard, me.boards, me.movepins, me.p_board, me.chesspiece_black, me.chesspiece_white));
+	            } else if (clickedButton.getIcon() == p_rook_white) {
+	                changeChessPiece(new Rook("white", me.row, me.col, me.chessBoard, me.boards, me.movepins, me.p_board, me.chesspiece_black, me.chesspiece_white));
+	            } else if (clickedButton.getIcon() == p_knight_white) {
+	                changeChessPiece(new Knight("white", me.row, me.col, me.chessBoard, me.boards, me.movepins, me.p_board, me.chesspiece_black, me.chesspiece_white));
+	            }
+	        
+	            // 화이트 체스말 이벤트
+	    		for (int i = 0; i < chesspiece_white.size(); i++) {
+	    			final int index = i;
+	    			chesspiece_white.get(index).addActionListener(new ActionListener() {
 
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							if (chessBoard.turn.equals("white") && chesspiece_white.get(index).isEnabled()) {
-								chesspiece_white.get(index).whiteMove();
-							}
-						}
+	    				@Override
+	    				public void actionPerformed(ActionEvent e) {
+	    					if (chessBoard.turn.equals("white") && chesspiece_white.get(index).isEnabled()) {
+	    						chesspiece_white.get(index).whiteMove();
+	    					}
+	    				}
 
-					});
-				}
-
-				p_board.getParent().validate();
+	    			});
+	    		}
+	    			            
+	            p_board.getParent().validate();
 				p_board.getParent().repaint();
+	            
+	        }
 
-			}
+	        private void changeChessPiece(ChessPiece newPiece2) {
+	            for (int i = 0; i < chesspiece_white.size(); i++) {
+	                if (chesspiece_white.get(i) == me) {
+	                	
+	                	boards[row][col].remove(chesspiece_white.get(i));
+	                	chesspiece_white.remove(i);
+	                	
+	                	chesspiece_white.add(i, newPiece2);
+	                	
+	                	
+	                	boards[row][col].add(chesspiece_white.get(i),"Center");
+	                	
+	                } 
+	            }
+	        }
+	    };
+	    
+	    for (int i = 0; i < selectButton.length; i++) {
+	        selectButton[i].addActionListener(buttonListener);
+	    }
+	    
+		
+	    JOptionPane.showMessageDialog(this, panel, "변경 말 선택", JOptionPane.NO_OPTION);
 
-			private void changeChessPiece(ChessPiece newPiece2) {
-				for (int i = 0; i < chesspiece_white.size(); i++) {
-					if (chesspiece_white.get(i) == me) {
-
-						boards[row][col].remove(chesspiece_white.get(i));
-						chesspiece_white.remove(i);
-
-						chesspiece_white.set(i, newPiece2);
-
-						boards[row][col].add(chesspiece_white.get(i), "Center");
-
-					}
-				}
-			}
-		};
-
-		for (int i = 0; i < selectButton.length; i++) {
-			selectButton[i].addActionListener(buttonListener);
-		}
-
-		JOptionPane.showMessageDialog(this, panel, "변경 말 선택", JOptionPane.NO_OPTION);
 	}
 
 	// 체크 상태를 확인하기 위해 구분하는 킹 아이콘 변경 메서드
