@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 public class Pawn extends ChessPiece {
 	Pawn pawn;
-	int lastmoveturn;	// 마지막으로 이동한 턴수를 저장하는 변수(앙파상 검사)
+	int lastmoveturn; // 마지막으로 이동한 턴수를 저장하는 변수(앙파상 검사)
 
 	public Pawn(String side, int row, int col, ChessBoard chessBoard, JPanel boards[][], JButton movepins[][],
 			JPanel p_board, ArrayList<ChessPiece> chesspiece_black, ArrayList<ChessPiece> chesspiece_white) {
@@ -198,7 +198,7 @@ public class Pawn extends ChessPiece {
 									if (chessBoard.isKingInCheck("black")) {
 										System.out.println("Black King is in Check!");
 									}
-									
+
 									// 이동한 보드 칸 색상 표시
 									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
@@ -261,7 +261,7 @@ public class Pawn extends ChessPiece {
 									if (chessBoard.isKingInCheck("black")) {
 										System.out.println("Black King is in Check!");
 									}
-									
+
 									// 이동한 보드 칸 색상 표시
 									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
@@ -329,7 +329,6 @@ public class Pawn extends ChessPiece {
 									row = indexrow;
 									col = indexcol;
 
-
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
 									chessBoard.lb_turn.setText("Black");
@@ -347,7 +346,7 @@ public class Pawn extends ChessPiece {
 									if (chessBoard.isKingInCheck("black")) {
 										System.out.println("Black King is in Check!");
 									}
-									
+
 									// 이동한 보드 칸 색상 표시
 									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
@@ -410,7 +409,7 @@ public class Pawn extends ChessPiece {
 									if (chessBoard.isKingInCheck("black")) {
 										System.out.println("Black King is in Check!");
 									}
-									
+
 									// 이동한 보드 칸 색상 표시
 									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
@@ -467,7 +466,7 @@ public class Pawn extends ChessPiece {
 				}
 			}
 
-		} else if (row != 2 ||row!=8) {
+		} else if (row != 2 || row != 8) {
 
 			// 처음 이후 무브 포인트 탐색
 			for (int i = row + 1; i <= row + 1; i++) {
@@ -576,7 +575,7 @@ public class Pawn extends ChessPiece {
 				}
 			}
 
-		} else if (row != 7||row !=1) {
+		} else if (row != 7 || row != 1) {
 
 			// 처음 이후 무브 포인트 탐색
 			for (int i = row - 1; i >= row - 1; i--) {
@@ -674,6 +673,4 @@ public class Pawn extends ChessPiece {
 
 	}
 
-
 }
-

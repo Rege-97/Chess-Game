@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 abstract public class ChessPiece extends JButton {
-	
+
 	String side;
 	int row;
 	int col;
@@ -142,7 +142,7 @@ abstract public class ChessPiece extends JButton {
 								if (chessBoard.isKingInCheck("black")) {
 									System.out.println("Black King is in Check!");
 								}
-								
+
 								// 이동한 보드 칸 색상 표시
 								setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
@@ -221,7 +221,7 @@ abstract public class ChessPiece extends JButton {
 								if (chessBoard.isKingInCheck("black")) {
 									System.out.println("Black King is in Check!");
 								}
-								
+
 								// 이동한 보드 칸 색상 표시
 								setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
@@ -320,7 +320,7 @@ abstract public class ChessPiece extends JButton {
 
 								// 이동한 보드 칸 색상 표시
 								setMoveBoard(originalrow, originalcol, indexrow, indexcol);
-								
+
 								// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 								chessBoard.updateCheckStatus();
 
@@ -450,6 +450,7 @@ abstract public class ChessPiece extends JButton {
 	// 프로모션 적용을 위한 다이얼 로그
 
 	public void showblackImageDialog(ChessPiece me) {
+
 	    
 
 	    ImageIcon p_queen_black = new ImageIcon("image/Queen-black.png");
@@ -529,10 +530,12 @@ abstract public class ChessPiece extends JButton {
 	    
 		
 	    JOptionPane.showMessageDialog(this, panel, "변경 말 선택", JOptionPane.NO_OPTION);
+
 	}
 
 	// 프로모션 적용을 위한 다이얼 로그
 	public void showwhiteImageDialog(ChessPiece me) {
+
 	    
 
 	    ImageIcon p_queen_white = new ImageIcon("image/Queen-white.png");
@@ -612,6 +615,7 @@ abstract public class ChessPiece extends JButton {
 	    
 		
 	    JOptionPane.showMessageDialog(this, panel, "변경 말 선택", JOptionPane.NO_OPTION);
+
 	}
 
 	// 체크 상태를 확인하기 위해 구분하는 킹 아이콘 변경 메서드
@@ -724,9 +728,9 @@ abstract public class ChessPiece extends JButton {
 		}
 
 	}
-	
+
 	// 기물 이동 시 원래 위치와 이동한 위치를 색상으로 표시하는 메서드
-	public void setMoveBoard(int originalrow,int originalcol,int moverow,int movecol) {
+	public void setMoveBoard(int originalrow, int originalcol, int moverow, int movecol) {
 		// 보드를 기본 색상으로 초기화
 		for (int i = 1; i <= 8; i++) {
 			for (int j = 1; j <= 8; j++) {
@@ -747,19 +751,18 @@ abstract public class ChessPiece extends JButton {
 		}
 
 		// 원래 있던 위치 색 변경
-		if(boards[originalrow][originalcol].getBackground().equals(Color.white)) {
-			boards[originalrow][originalcol].setBackground(new Color(209,254,164));
-		}else {
-			boards[originalrow][originalcol].setBackground(new Color(124,188,0));
+		if (boards[originalrow][originalcol].getBackground().equals(Color.white)) {
+			boards[originalrow][originalcol].setBackground(new Color(209, 254, 164));
+		} else {
+			boards[originalrow][originalcol].setBackground(new Color(124, 188, 0));
 		}
-		
+
 		// 이동한 위치 색 변경
-		if(boards[moverow][movecol].getBackground().equals(Color.white)) {
-			boards[moverow][movecol].setBackground(new Color(209,254,164));
-		}else {
-			boards[moverow][movecol].setBackground(new Color(124,188,0));
+		if (boards[moverow][movecol].getBackground().equals(Color.white)) {
+			boards[moverow][movecol].setBackground(new Color(209, 254, 164));
+		} else {
+			boards[moverow][movecol].setBackground(new Color(124, 188, 0));
 		}
 	}
 
 }
-

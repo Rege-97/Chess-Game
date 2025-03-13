@@ -26,12 +26,12 @@ public class ChessBoard extends JFrame {
 	ArrayList<ChessPiece> chesspiece_black, chesspiece_white;
 	JLabel lb_check;
 	JLabel lb_turn;
-	JLabel lb_turn_count;	
+	JLabel lb_turn_count;
 	String checkpiece;
 	int turn_count;
 
 	public ChessBoard() {
-		
+
 		super("테스트");
 
 		this.setSize(1280, 800);
@@ -50,7 +50,7 @@ public class ChessBoard extends JFrame {
 
 		// 초기 턴 화이트
 		turn = "white";
-		turn_count=1;
+		turn_count = 1;
 
 		// 보드 세팅
 		p_board = new JPanel(new GridLayout(8, 8));
@@ -70,9 +70,9 @@ public class ChessBoard extends JFrame {
 		lb_turn = new JLabel("White", JLabel.CENTER);
 		lb_turn.setFont(new Font("Default Font", Font.PLAIN, 50));
 		p_west.add(lb_turn, "Center");
-		
+
 		// 턴수를 표기하기 위한 임시 라벨
-		lb_turn_count = new JLabel(turn_count+"", JLabel.CENTER);
+		lb_turn_count = new JLabel(turn_count + "", JLabel.CENTER);
 		lb_turn_count.setFont(new Font("Default Font", Font.PLAIN, 50));
 		p_west.add(lb_turn_count, "South");
 
@@ -109,7 +109,7 @@ public class ChessBoard extends JFrame {
 		}
 		this.validate();
 	}
-	
+
 	// 체스 보드 그리기;
 	public void boardSet() {
 
@@ -249,6 +249,7 @@ public class ChessBoard extends JFrame {
 		boards[8][3].add(chesspiece_white.get(13), "Center");
 		boards[8][6].add(chesspiece_white.get(14), "Center");
 		boards[8][4].add(chesspiece_white.get(15), "Center");
+
 	}
 
 	// 킹이 체크상태인지 확인하는 메서드
@@ -287,8 +288,8 @@ public class ChessBoard extends JFrame {
 		// 상대 기물들의 공격 가능 위치 확인
 		for (int i = 0; i < opponentPieces.size(); i++) {
 			// 활성화가 되어있는 말만 적용되도록 해야함(아니면 죽은 말도 체크 여부에 포함됨)
-			if(opponentPieces.get(i).isEnabled()) {
-			opponentPieces.get(i).isAttackKing();
+			if (opponentPieces.get(i).isEnabled()) {
+				opponentPieces.get(i).isAttackKing();
 			}
 		}
 
@@ -315,38 +316,48 @@ public class ChessBoard extends JFrame {
 	}
 
 	// 체크 상태가 되면 화면 업데이트 메서드
-	// 체크메이트가 된 상태면 체크가 아닌 체크메이트 출력
+	// 체크 상태에서 이동이 불가능하면 체크메이트 선언
+	// 체크가 아닌데 이동이 불가능하면 스테일메이트 선언
 	public void updateCheckStatus() {
 		if (isKingInCheck("white")) {
-			if (isCheckMate("white")) {
+			if (!isCanMove("white")) {
 				lb_check.setText("White Checkmate!");
 			} else {
-			lb_check.setText("White King in Check!");
-		}
+				lb_check.setText("White King in Check!");
+			}
 		} else if (isKingInCheck("black")) {
-			if (isCheckMate("black")) {
+			if (!isCanMove("black")) {
 				lb_check.setText("Black Checkmate!");
 			} else {
-			lb_check.setText("Black King in Check!");
+				lb_check.setText("Black King in Check!");
 			}
-		} else
-
-		{
-			lb_check.setText("Play");
+		}else {
+			if (!isCanMove("black") || !isCanMove("white")) {
+				lb_check.setText("Stalemate!");
+			} else {
+				lb_check.setText("Play");
+			}
 		}
-
+		// 확인을 위해 깔아놨던 무브핀들 제거
+		for(int i=0;i<chesspiece_white.size();i++) {
+			chesspiece_white.get(i).movepinsNotVisible();
+		}
+		for(int i=0;i<chesspiece_black.size();i++) {
+			chesspiece_black.get(i).movepinsNotVisible();
+		}
+		
 		// UI 즉시 새로고침
 		lb_check.repaint();
 		this.validate();
 		this.repaint();
 	}
 
-	// 체크메이트 확인 메서드
-	public boolean isCheckMate(String kingSide) {
+	// 체크해제를 위해 이동이 가능한지 확인 메서드
+	public boolean isCanMove(String kingSide) {
 		int movepincount = 0;
 		int attackcount = 0;
 
-		// 화이트 체크메이트 확인
+		// 화이트 확인
 		if (kingSide.equals("white")) {
 			// 화이트 기물 중 활성화 되어있는 기물의 체크 해제가 가능한 무브핀을 체크
 			for (int z = 0; z < chesspiece_white.size(); z++) {
@@ -377,13 +388,13 @@ public class ChessBoard extends JFrame {
 					}
 				}
 			}
-			// 무브핀과 공격아이콘이 전혀 카운트되어 있지 않으면 체크메이트 상태를 반환
+			// 무브핀과 공격아이콘이 전혀 카운트되어 있지 않으면 true(이동불가) 상태를 반환
 			if (movepincount == 0 && attackcount == 0) {
-				return true;
-			} else {
 				return false;
+			} else {
+				return true;
 			}
-			// 블랙 체크메이트 확인
+			// 블랙 확인
 		} else if (kingSide.equals("black")) {
 			// 블랙 기물 중 활성화 되어있는 기물의 체크 해제가 가능한 무브핀을 체크
 			for (int z = 0; z < chesspiece_black.size(); z++) {
@@ -414,14 +425,14 @@ public class ChessBoard extends JFrame {
 					}
 				}
 			}
-			// 무브핀과 공격아이콘이 전혀 카운트되어 있지 않으면 체크메이트 상태를 반환
+			// 무브핀과 공격아이콘이 전혀 카운트되어 있지 않으면 true(이동불가) 상태를 반환
 			if (movepincount == 0 && attackcount == 0) {
-				return true;
-			} else {
 				return false;
+			} else {
+				return true;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	public static void main(String[] args) {
