@@ -331,7 +331,7 @@ public class ChessBoard extends JFrame {
 			} else {
 				lb_check.setText("Black King in Check!");
 			}
-		}else {
+		} else {
 			if (!isCanMove("black") || !isCanMove("white")) {
 				lb_check.setText("Stalemate!");
 			} else {
@@ -339,13 +339,13 @@ public class ChessBoard extends JFrame {
 			}
 		}
 		// 확인을 위해 깔아놨던 무브핀들 제거
-		for(int i=0;i<chesspiece_white.size();i++) {
+		for (int i = 0; i < chesspiece_white.size(); i++) {
 			chesspiece_white.get(i).movepinsNotVisible();
 		}
-		for(int i=0;i<chesspiece_black.size();i++) {
+		for (int i = 0; i < chesspiece_black.size(); i++) {
 			chesspiece_black.get(i).movepinsNotVisible();
 		}
-		
+
 		// UI 즉시 새로고침
 		lb_check.repaint();
 		this.validate();
@@ -388,6 +388,15 @@ public class ChessBoard extends JFrame {
 					}
 				}
 			}
+			// 확인 후 각 기물의 공격 리스너들 제거
+			for (int i = 0; i < chesspiece_black.size(); i++) {
+				chesspiece_black.get(i).removeAttackBlack();
+			}
+			for (int i = 0; i < chesspiece_white.size(); i++) {
+				chesspiece_white.get(i).removeAttackWhite();
+				;
+			}
+
 			// 무브핀과 공격아이콘이 전혀 카운트되어 있지 않으면 true(이동불가) 상태를 반환
 			if (movepincount == 0 && attackcount == 0) {
 				return false;
@@ -424,6 +433,15 @@ public class ChessBoard extends JFrame {
 						}
 					}
 				}
+			}
+			
+			// 확인 후 각 기물의 공격 리스너들 제거
+			for (int i = 0; i < chesspiece_black.size(); i++) {
+				chesspiece_black.get(i).removeAttackBlack();
+			}
+			for (int i = 0; i < chesspiece_white.size(); i++) {
+				chesspiece_white.get(i).removeAttackWhite();
+				;
 			}
 			// 무브핀과 공격아이콘이 전혀 카운트되어 있지 않으면 true(이동불가) 상태를 반환
 			if (movepincount == 0 && attackcount == 0) {
