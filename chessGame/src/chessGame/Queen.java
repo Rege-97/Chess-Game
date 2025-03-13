@@ -348,7 +348,7 @@ public class Queen extends ChessPiece {
 					((ChessPiece) boards[i][col].getComponent(1))
 							.setIcon(((ChessPiece) boards[i][col].getComponent(1)).black_icon_attack);
 					break;
-				} else {
+				} else { 
 					break;
 				}
 			}
