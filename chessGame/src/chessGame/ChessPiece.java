@@ -395,7 +395,7 @@ abstract public class ChessPiece extends JButton {
 								}
 								if (chessBoard.isKingInCheck("black")) {
 									System.out.println("Black King is in Check!");
-								}
+								} 
 
 								// 이동한 보드 칸 색상 표시
 								setMoveBoard(originalrow, originalcol, indexrow, indexcol);
@@ -487,16 +487,19 @@ abstract public class ChessPiece extends JButton {
 	            }
 	            for (int i = 0; i < chesspiece_black.size(); i++) {
 	    			final int index = i;
-	    			chesspiece_black.get(index).addActionListener(new ActionListener() {
-
-	    				@Override
-	    				public void actionPerformed(ActionEvent e) {
-	    					if (chessBoard.turn.equals("black") && chesspiece_black.get(index).isEnabled()) {
-	    						chesspiece_black.get(index).blackMove();
-	    					}
-	    				}
-	    			});
+	    			
+		    			chesspiece_black.get(index).addActionListener(new ActionListener() {
+	
+		    				@Override
+		    				public void actionPerformed(ActionEvent e) {
+		    					if (chessBoard.turn.equals("black") && chesspiece_black.get(index).isEnabled()) {
+		    						chesspiece_black.get(index).blackMove();
+		    					}
+		    				}
+		    			});
+	    			
 	    		}
+	            
 	            
 	            p_board.getParent().validate();
 				p_board.getParent().repaint();
@@ -510,7 +513,7 @@ abstract public class ChessPiece extends JButton {
 	                	boards[row][col].remove(chesspiece_black.get(i));
 	                	chesspiece_black.remove(i);
 	                	
-	                	chesspiece_black.set(i, newPiece);
+	                	chesspiece_black.add(i, newPiece);
 	                	
 	                	
 	                	boards[row][col].add(chesspiece_black.get(i),"Center");
@@ -565,7 +568,8 @@ abstract public class ChessPiece extends JButton {
 	            } else if (clickedButton.getIcon() == p_knight_white) {
 	                changeChessPiece(new Knight("white", me.row, me.col, me.chessBoard, me.boards, me.movepins, me.p_board, me.chesspiece_black, me.chesspiece_white));
 	            }
-	         // 화이트 체스말 이벤트
+	        
+	            // 화이트 체스말 이벤트
 	    		for (int i = 0; i < chesspiece_white.size(); i++) {
 	    			final int index = i;
 	    			chesspiece_white.get(index).addActionListener(new ActionListener() {
@@ -579,7 +583,7 @@ abstract public class ChessPiece extends JButton {
 
 	    			});
 	    		}
-	            
+	    			            
 	            p_board.getParent().validate();
 				p_board.getParent().repaint();
 	            
@@ -592,7 +596,7 @@ abstract public class ChessPiece extends JButton {
 	                	boards[row][col].remove(chesspiece_white.get(i));
 	                	chesspiece_white.remove(i);
 	                	
-	                	chesspiece_white.set(i, newPiece2);
+	                	chesspiece_white.add(i, newPiece2);
 	                	
 	                	
 	                	boards[row][col].add(chesspiece_white.get(i),"Center");
