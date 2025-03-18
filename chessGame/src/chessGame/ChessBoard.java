@@ -53,8 +53,6 @@ public class ChessBoard extends JFrame {
 
 		super("테스트");
 
-		setGameInfo();
-
 		this.setSize(1280, 800);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
@@ -71,7 +69,7 @@ public class ChessBoard extends JFrame {
 
 		// 초기 턴 화이트
 		turn = "white";
-		turn_count = 1;
+		turn_count = 0;
 
 		// 보드 세팅
 		p_board = new JPanel(new GridLayout(8, 8));
@@ -111,7 +109,11 @@ public class ChessBoard extends JFrame {
 		turnTimer();
 
 		// 말 배치
-		setChessPiece();
+		chesspiece_white = new ArrayList<ChessPiece>();
+		chesspiece_black = new ArrayList<ChessPiece>();
+		setGameInfo();
+		setChessPieceWhite();
+		setChessPieceBlack();
 
 		// 블랙 체스말 이벤트
 		for (int i = 0; i < chesspiece_black.size(); i++) {
@@ -180,77 +182,341 @@ public class ChessBoard extends JFrame {
 		}
 	}
 
-	// 체스 말 그리기
-	public void setChessPiece() {
-		chesspiece_black = new ArrayList<ChessPiece>();
-		chesspiece_white = new ArrayList<ChessPiece>();
+	public void setTurn() {
+		try {
+			setDB();
 
-		for (int i = 1; i <= 8; i++) {
-			chesspiece_black
-					.add(new Pawn("black", 2, i, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+			String sql = "SELECT MAX(turn) AS max_turn" + "FROM (" + "    SELECT turn FROM white" + "    UNION ALL"
+					+ "    SELECT turn FROM black" + ")";
+
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			rs.next();
+
+			turn_count = rs.getInt("max_turn");
+
+			if (turn_count == 0) {
+				turn_count++;
+			}
+			if (turn_count % 2 == 1) {
+				turn = "white";
+			} else {
+				turn = "black";
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e2) {
+			}
 		}
-		chesspiece_black
-				.add(new Rook("black", 1, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Rook("black", 1, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Bishop("black", 1, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Bishop("black", 1, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Knight("black", 1, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Knight("black", 1, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Queen("black", 1, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new King("black", 1, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+	}
 
-		for (int i = 1; i <= 8; i++) {
-			boards[2][i].add(chesspiece_black.get(i - 1), "Center");
+	// 화이트 체스 말 그리기
+	public void setChessPieceWhite() {
+		try {
+			setDB();
+
+			String sql = "SELECT * FROM white WHERE gameno=? AND turn=(SELECT max(turn) FROM white WHERE gameno=?)";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, gameno);
+			ps.setInt(2, gameno);
+			rs = ps.executeQuery();
+			rs.next();
+
+			w_remainingTime = rs.getInt("w_time");
+
+			for (int i = 1; i <= 8; i++) {
+				String pawnPromotion = rs.getString("w_pawn" + i + "_promotion");
+				int row = rs.getInt("w_pawn" + i + "_row");
+				int col = rs.getInt("w_pawn" + i + "_col");
+				int moveCount = rs.getInt("w_pawn" + i + "_move");
+
+				if (row == -1) {
+					chesspiece_white.add(new Pawn("white", row, col, this, boards, movepins, p_board, chesspiece_black,
+							chesspiece_white));
+					chesspiece_white.get(chesspiece_white.size() - 1).setEnabled(false);
+					chesspiece_white.get(chesspiece_white.size() - 1).movecount = moveCount;
+				} else {
+					if (pawnPromotion.equals("pawn")) {
+						chesspiece_white.add(new Pawn("white", row, col, this, boards, movepins, p_board,
+								chesspiece_black, chesspiece_white));
+					} else if (pawnPromotion.equals("rook")) {
+						chesspiece_white.add(new Rook("white", row, col, this, boards, movepins, p_board,
+								chesspiece_black, chesspiece_white));
+					} else if (pawnPromotion.equals("bishop")) {
+						chesspiece_white.add(new Bishop("white", row, col, this, boards, movepins, p_board,
+								chesspiece_black, chesspiece_white));
+					} else if (pawnPromotion.equals("knight")) {
+						chesspiece_white.add(new Knight("white", row, col, this, boards, movepins, p_board,
+								chesspiece_black, chesspiece_white));
+					} else if (pawnPromotion.equals("queen")) {
+						chesspiece_white.add(new Queen("white", row, col, this, boards, movepins, p_board,
+								chesspiece_black, chesspiece_white));
+					}
+					chesspiece_white.get(chesspiece_white.size() - 1).movecount = moveCount;
+					boards[row][col].add(chesspiece_white.get(chesspiece_white.size() - 1), "Center");
+				}
+
+			}
+
+			for (int i = 1; i <= 2; i++) {
+				int row = rs.getInt("w_rook" + i + "_row");
+				int col = rs.getInt("w_rook" + i + "_col");
+				int moveCount = rs.getInt("w_rook" + i + "_move");
+
+				if (row == -1) {
+					chesspiece_white.add(new Rook("white", row, col, this, boards, movepins, p_board, chesspiece_black,
+							chesspiece_white));
+					chesspiece_white.get(chesspiece_white.size() - 1).setEnabled(false);
+					chesspiece_white.get(chesspiece_white.size() - 1).movecount = moveCount;
+				} else {
+					chesspiece_white.add(new Rook("white", row, col, this, boards, movepins, p_board, chesspiece_black,
+							chesspiece_white));
+					chesspiece_white.get(chesspiece_white.size() - 1).movecount = moveCount;
+					boards[row][col].add(chesspiece_white.get(chesspiece_white.size() - 1), "Center");
+				}
+			}
+
+			for (int i = 1; i <= 2; i++) {
+				int row = rs.getInt("w_bishop" + i + "_row");
+				int col = rs.getInt("w_bishop" + i + "_col");
+				int moveCount = rs.getInt("w_bishop" + i + "_move");
+
+				if (row == -1) {
+					chesspiece_white.add(new Bishop("white", row, col, this, boards, movepins, p_board,
+							chesspiece_black, chesspiece_white));
+					chesspiece_white.get(chesspiece_white.size() - 1).setEnabled(false);
+					chesspiece_white.get(chesspiece_white.size() - 1).movecount = moveCount;
+				} else {
+					chesspiece_white.add(new Bishop("white", row, col, this, boards, movepins, p_board,
+							chesspiece_black, chesspiece_white));
+					chesspiece_white.get(chesspiece_white.size() - 1).movecount = moveCount;
+					boards[row][col].add(chesspiece_white.get(chesspiece_white.size() - 1), "Center");
+				}
+			}
+
+			for (int i = 1; i <= 2; i++) {
+				int row = rs.getInt("w_knight" + i + "_row");
+				int col = rs.getInt("w_knight" + i + "_col");
+				int moveCount = rs.getInt("w_knight" + i + "_move");
+
+				if (row == -1) {
+					chesspiece_white.add(new Knight("white", row, col, this, boards, movepins, p_board,
+							chesspiece_black, chesspiece_white));
+					chesspiece_white.get(chesspiece_white.size() - 1).setEnabled(false);
+					chesspiece_white.get(chesspiece_white.size() - 1).movecount = moveCount;
+				} else {
+					chesspiece_white.add(new Knight("white", row, col, this, boards, movepins, p_board,
+							chesspiece_black, chesspiece_white));
+					chesspiece_white.get(chesspiece_white.size() - 1).movecount = moveCount;
+					boards[row][col].add(chesspiece_white.get(chesspiece_white.size() - 1), "Center");
+				}
+			}
+
+			int row = rs.getInt("w_queen_row");
+			int col = rs.getInt("w_queen_col");
+			int moveCount = rs.getInt("w_queen_move");
+
+			if (row == -1) {
+				chesspiece_white.add(new Queen("white", row, col, this, boards, movepins, p_board, chesspiece_black,
+						chesspiece_white));
+				chesspiece_white.get(chesspiece_white.size() - 1).setEnabled(false);
+				chesspiece_white.get(chesspiece_white.size() - 1).movecount = moveCount;
+			} else {
+				chesspiece_white.add(new Queen("white", row, col, this, boards, movepins, p_board, chesspiece_black,
+						chesspiece_white));
+				chesspiece_white.get(chesspiece_white.size() - 1).movecount = moveCount;
+				boards[row][col].add(chesspiece_white.get(chesspiece_white.size() - 1), "Center");
+			}
+
+			row = rs.getInt("w_king_row");
+			col = rs.getInt("w_king_col");
+			moveCount = rs.getInt("w_king_move");
+
+			if (row == -1) {
+				chesspiece_white.add(new King("white", row, col, this, boards, movepins, p_board, chesspiece_black,
+						chesspiece_white));
+				chesspiece_white.get(chesspiece_white.size() - 1).setEnabled(false);
+				chesspiece_white.get(chesspiece_white.size() - 1).movecount = moveCount;
+			} else {
+				chesspiece_white.add(new King("white", row, col, this, boards, movepins, p_board, chesspiece_black,
+						chesspiece_white));
+				chesspiece_white.get(chesspiece_white.size() - 1).movecount = moveCount;
+				boards[row][col].add(chesspiece_white.get(chesspiece_white.size() - 1), "Center");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e2) {
+
+			}
 		}
-		boards[1][1].add(chesspiece_black.get(8), "Center");
-		boards[1][8].add(chesspiece_black.get(9), "Center");
-		boards[1][3].add(chesspiece_black.get(10), "Center");
-		boards[1][6].add(chesspiece_black.get(11), "Center");
-		boards[1][2].add(chesspiece_black.get(12), "Center");
-		boards[1][7].add(chesspiece_black.get(13), "Center");
-		boards[1][4].add(chesspiece_black.get(14), "Center");
-		boards[1][5].add(chesspiece_black.get(15), "Center");
 
-		for (int i = 1; i <= 8; i++) {
-			chesspiece_white
-					.add(new Pawn("white", 7, i, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+	}
+
+	// 블랙 체스말 그리기
+	public void setChessPieceBlack() {
+		try {
+			setDB();
+
+			String sql = "SELECT * FROM black WHERE gameno=? AND turn=(SELECT max(turn) FROM black WHERE gameno=?)";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, gameno);
+			ps.setInt(2, gameno);
+			rs = ps.executeQuery();
+			rs.next();
+
+			b_remainingTime = rs.getInt("b_time");
+
+			for (int i = 1; i <= 8; i++) {
+				String pawnPromotion = rs.getString("b_pawn" + i + "_promotion");
+				int row = rs.getInt("b_pawn" + i + "_row");
+				int col = rs.getInt("b_pawn" + i + "_col");
+				int moveCount = rs.getInt("b_pawn" + i + "_move");
+
+				if (row == -1) {
+					chesspiece_black.add(new Pawn("black", row, col, this, boards, movepins, p_board, chesspiece_black,
+							chesspiece_white));
+					chesspiece_black.get(chesspiece_black.size() - 1).setEnabled(false);
+					chesspiece_black.get(chesspiece_black.size() - 1).movecount = moveCount;
+				} else {
+					if (pawnPromotion.equals("pawn")) {
+						chesspiece_black.add(new Pawn("black", row, col, this, boards, movepins, p_board,
+								chesspiece_black, chesspiece_white));
+					} else if (pawnPromotion.equals("rook")) {
+						chesspiece_black.add(new Rook("black", row, col, this, boards, movepins, p_board,
+								chesspiece_black, chesspiece_white));
+					} else if (pawnPromotion.equals("bishop")) {
+						chesspiece_black.add(new Bishop("black", row, col, this, boards, movepins, p_board,
+								chesspiece_black, chesspiece_white));
+					} else if (pawnPromotion.equals("knight")) {
+						chesspiece_black.add(new Knight("black", row, col, this, boards, movepins, p_board,
+								chesspiece_black, chesspiece_white));
+					} else if (pawnPromotion.equals("queen")) {
+						chesspiece_black.add(new Queen("black", row, col, this, boards, movepins, p_board,
+								chesspiece_black, chesspiece_white));
+					}
+					chesspiece_black.get(chesspiece_black.size() - 1).movecount = moveCount;
+					boards[row][col].add(chesspiece_black.get(chesspiece_black.size() - 1), "Center");
+				}
+			}
+
+			for (int i = 1; i <= 2; i++) {
+				int row = rs.getInt("b_rook" + i + "_row");
+				int col = rs.getInt("b_rook" + i + "_col");
+				int moveCount = rs.getInt("b_rook" + i + "_move");
+
+				if (row == -1) {
+					chesspiece_black.add(new Rook("black", row, col, this, boards, movepins, p_board, chesspiece_black,
+							chesspiece_white));
+					chesspiece_black.get(chesspiece_black.size() - 1).setEnabled(false);
+					chesspiece_black.get(chesspiece_black.size() - 1).movecount = moveCount;
+				} else {
+					chesspiece_black.add(new Rook("black", row, col, this, boards, movepins, p_board, chesspiece_black,
+							chesspiece_white));
+					chesspiece_black.get(chesspiece_black.size() - 1).movecount = moveCount;
+					boards[row][col].add(chesspiece_black.get(chesspiece_black.size() - 1), "Center");
+				}
+			}
+
+			for (int i = 1; i <= 2; i++) {
+				int row = rs.getInt("b_bishop" + i + "_row");
+				int col = rs.getInt("b_bishop" + i + "_col");
+				int moveCount = rs.getInt("b_bishop" + i + "_move");
+
+				if (row == -1) {
+					chesspiece_black.add(new Bishop("black", row, col, this, boards, movepins, p_board,
+							chesspiece_black, chesspiece_white));
+					chesspiece_black.get(chesspiece_black.size() - 1).setEnabled(false);
+					chesspiece_black.get(chesspiece_black.size() - 1).movecount = moveCount;
+				} else {
+					chesspiece_black.add(new Bishop("black", row, col, this, boards, movepins, p_board,
+							chesspiece_black, chesspiece_white));
+					chesspiece_black.get(chesspiece_black.size() - 1).movecount = moveCount;
+					boards[row][col].add(chesspiece_black.get(chesspiece_black.size() - 1), "Center");
+				}
+			}
+
+			for (int i = 1; i <= 2; i++) {
+				int row = rs.getInt("b_knight" + i + "_row");
+				int col = rs.getInt("b_knight" + i + "_col");
+				int moveCount = rs.getInt("b_knight" + i + "_move");
+
+				if (row == -1) {
+					chesspiece_black.add(new Knight("black", row, col, this, boards, movepins, p_board,
+							chesspiece_black, chesspiece_white));
+					chesspiece_black.get(chesspiece_black.size() - 1).setEnabled(false);
+					chesspiece_black.get(chesspiece_black.size() - 1).movecount = moveCount;
+				} else {
+					chesspiece_black.add(new Knight("black", row, col, this, boards, movepins, p_board,
+							chesspiece_black, chesspiece_white));
+					chesspiece_black.get(chesspiece_black.size() - 1).movecount = moveCount;
+					boards[row][col].add(chesspiece_black.get(chesspiece_black.size() - 1), "Center");
+				}
+			}
+
+			int row = rs.getInt("b_queen_row");
+			int col = rs.getInt("b_queen_col");
+			int moveCount = rs.getInt("b_queen_move");
+
+			if (row == -1) {
+				chesspiece_black.add(new Queen("black", row, col, this, boards, movepins, p_board, chesspiece_black,
+						chesspiece_white));
+				chesspiece_black.get(chesspiece_black.size() - 1).setEnabled(false);
+				chesspiece_black.get(chesspiece_black.size() - 1).movecount = moveCount;
+			} else {
+				chesspiece_black.add(new Queen("black", row, col, this, boards, movepins, p_board, chesspiece_black,
+						chesspiece_white));
+				chesspiece_black.get(chesspiece_black.size() - 1).movecount = moveCount;
+				boards[row][col].add(chesspiece_black.get(chesspiece_black.size() - 1), "Center");
+			}
+
+			row = rs.getInt("b_king_row");
+			col = rs.getInt("b_king_col");
+			moveCount = rs.getInt("b_king_move");
+
+			if (row == -1) {
+				chesspiece_black.add(new King("black", row, col, this, boards, movepins, p_board, chesspiece_black,
+						chesspiece_white));
+				chesspiece_black.get(chesspiece_black.size() - 1).setEnabled(false);
+				chesspiece_black.get(chesspiece_black.size() - 1).movecount = moveCount;
+			} else {
+				chesspiece_black.add(new King("black", row, col, this, boards, movepins, p_board, chesspiece_black,
+						chesspiece_white));
+				chesspiece_black.get(chesspiece_black.size() - 1).movecount = moveCount;
+				boards[row][col].add(chesspiece_black.get(chesspiece_black.size() - 1), "Center");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e2) {
+
+			}
 		}
-		chesspiece_white
-				.add(new Rook("white", 8, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Rook("white", 8, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Bishop("white", 8, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Bishop("white", 8, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Knight("white", 8, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Knight("white", 8, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Queen("white", 8, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new King("white", 8, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-
-		for (int i = 1; i <= 8; i++) {
-			boards[7][i].add(chesspiece_white.get(i - 1), "Center");
-		}
-		boards[8][8].add(chesspiece_white.get(8), "Center");
-		boards[8][8].add(chesspiece_white.get(9), "Center");
-		boards[8][3].add(chesspiece_white.get(10), "Center");
-		boards[8][6].add(chesspiece_white.get(11), "Center");
-		boards[8][2].add(chesspiece_white.get(12), "Center");
-		boards[8][7].add(chesspiece_white.get(13), "Center");
-		boards[8][4].add(chesspiece_white.get(14), "Center");
-		boards[8][5].add(chesspiece_white.get(15), "Center");
-
 	}
 
 	// 타이머 설정
@@ -540,13 +806,14 @@ public class ChessBoard extends JFrame {
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				gameno = rs.getInt("gameno");
+				System.out.println(gameno);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs!=null)
+				if (rs != null)
 					rs.close();
 				if (ps != null)
 					ps.close();
@@ -584,7 +851,7 @@ public class ChessBoard extends JFrame {
 							ps.setString(j, promotion);
 							j++;
 						}
-					}else {
+					} else {
 						ps.setInt(j, chesspiece_white.get(i).row);
 						j++;
 						ps.setInt(j, chesspiece_white.get(i).col);
@@ -592,8 +859,8 @@ public class ChessBoard extends JFrame {
 						ps.setInt(j, chesspiece_white.get(i).movecount);
 						j++;
 					}
-				}else {
-					if(chesspiece_white.get(i) instanceof Pawn) {
+				} else {
+					if (chesspiece_white.get(i) instanceof Pawn) {
 						ps.setInt(j, -1);
 						j++;
 						ps.setInt(j, -1);
@@ -601,7 +868,8 @@ public class ChessBoard extends JFrame {
 						ps.setInt(j, -1);
 						j++;
 						ps.setString(j, "death");
-					}else {
+						j++;
+					} else {
 						ps.setInt(j, -1);
 						j++;
 						ps.setInt(j, -1);
@@ -609,7 +877,7 @@ public class ChessBoard extends JFrame {
 						ps.setInt(j, -1);
 						j++;
 					}
-					
+
 				}
 			}
 
@@ -628,11 +896,11 @@ public class ChessBoard extends JFrame {
 			}
 		}
 	}
-	
+
 	public void insertGamePlayBlack() {
 		try {
 			setDB();
-			String sql = "insert into white values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String sql = "insert into black values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, gameno);
 			ps.setInt(2, turn_count);
@@ -655,7 +923,7 @@ public class ChessBoard extends JFrame {
 							ps.setString(j, promotion);
 							j++;
 						}
-					}else {
+					} else {
 						ps.setInt(j, chesspiece_black.get(i).row);
 						j++;
 						ps.setInt(j, chesspiece_black.get(i).col);
@@ -663,8 +931,8 @@ public class ChessBoard extends JFrame {
 						ps.setInt(j, chesspiece_black.get(i).movecount);
 						j++;
 					}
-				}else {
-					if(chesspiece_black.get(i) instanceof Pawn) {
+				} else {
+					if (chesspiece_black.get(i) instanceof Pawn) {
 						ps.setInt(j, -1);
 						j++;
 						ps.setInt(j, -1);
@@ -672,7 +940,8 @@ public class ChessBoard extends JFrame {
 						ps.setInt(j, -1);
 						j++;
 						ps.setString(j, "death");
-					}else {
+						j++;
+					} else {
 						ps.setInt(j, -1);
 						j++;
 						ps.setInt(j, -1);
@@ -680,7 +949,7 @@ public class ChessBoard extends JFrame {
 						ps.setInt(j, -1);
 						j++;
 					}
-					
+
 				}
 			}
 

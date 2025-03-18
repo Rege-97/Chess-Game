@@ -206,6 +206,11 @@ public class Pawn extends ChessPiece {
 
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
+									
+									// 이동 기록 DB 저장
+									chessBoard.insertGamePlayWhite();
+									chessBoard.insertGamePlayBlack();
+
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
@@ -271,6 +276,11 @@ public class Pawn extends ChessPiece {
 
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
+									
+									// 이동 기록 DB 저장
+									chessBoard.insertGamePlayWhite();
+									chessBoard.insertGamePlayBlack();
+
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
@@ -358,6 +368,11 @@ public class Pawn extends ChessPiece {
 
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
+									
+									// 이동 기록 DB 저장
+									chessBoard.insertGamePlayWhite();
+									chessBoard.insertGamePlayBlack();
+
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
@@ -423,6 +438,11 @@ public class Pawn extends ChessPiece {
 
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
+									
+									// 이동 기록 DB 저장
+									chessBoard.insertGamePlayWhite();
+									chessBoard.insertGamePlayBlack();
+
 						
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
