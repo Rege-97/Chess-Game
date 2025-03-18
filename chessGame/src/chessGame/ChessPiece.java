@@ -332,6 +332,7 @@ abstract public class ChessPiece extends JButton {
 								p_board.getParent().repaint();
 								
 								chessBoard.turnTimer();
+								
 							}
 
 						};

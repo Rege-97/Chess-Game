@@ -423,7 +423,7 @@ public class Pawn extends ChessPiece {
 
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
-
+						
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
 									

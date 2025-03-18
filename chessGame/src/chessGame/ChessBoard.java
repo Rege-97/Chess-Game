@@ -8,7 +8,12 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,8 +36,13 @@ public class ChessBoard extends JFrame {
 	JLabel lb_turn_count;
 	String checkpiece;
 	int turn_count;
+	int gameno;
 
-	final int TIMER_DURATION = 15;
+	Connection conn;
+	PreparedStatement ps;
+	ResultSet rs;
+
+	final int TIMER_DURATION = 60;
 	Timer b_timer, w_timer;
 	int b_remainingTime = TIMER_DURATION;
 	int w_remainingTime = TIMER_DURATION;
@@ -42,6 +52,8 @@ public class ChessBoard extends JFrame {
 	public ChessBoard() {
 
 		super("테스트");
+
+		setGameInfo();
 
 		this.setSize(1280, 800);
 		this.setVisible(true);
@@ -195,7 +207,7 @@ public class ChessBoard extends JFrame {
 				.add(new King("black", 1, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 
 		for (int i = 1; i <= 8; i++) {
-			boards[2][i].add(chesspiece_black.get(i-1), "Center");
+			boards[2][i].add(chesspiece_black.get(i - 1), "Center");
 		}
 		boards[1][1].add(chesspiece_black.get(8), "Center");
 		boards[1][8].add(chesspiece_black.get(9), "Center");
@@ -205,8 +217,7 @@ public class ChessBoard extends JFrame {
 		boards[1][7].add(chesspiece_black.get(13), "Center");
 		boards[1][4].add(chesspiece_black.get(14), "Center");
 		boards[1][5].add(chesspiece_black.get(15), "Center");
-		
-		
+
 		for (int i = 1; i <= 8; i++) {
 			chesspiece_white
 					.add(new Pawn("white", 7, i, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
@@ -229,7 +240,7 @@ public class ChessBoard extends JFrame {
 				.add(new King("white", 8, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 
 		for (int i = 1; i <= 8; i++) {
-			boards[7][i].add(chesspiece_white.get(i-1), "Center");
+			boards[7][i].add(chesspiece_white.get(i - 1), "Center");
 		}
 		boards[8][8].add(chesspiece_white.get(8), "Center");
 		boards[8][8].add(chesspiece_white.get(9), "Center");
@@ -239,7 +250,7 @@ public class ChessBoard extends JFrame {
 		boards[8][7].add(chesspiece_white.get(13), "Center");
 		boards[8][4].add(chesspiece_white.get(14), "Center");
 		boards[8][5].add(chesspiece_white.get(15), "Center");
-		
+
 	}
 
 	// 타이머 설정
@@ -501,7 +512,196 @@ public class ChessBoard extends JFrame {
 		return true;
 	}
 
-	public static void main(String[] args) {
+	public void setDB() {
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			String url = "jdbc:oracle:thin:@localhost:1521:xe";
+			String user = "chess";
+			String pwd = "1234";
+
+			conn = DriverManager.getConnection(url, user, pwd);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void setGameInfo() {
+		try {
+			setDB();
+			Calendar now = Calendar.getInstance();
+			java.sql.Timestamp jst = new java.sql.Timestamp(now.getTimeInMillis());
+			String sql = "insert into history values(history_gameno_sq.nextval,'playing',?)";
+			ps = conn.prepareStatement(sql);
+			ps.setTimestamp(1, jst);
+			ps.executeUpdate();
+
+			sql = "select gameno from history order by gameno";
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				gameno = rs.getInt("gameno");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs!=null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e2) {
+			}
+		}
+
+	}
+
+	public void insertGamePlayWhite() {
+		try {
+			setDB();
+			String sql = "insert into white values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, gameno);
+			ps.setInt(2, turn_count);
+			ps.setInt(3, w_remainingTime);
+			int j = 4;
+			for (int i = 0; i < chesspiece_white.size(); i++) {
+				if (chesspiece_white.get(i).isEnabled()) {
+					if (i < 8) {
+						ps.setInt(j, chesspiece_white.get(i).row);
+						j++;
+						ps.setInt(j, chesspiece_white.get(i).col);
+						j++;
+						ps.setInt(j, chesspiece_white.get(i).movecount);
+						j++;
+						if (chesspiece_white.get(i) instanceof Pawn) {
+							ps.setString(j, "pawn");
+							j++;
+						} else {
+							String promotion = chesspiece_white.get(i).getClass().getSimpleName();
+							ps.setString(j, promotion);
+							j++;
+						}
+					}else {
+						ps.setInt(j, chesspiece_white.get(i).row);
+						j++;
+						ps.setInt(j, chesspiece_white.get(i).col);
+						j++;
+						ps.setInt(j, chesspiece_white.get(i).movecount);
+						j++;
+					}
+				}else {
+					if(chesspiece_white.get(i) instanceof Pawn) {
+						ps.setInt(j, -1);
+						j++;
+						ps.setInt(j, -1);
+						j++;
+						ps.setInt(j, -1);
+						j++;
+						ps.setString(j, "death");
+					}else {
+						ps.setInt(j, -1);
+						j++;
+						ps.setInt(j, -1);
+						j++;
+						ps.setInt(j, -1);
+						j++;
+					}
+					
+				}
+			}
+
+			ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e2) {
+
+			}
+		}
+	}
+	
+	public void insertGamePlayBlack() {
+		try {
+			setDB();
+			String sql = "insert into white values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, gameno);
+			ps.setInt(2, turn_count);
+			ps.setInt(3, b_remainingTime);
+			int j = 4;
+			for (int i = 0; i < chesspiece_black.size(); i++) {
+				if (chesspiece_black.get(i).isEnabled()) {
+					if (i < 8) {
+						ps.setInt(j, chesspiece_black.get(i).row);
+						j++;
+						ps.setInt(j, chesspiece_black.get(i).col);
+						j++;
+						ps.setInt(j, chesspiece_black.get(i).movecount);
+						j++;
+						if (chesspiece_black.get(i) instanceof Pawn) {
+							ps.setString(j, "pawn");
+							j++;
+						} else {
+							String promotion = chesspiece_black.get(i).getClass().getSimpleName();
+							ps.setString(j, promotion);
+							j++;
+						}
+					}else {
+						ps.setInt(j, chesspiece_black.get(i).row);
+						j++;
+						ps.setInt(j, chesspiece_black.get(i).col);
+						j++;
+						ps.setInt(j, chesspiece_black.get(i).movecount);
+						j++;
+					}
+				}else {
+					if(chesspiece_black.get(i) instanceof Pawn) {
+						ps.setInt(j, -1);
+						j++;
+						ps.setInt(j, -1);
+						j++;
+						ps.setInt(j, -1);
+						j++;
+						ps.setString(j, "death");
+					}else {
+						ps.setInt(j, -1);
+						j++;
+						ps.setInt(j, -1);
+						j++;
+						ps.setInt(j, -1);
+						j++;
+					}
+					
+				}
+			}
+
+			ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e2) {
+
+			}
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+
 		System.setProperty("sun.java2d.uiScale", "1");
 		new ChessBoard();
 
