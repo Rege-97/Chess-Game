@@ -31,14 +31,13 @@ public class ChessBoard extends JFrame {
 	JLabel lb_turn_count;
 	String checkpiece;
 	int turn_count;
-	
-	final int TIMER_DURATION=15;
-	Timer b_timer,w_timer;
-	int b_remainingTime=TIMER_DURATION;
-	int w_remainingTime=TIMER_DURATION;
-	
-	JLabel lb_b_timer,lb_w_timer;
-	
+
+	final int TIMER_DURATION = 15;
+	Timer b_timer, w_timer;
+	int b_remainingTime = TIMER_DURATION;
+	int w_remainingTime = TIMER_DURATION;
+
+	JLabel lb_b_timer, lb_w_timer;
 
 	public ChessBoard() {
 
@@ -85,22 +84,20 @@ public class ChessBoard extends JFrame {
 		lb_turn_count = new JLabel(turn_count + "", JLabel.CENTER);
 		lb_turn_count.setFont(new Font("Default Font", Font.PLAIN, 50));
 		p_west.add(lb_turn_count, "South");
-		
-		// 타이머 배치
-        lb_b_timer = new JLabel(formatTime(b_remainingTime), JLabel.CENTER);
-        p_west.add(lb_b_timer, "West");
-        
-        lb_w_timer = new JLabel(formatTime(w_remainingTime), JLabel.CENTER);
-        p_west.add(lb_w_timer, "East");
 
-        // 타이머 초기화 및 시작
-        b_timer = blacktimer();
-        w_timer = whitetimer();
-        
-        
-        turnTimer();
-		
-		
+		// 타이머 배치
+		lb_b_timer = new JLabel(formatTime(b_remainingTime), JLabel.CENTER);
+		p_west.add(lb_b_timer, "West");
+
+		lb_w_timer = new JLabel(formatTime(w_remainingTime), JLabel.CENTER);
+		p_west.add(lb_w_timer, "East");
+
+		// 타이머 초기화 및 시작
+		b_timer = blacktimer();
+		w_timer = whitetimer();
+
+		turnTimer();
+
 		// 말 배치
 		setChessPiece();
 
@@ -133,7 +130,7 @@ public class ChessBoard extends JFrame {
 			});
 		}
 		this.validate();
-		
+
 	}
 
 	// 체스 보드 그리기;
@@ -176,158 +173,127 @@ public class ChessBoard extends JFrame {
 		chesspiece_black = new ArrayList<ChessPiece>();
 		chesspiece_white = new ArrayList<ChessPiece>();
 
+		for (int i = 1; i <= 8; i++) {
+			chesspiece_black
+					.add(new Pawn("black", 2, i, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		}
 		chesspiece_black
 				.add(new Rook("black", 1, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black
 				.add(new Rook("black", 1, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black
-				.add(new Pawn("black", 2, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+				.add(new Bishop("black", 1, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black
-				.add(new Pawn("black", 2, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Pawn("black", 2, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Pawn("black", 2, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Pawn("black", 2, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Pawn("black", 2, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Pawn("black", 2, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Pawn("black", 2, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+				.add(new Bishop("black", 1, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black
 				.add(new Knight("black", 1, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black
 				.add(new Knight("black", 1, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_black
-				.add(new King("black", 1, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Bishop("black", 1, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
-				.add(new Bishop("black", 1, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_black
 				.add(new Queen("black", 1, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_black
+				.add(new King("black", 1, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 
-		boards[1][1].add(chesspiece_black.get(0), "Center");
-		boards[1][8].add(chesspiece_black.get(1), "Center");
-		boards[2][1].add(chesspiece_black.get(2), "Center");
-		boards[2][2].add(chesspiece_black.get(3), "Center");
-		boards[2][3].add(chesspiece_black.get(4), "Center");
-		boards[2][4].add(chesspiece_black.get(5), "Center");
-		boards[2][5].add(chesspiece_black.get(6), "Center");
-		boards[2][6].add(chesspiece_black.get(7), "Center");
-		boards[2][7].add(chesspiece_black.get(8), "Center");
-		boards[2][8].add(chesspiece_black.get(9), "Center");
-		boards[1][2].add(chesspiece_black.get(10), "Center");
-		boards[1][7].add(chesspiece_black.get(11), "Center");
-		boards[1][5].add(chesspiece_black.get(12), "Center");
-		boards[1][3].add(chesspiece_black.get(13), "Center");
-		boards[1][6].add(chesspiece_black.get(14), "Center");
-		boards[1][4].add(chesspiece_black.get(15), "Center");
-
+		for (int i = 1; i <= 8; i++) {
+			boards[2][i].add(chesspiece_black.get(i-1), "Center");
+		}
+		boards[1][1].add(chesspiece_black.get(8), "Center");
+		boards[1][8].add(chesspiece_black.get(9), "Center");
+		boards[1][3].add(chesspiece_black.get(10), "Center");
+		boards[1][6].add(chesspiece_black.get(11), "Center");
+		boards[1][2].add(chesspiece_black.get(12), "Center");
+		boards[1][7].add(chesspiece_black.get(13), "Center");
+		boards[1][4].add(chesspiece_black.get(14), "Center");
+		boards[1][5].add(chesspiece_black.get(15), "Center");
+		
+		
+		for (int i = 1; i <= 8; i++) {
+			chesspiece_white
+					.add(new Pawn("white", 7, i, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		}
 		chesspiece_white
 				.add(new Rook("white", 8, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_white
 				.add(new Rook("white", 8, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_white
-				.add(new Pawn("white", 7, 1, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+				.add(new Bishop("white", 8, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_white
-				.add(new Pawn("white", 7, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Pawn("white", 7, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Pawn("white", 7, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Pawn("white", 7, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Pawn("white", 7, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Pawn("white", 7, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Pawn("white", 7, 8, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+				.add(new Bishop("white", 8, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_white
 				.add(new Knight("white", 8, 2, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_white
 				.add(new Knight("white", 8, 7, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 		chesspiece_white
-				.add(new King("white", 8, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Bishop("white", 8, 3, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
-				.add(new Bishop("white", 8, 6, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
-		chesspiece_white
 				.add(new Queen("white", 8, 4, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
+		chesspiece_white
+				.add(new King("white", 8, 5, this, boards, movepins, p_board, chesspiece_black, chesspiece_white));
 
-		boards[8][1].add(chesspiece_white.get(0), "Center");
-		boards[8][8].add(chesspiece_white.get(1), "Center");
-		boards[7][1].add(chesspiece_white.get(2), "Center");
-		boards[7][2].add(chesspiece_white.get(3), "Center");
-		boards[7][3].add(chesspiece_white.get(4), "Center");
-		boards[7][4].add(chesspiece_white.get(5), "Center");
-		boards[7][5].add(chesspiece_white.get(6), "Center");
-		boards[7][6].add(chesspiece_white.get(7), "Center");
-		boards[7][7].add(chesspiece_white.get(8), "Center");
-		boards[7][8].add(chesspiece_white.get(9), "Center");
-		boards[8][2].add(chesspiece_white.get(10), "Center");
-		boards[8][7].add(chesspiece_white.get(11), "Center");
-		boards[8][5].add(chesspiece_white.get(12), "Center");
-		boards[8][3].add(chesspiece_white.get(13), "Center");
-		boards[8][6].add(chesspiece_white.get(14), "Center");
-		boards[8][4].add(chesspiece_white.get(15), "Center");
-
+		for (int i = 1; i <= 8; i++) {
+			boards[7][i].add(chesspiece_white.get(i-1), "Center");
+		}
+		boards[8][8].add(chesspiece_white.get(8), "Center");
+		boards[8][8].add(chesspiece_white.get(9), "Center");
+		boards[8][3].add(chesspiece_white.get(10), "Center");
+		boards[8][6].add(chesspiece_white.get(11), "Center");
+		boards[8][2].add(chesspiece_white.get(12), "Center");
+		boards[8][7].add(chesspiece_white.get(13), "Center");
+		boards[8][4].add(chesspiece_white.get(14), "Center");
+		boards[8][5].add(chesspiece_white.get(15), "Center");
+		
 	}
+
 	// 타이머 설정
 	// 턴이 바뀔때마다 10초 추가 / 시간 다 끝나면 승리 패배 표시
 	public void turnTimer() {
-		if(turn.equals("white")) {
-			if(w_remainingTime<=15*60-10) {
-				w_remainingTime+=10;
+		if (turn.equals("white")) {
+			if (w_remainingTime <= 15 * 60 - 10) {
+				w_remainingTime += 10;
 			}
-        	w_timer.start();
-        	b_timer.stop();
-        } else if(turn.equals("black")) {
-        	if(b_remainingTime<=15*60-10) {
-				b_remainingTime+=10;
+			w_timer.start();
+			b_timer.stop();
+		} else if (turn.equals("black")) {
+			if (b_remainingTime <= 15 * 60 - 10) {
+				b_remainingTime += 10;
 			}
-        	b_timer.start();
-        	w_timer.stop();
-        }
+			b_timer.start();
+			w_timer.stop();
+		}
 	}
+
 	public Timer blacktimer() {
-        return new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                b_remainingTime--;
-                lb_b_timer.setText(formatTime(b_remainingTime));
-                if (b_remainingTime <= 0) {
-                    ((Timer)e.getSource()).stop();
-                    JOptionPane.showMessageDialog(lb_b_timer, "white win!");
-                }
-            }
-        });
-    }
-	
+		return new Timer(1000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				b_remainingTime--;
+				lb_b_timer.setText(formatTime(b_remainingTime));
+				if (b_remainingTime <= 0) {
+					((Timer) e.getSource()).stop();
+					JOptionPane.showMessageDialog(lb_b_timer, "white win!");
+				}
+			}
+		});
+	}
+
 	public Timer whitetimer() {
-        return new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                w_remainingTime--;
-                lb_w_timer.setText(formatTime(w_remainingTime));
-                if (w_remainingTime <= 0) {
-                    ((Timer)e.getSource()).stop();
-                    JOptionPane.showMessageDialog(lb_w_timer, "black win!");
-                }
-            }
-        });
-    }
-	
+		return new Timer(1000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				w_remainingTime--;
+				lb_w_timer.setText(formatTime(w_remainingTime));
+				if (w_remainingTime <= 0) {
+					((Timer) e.getSource()).stop();
+					JOptionPane.showMessageDialog(lb_w_timer, "black win!");
+				}
+			}
+		});
+	}
+
 	private String formatTime(int seconds) {
-        int minutes = seconds / 60;
-        int secs = seconds % 60;
-        return String.format("%02d:%02d", minutes, secs);
-    }
-	
+		int minutes = seconds / 60;
+		int secs = seconds % 60;
+		return String.format("%02d:%02d", minutes, secs);
+	}
+
 	// 킹이 체크상태인지 확인하는 메서드
 	public boolean isKingInCheck(String kingSide) {
 		King king = null;
@@ -395,10 +361,10 @@ public class ChessBoard extends JFrame {
 	// 체크 상태에서 이동이 불가능하면 체크메이트 선언
 	// 체크가 아닌데 이동이 불가능하면 스테일메이트 선언
 	public void updateCheckStatus() {
-		if(b_remainingTime==0||w_remainingTime==0) {
-			if(b_remainingTime==0) {
+		if (b_remainingTime == 0 || w_remainingTime == 0) {
+			if (b_remainingTime == 0) {
 				lb_check.setText("white win!");
-			} else if(w_remainingTime==0) {
+			} else if (w_remainingTime == 0) {
 				lb_check.setText("black win!");
 			}
 		} else if (isKingInCheck("white")) {
@@ -516,7 +482,7 @@ public class ChessBoard extends JFrame {
 					}
 				}
 			}
-			
+
 			// 확인 후 각 기물의 공격 리스너들 제거
 			for (int i = 0; i < chesspiece_black.size(); i++) {
 				chesspiece_black.get(i).removeAttackBlack();
