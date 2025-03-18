@@ -14,7 +14,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class ChessBoard extends JFrame {
 	boolean white_check, black_check;
@@ -29,6 +31,14 @@ public class ChessBoard extends JFrame {
 	JLabel lb_turn_count;
 	String checkpiece;
 	int turn_count;
+	
+	final int TIMER_DURATION=15;
+	Timer b_timer,w_timer;
+	int b_remainingTime=TIMER_DURATION;
+	int w_remainingTime=TIMER_DURATION;
+	
+	JLabel lb_b_timer,lb_w_timer;
+	
 
 	public ChessBoard() {
 
@@ -75,7 +85,22 @@ public class ChessBoard extends JFrame {
 		lb_turn_count = new JLabel(turn_count + "", JLabel.CENTER);
 		lb_turn_count.setFont(new Font("Default Font", Font.PLAIN, 50));
 		p_west.add(lb_turn_count, "South");
+		
+		// 타이머 배치
+        lb_b_timer = new JLabel(formatTime(b_remainingTime), JLabel.CENTER);
+        p_west.add(lb_b_timer, "West");
+        
+        lb_w_timer = new JLabel(formatTime(w_remainingTime), JLabel.CENTER);
+        p_west.add(lb_w_timer, "East");
 
+        // 타이머 초기화 및 시작
+        b_timer = blacktimer();
+        w_timer = whitetimer();
+        
+        
+        turnTimer();
+		
+		
 		// 말 배치
 		setChessPiece();
 
@@ -108,6 +133,7 @@ public class ChessBoard extends JFrame {
 			});
 		}
 		this.validate();
+		
 	}
 
 	// 체스 보드 그리기;
@@ -251,7 +277,57 @@ public class ChessBoard extends JFrame {
 		boards[8][4].add(chesspiece_white.get(15), "Center");
 
 	}
-
+	// 타이머 설정
+	// 턴이 바뀔때마다 10초 추가 / 시간 다 끝나면 승리 패배 표시
+	public void turnTimer() {
+		if(turn.equals("white")) {
+			if(w_remainingTime<=15*60-10) {
+				w_remainingTime+=10;
+			}
+        	w_timer.start();
+        	b_timer.stop();
+        } else if(turn.equals("black")) {
+        	if(b_remainingTime<=15*60-10) {
+				b_remainingTime+=10;
+			}
+        	b_timer.start();
+        	w_timer.stop();
+        }
+	}
+	public Timer blacktimer() {
+        return new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                b_remainingTime--;
+                lb_b_timer.setText(formatTime(b_remainingTime));
+                if (b_remainingTime <= 0) {
+                    ((Timer)e.getSource()).stop();
+                    JOptionPane.showMessageDialog(lb_b_timer, "white win!");
+                }
+            }
+        });
+    }
+	
+	public Timer whitetimer() {
+        return new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                w_remainingTime--;
+                lb_w_timer.setText(formatTime(w_remainingTime));
+                if (w_remainingTime <= 0) {
+                    ((Timer)e.getSource()).stop();
+                    JOptionPane.showMessageDialog(lb_w_timer, "black win!");
+                }
+            }
+        });
+    }
+	
+	private String formatTime(int seconds) {
+        int minutes = seconds / 60;
+        int secs = seconds % 60;
+        return String.format("%02d:%02d", minutes, secs);
+    }
+	
 	// 킹이 체크상태인지 확인하는 메서드
 	public boolean isKingInCheck(String kingSide) {
 		King king = null;
@@ -319,7 +395,13 @@ public class ChessBoard extends JFrame {
 	// 체크 상태에서 이동이 불가능하면 체크메이트 선언
 	// 체크가 아닌데 이동이 불가능하면 스테일메이트 선언
 	public void updateCheckStatus() {
-		if (isKingInCheck("white")) {
+		if(b_remainingTime==0||w_remainingTime==0) {
+			if(b_remainingTime==0) {
+				lb_check.setText("white win!");
+			} else if(w_remainingTime==0) {
+				lb_check.setText("black win!");
+			}
+		} else if (isKingInCheck("white")) {
 			if (!isCanMove("white")) {
 				lb_check.setText("White Checkmate!");
 			} else {
