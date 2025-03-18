@@ -151,6 +151,8 @@ abstract public class ChessPiece extends JButton {
 
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
+								
+								chessBoard.turnTimer();
 							}
 
 						};
@@ -230,6 +232,8 @@ abstract public class ChessPiece extends JButton {
 
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
+								
+								chessBoard.turnTimer();
 							}
 						});
 
@@ -326,6 +330,8 @@ abstract public class ChessPiece extends JButton {
 
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
+								
+								chessBoard.turnTimer();
 							}
 
 						};
@@ -405,6 +411,8 @@ abstract public class ChessPiece extends JButton {
 
 								p_board.getParent().validate();
 								p_board.getParent().repaint();
+								
+								chessBoard.turnTimer();
 							}
 						});
 
@@ -539,7 +547,7 @@ abstract public class ChessPiece extends JButton {
 	    
 
 	    ImageIcon p_queen_white = new ImageIcon("image/Queen-white.png");
-	    ImageIcon p_bishop_white = new ImageIcon("image/Bishop-white.png");
+	    ImageIcon p_bishop_white = new ImageIcon(" image/Bishop-white.png");
 	    ImageIcon p_rook_white = new ImageIcon("image/Rook-white.png");
 	    ImageIcon p_knight_white = new ImageIcon("image/Knight-white.png");
 

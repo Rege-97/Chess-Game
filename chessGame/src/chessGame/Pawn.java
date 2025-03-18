@@ -92,6 +92,8 @@ public class Pawn extends ChessPiece {
 
 		// 공격을 안했을 시 일반 이동 액션
 		moveBlack(pawn);
+		
+		
 	}
 
 	@Override
@@ -207,6 +209,8 @@ public class Pawn extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									chessBoard.turnTimer();
 								}
 							});
 							// 일반 이동 시 이동 액션
@@ -270,6 +274,8 @@ public class Pawn extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									chessBoard.turnTimer();
 								}
 							});
 						}
@@ -355,6 +361,8 @@ public class Pawn extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									chessBoard.turnTimer();
 								}
 							});
 							// 일반 이동 시 이동 액션
@@ -418,6 +426,8 @@ public class Pawn extends ChessPiece {
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
+									
+									chessBoard.turnTimer();
 								}
 							});
 						}
