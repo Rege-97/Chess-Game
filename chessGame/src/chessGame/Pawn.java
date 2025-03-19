@@ -185,7 +185,6 @@ public class Pawn extends ChessPiece {
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "white";
-									chessBoard.lb_turn.setText("White");
 									lastmoveturn = chessBoard.turn_count;
 									chessBoard.turn_count++;
 									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
@@ -255,7 +254,6 @@ public class Pawn extends ChessPiece {
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "white";
-									chessBoard.lb_turn.setText("White");
 									lastmoveturn = chessBoard.turn_count;
 									chessBoard.turn_count++;
 									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
@@ -347,7 +345,6 @@ public class Pawn extends ChessPiece {
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
-									chessBoard.lb_turn.setText("Black");
 									lastmoveturn = chessBoard.turn_count;
 									chessBoard.turn_count++;
 									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
@@ -417,7 +414,6 @@ public class Pawn extends ChessPiece {
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
-									chessBoard.lb_turn.setText("Black");
 									lastmoveturn = chessBoard.turn_count;
 									chessBoard.turn_count++;
 									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");

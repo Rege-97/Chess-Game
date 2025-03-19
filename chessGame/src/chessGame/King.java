@@ -202,7 +202,6 @@ public class King extends ChessPiece {
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "white";
-									chessBoard.lb_turn.setText("White");
 									chessBoard.turn_count++;
 									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 
@@ -262,7 +261,6 @@ public class King extends ChessPiece {
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "white";
-									chessBoard.lb_turn.setText("White");
 									chessBoard.turn_count++;
 									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 
@@ -371,7 +369,6 @@ public class King extends ChessPiece {
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
-									chessBoard.lb_turn.setText("Black");
 									chessBoard.turn_count++;
 									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 
@@ -430,7 +427,6 @@ public class King extends ChessPiece {
 
 									// 턴 정보를 상대 턴으로 변경
 									chessBoard.turn = "black";
-									chessBoard.lb_turn.setText("Black");
 									chessBoard.turn_count++;
 									chessBoard.lb_turn_count.setText(chessBoard.turn_count + "");
 

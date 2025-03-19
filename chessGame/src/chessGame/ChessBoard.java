@@ -32,7 +32,7 @@ public class ChessBoard extends JFrame {
 	ImageIcon movepin;
 	ArrayList<ChessPiece> chesspiece_black, chesspiece_white;
 	JLabel lb_check;
-	JLabel lb_turn;
+	JLabel lb_w_turn;
 	JLabel lb_turn_count;
 	String checkpiece;
 	int turn_count;
@@ -42,12 +42,13 @@ public class ChessBoard extends JFrame {
 	PreparedStatement ps;
 	ResultSet rs;
 
-	final int TIMER_DURATION = 60;
+	final int TIMER_DURATION = 900;
 	Timer b_timer, w_timer;
 	int b_remainingTime = TIMER_DURATION;
 	int w_remainingTime = TIMER_DURATION;
 
 	JLabel lb_b_timer, lb_w_timer;
+	JLabel lb_b_turn;
 
 	public ChessBoard() {
 
@@ -76,31 +77,39 @@ public class ChessBoard extends JFrame {
 		boardSet();
 		this.add(p_board, "Center");
 
-		JPanel p_west = new JPanel(new BorderLayout());
-		p_west.setPreferredSize(new Dimension(480, 800));
-		this.add(p_west, "East");
+		JPanel p_east = new JPanel(new BorderLayout());
+		p_east.setPreferredSize(new Dimension(480, 800));
+		this.add(p_east, "East");
 
 		// 체크 상태를 표시하기 위한 임시 라벨
 		lb_check = new JLabel("Play", JLabel.CENTER);
 		lb_check.setFont(new Font("Default Font", Font.PLAIN, 50));
-		p_west.add(lb_check, "North");
+		p_east.add(lb_check, "North");
 
 		// 턴을 표시하기 위한 임시 라벨
-		lb_turn = new JLabel("White", JLabel.CENTER);
-		lb_turn.setFont(new Font("Default Font", Font.PLAIN, 50));
-		p_west.add(lb_turn, "Center");
+		JPanel p_east_center = new JPanel(new GridLayout(2, 2));
+		p_east.add(p_east_center,"Center");
+		lb_w_turn = new JLabel("White", JLabel.CENTER);
+		lb_w_turn.setFont(new Font("Default Font", Font.PLAIN, 50));
+		p_east_center.add(lb_w_turn);
+		lb_b_turn = new JLabel("Black", JLabel.CENTER);
+		lb_b_turn.setFont(new Font("Default Font", Font.PLAIN, 50));
+		p_east_center.add(lb_b_turn);
+		
+		// 타이머 배치
+		lb_w_timer = new JLabel(formatTime(w_remainingTime), JLabel.CENTER);
+		lb_w_timer.setFont(new Font("Default Font", Font.PLAIN, 50));
+		p_east_center.add(lb_w_timer);
+		
+		lb_b_timer = new JLabel(formatTime(b_remainingTime), JLabel.CENTER);
+		lb_b_timer.setFont(new Font("Default Font", Font.PLAIN, 50));
+		p_east_center.add(lb_b_timer);
+
 
 		// 턴수를 표기하기 위한 임시 라벨
 		lb_turn_count = new JLabel(turn_count + "", JLabel.CENTER);
 		lb_turn_count.setFont(new Font("Default Font", Font.PLAIN, 50));
-		p_west.add(lb_turn_count, "South");
-
-		// 타이머 배치
-		lb_b_timer = new JLabel(formatTime(b_remainingTime), JLabel.CENTER);
-		p_west.add(lb_b_timer, "West");
-
-		lb_w_timer = new JLabel(formatTime(w_remainingTime), JLabel.CENTER);
-		p_west.add(lb_w_timer, "East");
+		p_east.add(lb_turn_count, "South");
 
 		// 타이머 초기화 및 시작
 		b_timer = blacktimer();
@@ -115,34 +124,6 @@ public class ChessBoard extends JFrame {
 		setChessPieceWhite();
 		setChessPieceBlack();
 
-		// 블랙 체스말 이벤트
-		for (int i = 0; i < chesspiece_black.size(); i++) {
-			final int index = i;
-			chesspiece_black.get(index).addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (turn.equals("black") && chesspiece_black.get(index).isEnabled()) {
-						chesspiece_black.get(index).blackMove();
-					}
-				}
-			});
-		}
-
-		// 화이트 체스말 이벤트
-		for (int i = 0; i < chesspiece_white.size(); i++) {
-			final int index = i;
-			chesspiece_white.get(index).addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (turn.equals("white") && chesspiece_white.get(index).isEnabled()) {
-						chesspiece_white.get(index).whiteMove();
-					}
-				}
-
-			});
-		}
 		this.validate();
 
 	}
@@ -224,10 +205,10 @@ public class ChessBoard extends JFrame {
 		try {
 			setDB();
 
-			String sql = "SELECT * FROM white WHERE gameno=? AND turn=(SELECT max(turn) FROM white WHERE gameno=?)";
+			String sql = "SELECT * FROM white WHERE gameno=? AND turn=?";
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, gameno);
-			ps.setInt(2, gameno);
+			ps.setInt(2, turn_count);
 			rs = ps.executeQuery();
 			rs.next();
 
@@ -353,6 +334,21 @@ public class ChessBoard extends JFrame {
 				boards[row][col].add(chesspiece_white.get(chesspiece_white.size() - 1), "Center");
 			}
 
+			// 화이트 체스말 이벤트
+			for (int i = 0; i < chesspiece_white.size(); i++) {
+				final int index = i;
+				chesspiece_white.get(index).addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (turn.equals("white") && chesspiece_white.get(index).isEnabled()) {
+							chesspiece_white.get(index).whiteMove();
+						}
+					}
+
+				});
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -375,10 +371,10 @@ public class ChessBoard extends JFrame {
 		try {
 			setDB();
 
-			String sql = "SELECT * FROM black WHERE gameno=? AND turn=(SELECT max(turn) FROM black WHERE gameno=?)";
+			String sql = "SELECT * FROM black WHERE gameno=? AND turn=?";
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, gameno);
-			ps.setInt(2, gameno);
+			ps.setInt(2, turn_count);
 			rs = ps.executeQuery();
 			rs.next();
 
@@ -503,6 +499,20 @@ public class ChessBoard extends JFrame {
 				boards[row][col].add(chesspiece_black.get(chesspiece_black.size() - 1), "Center");
 			}
 
+			// 블랙 체스말 이벤트
+			for (int i = 0; i < chesspiece_black.size(); i++) {
+				final int index = i;
+				chesspiece_black.get(index).addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (turn.equals("black") && chesspiece_black.get(index).isEnabled()) {
+							chesspiece_black.get(index).blackMove();
+						}
+					}
+				});
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -523,17 +533,19 @@ public class ChessBoard extends JFrame {
 	// 턴이 바뀔때마다 10초 추가 / 시간 다 끝나면 승리 패배 표시
 	public void turnTimer() {
 		if (turn.equals("white")) {
-			if (w_remainingTime <= 15 * 60 - 10) {
-				w_remainingTime += 10;
-			}
+			b_remainingTime += 10;
+			lb_b_timer.setText(formatTime(b_remainingTime));
 			w_timer.start();
 			b_timer.stop();
+			
+			
+			
 		} else if (turn.equals("black")) {
-			if (b_remainingTime <= 15 * 60 - 10) {
-				b_remainingTime += 10;
-			}
+			w_remainingTime += 10;
+			lb_w_timer.setText(formatTime(w_remainingTime));
 			b_timer.start();
 			w_timer.stop();
+			
 		}
 	}
 
@@ -806,7 +818,6 @@ public class ChessBoard extends JFrame {
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				gameno = rs.getInt("gameno");
-				System.out.println(gameno);
 			}
 
 		} catch (Exception e) {
