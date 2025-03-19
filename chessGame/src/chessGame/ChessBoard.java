@@ -25,6 +25,7 @@ import javax.swing.Timer;
 
 public class ChessBoard extends JFrame {
 	boolean white_check, black_check;
+	ChessBoard main;
 	JPanel p_board;
 	JPanel boards[][];
 	JButton movepins[][];
@@ -53,6 +54,7 @@ public class ChessBoard extends JFrame {
 	public ChessBoard() {
 
 		super("테스트");
+		main = this;
 
 		this.setSize(1280, 800);
 		this.setVisible(true);
@@ -73,9 +75,7 @@ public class ChessBoard extends JFrame {
 		turn_count = 0;
 
 		// 보드 세팅
-		p_board = new JPanel(new GridLayout(8, 8));
 		boardSet();
-		this.add(p_board, "Center");
 
 		JPanel p_east = new JPanel(new BorderLayout());
 		p_east.setPreferredSize(new Dimension(480, 800));
@@ -88,28 +88,32 @@ public class ChessBoard extends JFrame {
 
 		// 턴을 표시하기 위한 임시 라벨
 		JPanel p_east_center = new JPanel(new GridLayout(2, 2));
-		p_east.add(p_east_center,"Center");
+		p_east.add(p_east_center, "Center");
 		lb_w_turn = new JLabel("White", JLabel.CENTER);
 		lb_w_turn.setFont(new Font("Default Font", Font.PLAIN, 50));
 		p_east_center.add(lb_w_turn);
 		lb_b_turn = new JLabel("Black", JLabel.CENTER);
 		lb_b_turn.setFont(new Font("Default Font", Font.PLAIN, 50));
 		p_east_center.add(lb_b_turn);
-		
+
 		// 타이머 배치
 		lb_w_timer = new JLabel(formatTime(w_remainingTime), JLabel.CENTER);
 		lb_w_timer.setFont(new Font("Default Font", Font.PLAIN, 50));
 		p_east_center.add(lb_w_timer);
-		
+
 		lb_b_timer = new JLabel(formatTime(b_remainingTime), JLabel.CENTER);
 		lb_b_timer.setFont(new Font("Default Font", Font.PLAIN, 50));
 		p_east_center.add(lb_b_timer);
 
-
 		// 턴수를 표기하기 위한 임시 라벨
+		JPanel p_east_south = new JPanel(new GridLayout(1, 2));
+		p_east.add(p_east_south, "South");
 		lb_turn_count = new JLabel(turn_count + "", JLabel.CENTER);
 		lb_turn_count.setFont(new Font("Default Font", Font.PLAIN, 50));
-		p_east.add(lb_turn_count, "South");
+		p_east_south.add(lb_turn_count);
+		JButton bt_back = new JButton("⬅️");
+		bt_back.setFont(new Font("Default Font", Font.PLAIN, 50));
+		p_east_south.add(bt_back);
 
 		// 타이머 초기화 및 시작
 		b_timer = blacktimer();
@@ -123,6 +127,61 @@ public class ChessBoard extends JFrame {
 		setGameInfo();
 		setChessPieceWhite();
 		setChessPieceBlack();
+		loadMoveBoard();
+
+		bt_back.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (turn_count != 0) {
+					turn_count--;
+					if (turn.equals("white")) {
+						turn = "black";
+					} else {
+						turn = "white";
+					}
+					main.remove(p_board);
+					boardSet();
+
+					chesspiece_white = new ArrayList<ChessPiece>();
+					chesspiece_black = new ArrayList<ChessPiece>();
+					setChessPieceWhite();
+					setChessPieceBlack();
+					loadMoveBoard();
+					lb_turn_count.setText(turn_count + "");
+					turnTimer();
+
+					try {
+						setDB();
+						String sql = "delete from white where gameno=? and turn=?";
+						ps = conn.prepareStatement(sql);
+						ps.setInt(1, gameno);
+						ps.setInt(2, turn_count + 1);
+						ps.executeUpdate();
+
+						sql = "delete from black where gameno=? and turn=?";
+						ps = conn.prepareStatement(sql);
+						ps.setInt(1, gameno);
+						ps.setInt(2, turn_count + 1);
+						ps.executeUpdate();
+
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					} finally {
+						try {
+							if (ps != null)
+								ps.close();
+							if (conn != null)
+								conn.close();
+						} catch (Exception e3) {
+
+						}
+					}
+
+				}
+
+			}
+		});
 
 		this.validate();
 
@@ -130,7 +189,8 @@ public class ChessBoard extends JFrame {
 
 	// 체스 보드 그리기;
 	public void boardSet() {
-
+		p_board = new JPanel(new GridLayout(8, 8));
+		this.add(p_board, "Center");
 		boards = new JPanel[9][9];
 		movepins = new JButton[9][9];
 		movepin = new ImageIcon("image/MovePoint.png");
@@ -159,43 +219,6 @@ public class ChessBoard extends JFrame {
 				boards[i][j].add(movepins[i][j], "North");
 				movepins[i][j].setVisible(false);
 				p_board.add(boards[i][j]);
-			}
-		}
-	}
-
-	public void setTurn() {
-		try {
-			setDB();
-
-			String sql = "SELECT MAX(turn) AS max_turn" + "FROM (" + "    SELECT turn FROM white" + "    UNION ALL"
-					+ "    SELECT turn FROM black" + ")";
-
-			ps = conn.prepareStatement(sql);
-			rs = ps.executeQuery();
-			rs.next();
-
-			turn_count = rs.getInt("max_turn");
-
-			if (turn_count == 0) {
-				turn_count++;
-			}
-			if (turn_count % 2 == 1) {
-				turn = "white";
-			} else {
-				turn = "black";
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (ps != null)
-					ps.close();
-				if (conn != null)
-					conn.close();
-			} catch (Exception e2) {
 			}
 		}
 	}
@@ -348,6 +371,7 @@ public class ChessBoard extends JFrame {
 
 				});
 			}
+			this.validate();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -512,6 +536,7 @@ public class ChessBoard extends JFrame {
 					}
 				});
 			}
+			this.validate();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -537,15 +562,13 @@ public class ChessBoard extends JFrame {
 			lb_b_timer.setText(formatTime(b_remainingTime));
 			w_timer.start();
 			b_timer.stop();
-			
-			
-			
+
 		} else if (turn.equals("black")) {
 			w_remainingTime += 10;
 			lb_w_timer.setText(formatTime(w_remainingTime));
 			b_timer.start();
 			w_timer.stop();
-			
+
 		}
 	}
 
@@ -978,6 +1001,133 @@ public class ChessBoard extends JFrame {
 
 			}
 		}
+	}
+
+	public void loadMoveBoard() {
+		try {
+			setDB();
+
+			String sql = "select * from move_board where gameno=? and turn=?";
+			ps = conn.prepareStatement(sql);
+
+			ps.setInt(1, gameno);
+			ps.setInt(2, turn_count);
+
+			rs = ps.executeQuery();
+			rs.next();
+			
+			int row1=rs.getInt("row1");
+			int col1=rs.getInt("col1");
+			int row2=rs.getInt("row2");
+			int col2=rs.getInt("col2");
+			
+			if(row1>0) {
+				setMoveBoard(row1, col1, row2, col2);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e2) {
+
+			}
+		}
+
+	}
+
+	// 기물 이동 시 원래 위치와 이동한 위치를 색상으로 표시하는 메서드
+	public void setMoveBoard(int originalrow, int originalcol, int moverow, int movecol) {
+		// 보드를 기본 색상으로 초기화
+		for (int i = 1; i <= 8; i++) {
+			for (int j = 1; j <= 8; j++) {
+				if (i % 2 == 0) {
+					if (j % 2 == 0) {
+						boards[i][j].setBackground(Color.white);
+					} else {
+						boards[i][j].setBackground(Color.darkGray);
+					}
+				} else {
+					if (j % 2 == 0) {
+						boards[i][j].setBackground(Color.darkGray);
+					} else {
+						boards[i][j].setBackground(Color.white);
+					}
+				}
+			}
+		}
+
+		// 원래 있던 위치 색 변경
+		if (boards[originalrow][originalcol].getBackground().equals(Color.white)) {
+			boards[originalrow][originalcol].setBackground(new Color(209, 254, 164));
+		} else {
+			boards[originalrow][originalcol].setBackground(new Color(124, 188, 0));
+		}
+
+		// 이동한 위치 색 변경
+		if (boards[moverow][movecol].getBackground().equals(Color.white)) {
+			boards[moverow][movecol].setBackground(new Color(209, 254, 164));
+		} else {
+			boards[moverow][movecol].setBackground(new Color(124, 188, 0));
+		}
+	}
+
+	public void insertMoveBoard() {
+		try {
+			int row1 = 0;
+			int col1 = 0;
+			int row2 = 0;
+			int col2 = 0;
+
+			Color c1 = new Color(209, 254, 164);
+			Color c2 = new Color(124, 188, 0);
+			int count = 0;
+			for (int i = 1; i <= 8; i++) {
+				for (int j = 1; j <= 8; j++) {
+					if (boards[i][j].getBackground().equals(c1) || boards[i][j].getBackground().equals(c2)) {
+						count++;
+						if (count == 1) {
+							row1 = i;
+							col1 = j;
+						} else if (count == 2) {
+							row2 = i;
+							col2 = j;
+						}
+					}
+				}
+			}
+
+			setDB();
+			String sql = "insert into move_board values(?,?,?,?,?,?)";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, gameno);
+			ps.setInt(2, turn_count);
+			ps.setInt(3, row1);
+			ps.setInt(4, col1);
+			ps.setInt(5, row2);
+			ps.setInt(6, col2);
+
+			ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e2) {
+
+			}
+		}
+
 	}
 
 	public static void main(String[] args) throws Exception {

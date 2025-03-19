@@ -217,7 +217,7 @@ public class King extends ChessPiece {
 									}
 
 									// 이동한 보드 칸 색상 표시
-									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
+									chessBoard.setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
@@ -225,6 +225,7 @@ public class King extends ChessPiece {
 									// 이동 기록 DB 저장
 									chessBoard.insertGamePlayWhite();
 									chessBoard.insertGamePlayBlack();
+									chessBoard.insertMoveBoard();
 
 
 									p_board.getParent().validate();
@@ -281,7 +282,7 @@ public class King extends ChessPiece {
 									}
 
 									// 이동한 보드 칸 색상 표시
-									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
+									chessBoard.setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
@@ -289,6 +290,7 @@ public class King extends ChessPiece {
 									// 이동 기록 DB 저장
 									chessBoard.insertGamePlayWhite();
 									chessBoard.insertGamePlayBlack();
+									chessBoard.insertMoveBoard();
 
 									
 									p_board.getParent().validate();
@@ -384,7 +386,7 @@ public class King extends ChessPiece {
 									}
 
 									// 이동한 보드 칸 색상 표시
-									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
+									chessBoard.setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
@@ -392,6 +394,7 @@ public class King extends ChessPiece {
 									// 이동 기록 DB 저장
 									chessBoard.insertGamePlayWhite();
 									chessBoard.insertGamePlayBlack();
+									chessBoard.insertMoveBoard();
 
 									p_board.getParent().validate();
 									p_board.getParent().repaint();
@@ -447,7 +450,7 @@ public class King extends ChessPiece {
 									}
 
 									// 이동한 보드 칸 색상 표시
-									setMoveBoard(originalrow, originalcol, indexrow, indexcol);
+									chessBoard.setMoveBoard(originalrow, originalcol, indexrow, indexcol);
 
 									// UI 업데이트 호출 (체크 및 체크메이트 상태 즉시 반영)
 									chessBoard.updateCheckStatus();
@@ -455,6 +458,7 @@ public class King extends ChessPiece {
 									// 이동 기록 DB 저장
 									chessBoard.insertGamePlayWhite();
 									chessBoard.insertGamePlayBlack();
+									chessBoard.insertMoveBoard();
 
 
 									p_board.getParent().validate();
