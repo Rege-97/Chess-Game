@@ -281,16 +281,12 @@ public class ChessBoard extends JFrame {
 	// 턴이 바뀔때마다 10초 추가 / 시간 다 끝나면 승리 패배 표시
 	public void turnTimer() {
 		if(turn.equals("white")) {
-			if(w_remainingTime<=15*60-10) {
-				w_remainingTime+=10;
-			}
+			w_remainingTime+=10;
         	w_timer.start();
         	b_timer.stop();
         } else if(turn.equals("black")) {
-        	if(b_remainingTime<=15*60-10) {
-				b_remainingTime+=10;
-			}
-        	b_timer.start();
+        	b_remainingTime+=10;
+			b_timer.start();
         	w_timer.stop();
         }
 	}
