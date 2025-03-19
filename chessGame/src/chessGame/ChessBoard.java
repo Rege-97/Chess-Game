@@ -129,10 +129,12 @@ public class ChessBoard extends JFrame {
 		setChessPieceBlack();
 		loadMoveBoard();
 
+		// 되돌리기 버튼 액션리스너
 		bt_back.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// 턴카운트를 1 줄이고 보드를 제거한 뒤에 다시 생성
 				if (turn_count != 0) {
 					turn_count--;
 					if (turn.equals("white")) {
@@ -143,6 +145,7 @@ public class ChessBoard extends JFrame {
 					main.remove(p_board);
 					boardSet();
 
+					// 체스말과 이동 경로를 DB의 정보에 맞게 다시 생성
 					chesspiece_white = new ArrayList<ChessPiece>();
 					chesspiece_black = new ArrayList<ChessPiece>();
 					setChessPieceWhite();
@@ -152,6 +155,7 @@ public class ChessBoard extends JFrame {
 					turnTimer();
 
 					try {
+						// 기존 턴 정보 삭제
 						setDB();
 						String sql = "delete from white where gameno=? and turn=?";
 						ps = conn.prepareStatement(sql);
@@ -813,6 +817,7 @@ public class ChessBoard extends JFrame {
 		return true;
 	}
 
+	// DB 연결 전용 메서드
 	public void setDB() {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -826,6 +831,7 @@ public class ChessBoard extends JFrame {
 		}
 	}
 
+	// 게임 첫 시작 시 게임 정보 DB 기록 메서드
 	public void setGameInfo() {
 		try {
 			setDB();
@@ -859,6 +865,7 @@ public class ChessBoard extends JFrame {
 
 	}
 
+	// 화이트 기물 이동 시 DB 저장 메서드
 	public void insertGamePlayWhite() {
 		try {
 			setDB();
@@ -930,7 +937,7 @@ public class ChessBoard extends JFrame {
 			}
 		}
 	}
-
+	// 블랙 기물 이동 시 DB 저장 메서드
 	public void insertGamePlayBlack() {
 		try {
 			setDB();
@@ -1003,6 +1010,7 @@ public class ChessBoard extends JFrame {
 		}
 	}
 
+	// 이동 경로 불러와 색상 다시 칠하는 메서드
 	public void loadMoveBoard() {
 		try {
 			setDB();
@@ -1078,6 +1086,7 @@ public class ChessBoard extends JFrame {
 		}
 	}
 
+	// 이동 위치 색상이 어딘지 DB 저장 메서드
 	public void insertMoveBoard() {
 		try {
 			int row1 = 0;
